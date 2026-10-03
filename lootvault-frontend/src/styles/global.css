@@ -1,0 +1,33 @@
+:root {
+  color-scheme: dark;
+  --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-display: var(--font-body);
+  --bg1: #192137; --bg2: #090d17; --navy: #0c1220; --navy-2: #182137;
+  --white: #f4f7fc; --text-dim: #a7b4cc; --edge-light: rgba(255,255,255,.12); --outline: rgba(255,255,255,.12);
+  --blue: #72c9ff; --cyan: #72c9ff; --cyan-dark: #428dc0; --yellow: #e9d698; --yellow-dark: #b5a374; --red: #ff8a9b;
+  --glass: rgba(24,32,50,.65); --glass-strong: rgba(27,36,56,.88); --line: rgba(255,255,255,.12);
+  --shadow: 0 16px 48px rgba(0,0,0,.18), inset 0 1px 0 rgba(255,255,255,.045);
+  --radius: 22px; --border: 1px solid var(--line);
+  --rarity-common: #b9c2d9; --rarity-common-dark: #6b7386;
+  --rarity-basic: #72c9ff; --rarity-basic-dark: #428dc0;
+  --rarity-excellent: #c0a2f1; --rarity-excellent-dark: #8267ab;
+  --rarity-exotic: #82d7ac; --rarity-exotic-dark: #458c68;
+  --rarity-extraordinary: #e9d698; --rarity-extraordinary-dark: #b5a374;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html, body, #root { min-height: 100%; }
+html { background: radial-gradient(ellipse at 12% 0%, #1b2a43 0%, transparent 50%), radial-gradient(ellipse at 90% 45%, #211d36 0%, transparent 48%), #090d17; background-attachment: fixed; }
+body { margin: 0; font-family: var(--font-body); font-size: .9375rem; line-height: 1.6; font-weight: 400; color: var(--white); -webkit-font-smoothing: antialiased; }
+h1, h2, h3 { text-transform: none; line-height: 1.2; letter-spacing: -.035em; font-weight: 650; overflow-wrap: anywhere; }
+h2 { font-size: 1.35rem; } h3 { font-size: 1.05rem; }
+p { line-height: 1.65; }
+a { color: var(--cyan); text-underline-offset: .25em; } a:hover { color: #c2e7ff; }
+button, input, select { font: inherit; }
+button, a, input, select { -webkit-tap-highlight-color: transparent; }
+button { touch-action: manipulation; }
+input:not([type="checkbox"]), select { min-height: 44px; color: var(--white); background: rgba(8,13,23,.6); border: var(--border); border-radius: 12px; padding: .7rem .9rem; }
+input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--cyan); flex-shrink: 0; }
+input::placeholder { color: #8999b3; }
+:focus-visible { outline: 2px solid var(--cyan); outline-offset: 4px; }
+::selection { color: #fff; background: #37628d; } svg { flex-shrink: 0; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; } }

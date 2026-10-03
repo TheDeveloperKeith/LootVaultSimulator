@@ -1,0 +1,197 @@
+.progression { grid-column: 1 / -1; }
+
+.lobby {
+  --glass: rgba(15, 22, 42, 0.72);
+  --glass-strong: rgba(20, 29, 54, 0.9);
+  --line: rgba(255, 255, 255, 0.11);
+  --soft-text: #aebbd6;
+  --cyan: #44d7ff;
+  --violet: #8b7cff;
+  --lime: #d9ff54;
+
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(17rem, .75fr);
+  gap: clamp(1.25rem, 3vw, 2.25rem);
+  min-height: 30rem;
+  padding: clamp(1rem, 3vw, 2rem);
+  overflow: hidden;
+  isolation: isolate;
+  font-family: var(--font-body);
+}
+
+.lobby::before,
+.lobby::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  width: 25rem;
+  height: 25rem;
+  border-radius: 50%;
+  filter: blur(85px);
+  opacity: .22;
+  pointer-events: none;
+}
+
+.lobby::before {
+  top: -10rem;
+  left: -7rem;
+  background: var(--cyan);
+}
+
+.lobby::after {
+  right: -8rem;
+  bottom: -12rem;
+  background: var(--violet);
+}
+.promo { composes: surface from "../styles/Glass.module.css";
+
+  position: relative;
+  align-self: stretch;
+  justify-self: stretch;
+  display: flex;
+  align-items: center;
+  gap: clamp(1.25rem, 3vw, 2.25rem);
+  padding: clamp(1.5rem, 4vw, 3rem);
+  overflow: hidden;
+ }
+
+.promo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(120deg, rgba(255,255,255,.08), transparent 32%);
+}
+
+.promoTitle {
+  margin: 0;
+  max-width: 11ch;
+  font-family: var(--font-body);
+  font-weight: 650;
+  font-size: clamp(2rem, 5vw, 4.3rem);
+  line-height: .92;
+  letter-spacing: -.055em;
+}
+
+.promoText {
+  margin: .8rem 0 1.35rem;
+  color: var(--soft-text);
+  font-size: .95rem;
+  font-weight: 650;
+  letter-spacing: .02em;
+}
+
+.crate {
+  position: relative;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  width: clamp(6.5rem, 16vw, 10rem);
+  aspect-ratio: 1;
+  font-family: var(--font-body);
+  font-weight: 650;
+  font-size: clamp(4rem, 10vw, 7rem);
+  color: #071019;
+  background:
+          radial-gradient(circle at 30% 20%, #fff 0 2%, transparent 22%),
+          linear-gradient(145deg, #eaff79, var(--lime) 50%, #8fefff);
+  border: 1px solid rgba(255,255,255,.6);
+  border-radius: 30px;
+  box-shadow:
+          0 25px 55px rgba(68,215,255,.18),
+          inset 0 1px 0 rgba(255,255,255,.85);
+  transform: rotate(-4deg);
+}
+
+.play { composes: surface from "../styles/Glass.module.css";
+
+  align-self: end;
+  justify-self: stretch;
+  display: flex;
+  flex-direction: column;
+  gap: .75rem;
+  padding: 1.25rem;
+ }
+
+.play > button {
+  width: 100%;
+  min-height: 4rem;
+  border-radius: 16px;
+  font-family: var(--font-body);
+  font-size: 1.15rem;
+  font-weight: 650;
+  letter-spacing: -.02em;
+  box-shadow: 0 14px 32px rgba(68, 215, 255, .16);
+  transition: transform .18s ease, filter .18s ease;
+}
+
+.play > button:hover {
+  transform: translateY(-2px) scale(1.01);
+  filter: brightness(1.07);
+}
+
+.mode {
+  display: flex;
+  align-items: center;
+  gap: .55rem;
+  margin: 0;
+  padding: .35rem .2rem;
+  color: #dbe7ff;
+  background: transparent;
+  border: 0;
+  font-size: .78rem;
+  font-weight: 650;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+}
+
+.mode::before {
+  content: "";
+  width: .55rem;
+  height: .55rem;
+  border-radius: 50%;
+  background: var(--lime);
+  box-shadow: 0 0 14px rgba(217,255,84,.75);
+}
+
+@media (max-width: 48rem) {
+  .lobby {
+    grid-template-columns: 1fr;
+    min-height: auto;
+    padding: .75rem;
+  }
+
+.promo { 
+    min-height: 25rem;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-end;
+   }
+
+  .crate {
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    width: 7rem;
+  }
+
+  .promoTitle { max-width: 9ch; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .play > button { transition: none; }
+  .play > button:hover { transform: none; }
+}
+
+.lobby { --cyan: #72c9ff; --lime: #c5d9ac; padding: clamp(.5rem, 2vw, 1.5rem); max-width: 1120px; margin: 0 auto; }
+.promoTitle { font-size: clamp(2rem, 5vw, 3.75rem); font-weight: 650; letter-spacing: -.055em; line-height: 1.06; }
+.promoText { font-weight: 400; }
+.crate { color: #b8e3ff; background: linear-gradient(145deg, rgba(114,201,255,.16), rgba(173,152,224,.08)); border: 1px solid rgba(114,201,255,.15); border-radius: 28px; box-shadow: 0 16px 40px rgba(0,0,0,.15); transform: none; }
+.play { align-self: stretch; justify-content: center; padding: 1.75rem; }
+.play > button { min-height: 50px; font-size: 1rem; font-weight: 600; box-shadow: none; }
+.mode { text-transform: none; letter-spacing: normal; font-weight: 500; }
+.mode::before { box-shadow: none; }
+
+.lobby { overflow: visible; }
+.lobby::before, .lobby::after { display: none; }

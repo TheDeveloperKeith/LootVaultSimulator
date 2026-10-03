@@ -1,0 +1,6 @@
+.page { width: 100%; max-width: 1120px; margin: 0 auto; padding: clamp(.5rem, 2vw, 1.5rem); min-width: 0; }
+.title { margin: 0; color: var(--white); font-family: var(--font-body); font-size: clamp(2rem, 5vw, 3.25rem); font-weight: 650; letter-spacing: -.055em; line-height: 1.08; text-transform: none; }
+.sub { color: var(--text-dim); font-size: .9375rem; font-weight: 400; line-height: 1.7; letter-spacing: normal; margin: .75rem 0 0; max-width: 60ch; }
+.surface { background: linear-gradient(145deg, rgba(255,255,255,.035), transparent 55%), var(--glass); border: var(--border); border-radius: var(--radius); box-shadow: var(--shadow); backdrop-filter: blur(22px) saturate(120%); -webkit-backdrop-filter: blur(22px) saturate(120%); }
+.error { color: #ffd3db; background: rgba(255,100,130,.08); border: 1px solid rgba(255,138,155,.2); border-radius: 14px; padding: .85rem 1rem; font-size: .875rem; }
+.empty { padding: 2.5rem 1.5rem; text-align: center; color: var(--text-dim); border: 1px dashed var(--line); border-radius: var(--radius); background: rgba(255,255,255,.025); }

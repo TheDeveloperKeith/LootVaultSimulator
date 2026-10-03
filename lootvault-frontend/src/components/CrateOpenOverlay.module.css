@@ -1,0 +1,358 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2147482000;
+  display: grid;
+  place-items: center;
+  padding: clamp(.75rem, 2vw, 2rem);
+  overflow: hidden;
+  background: rgba(4, 7, 14, .92);
+  backdrop-filter: blur(18px) saturate(125%);
+  font-family: var(--font-body);
+}
+
+.backdropGlow {
+  position: absolute;
+  width: min(70vw, 62rem);
+  aspect-ratio: 2 / 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(68,215,255,.13), rgba(139,124,255,.08) 42%, transparent 72%);
+  filter: blur(55px);
+  pointer-events: none;
+}
+
+.shell {
+  position: relative;
+  width: min(74rem, 100%);
+  padding: clamp(1rem, 3vw, 1.8rem);
+  border: 1px solid rgba(255,255,255,.09);
+  border-radius: 26px;
+  background:
+          linear-gradient(145deg, rgba(255,255,255,.055), transparent 34%),
+          rgba(12,18,34,.93);
+  box-shadow: 0 36px 100px rgba(0,0,0,.48), inset 0 1px 0 rgba(255,255,255,.07);
+}
+
+.topline {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 1rem;
+  margin-bottom: 1.35rem;
+}
+
+.kicker,
+.secureTag {
+  color: #8fa0c4;
+  font-size: .68rem;
+  font-weight: 600;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+}
+
+.crateTitle {
+  margin: .2rem 0 0;
+  color: #fff;
+  font-size: clamp(1.5rem, 3vw, 2.35rem);
+  font-weight: 600;
+  letter-spacing: -.045em;
+}
+
+.secureTag {
+  padding: .38rem .65rem;
+  border: 1px solid rgba(68,215,255,.2);
+  border-radius: 999px;
+  color: #a9eaff;
+  background: rgba(68,215,255,.07);
+}
+
+.reelViewport {
+  position: relative;
+  height: 13.7rem;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 20px;
+  background:
+          linear-gradient(180deg, rgba(255,255,255,.025), transparent),
+          rgba(4,8,17,.75);
+  box-shadow: inset 0 0 45px rgba(0,0,0,.55);
+}
+
+.reelAnchor {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.reel {
+  display: flex;
+  gap: 14px;
+  width: max-content;
+  will-change: transform;
+}
+
+.reelCard {
+  --r-edge: #8190aa;
+  flex: 0 0 176px;
+  width: 176px;
+  height: 10.8rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: .55rem;
+  padding: .8rem;
+  text-align: center;
+  border: 1px solid color-mix(in srgb, var(--r-edge) 45%, rgba(255,255,255,.08));
+  border-bottom: 4px solid var(--r-edge);
+  border-radius: 14px;
+  background:
+          radial-gradient(circle at 50% 30%, color-mix(in srgb, var(--r-edge) 16%, transparent), transparent 42%),
+          rgba(17,24,42,.96);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.05);
+}
+
+.itemArt {
+  display: grid;
+  place-items: center;
+  width: 4.7rem;
+  aspect-ratio: 1;
+  color: var(--r-edge);
+  font-size: 2.9rem;
+  font-weight: 600;
+  text-shadow: 0 0 20px color-mix(in srgb, var(--r-edge) 50%, transparent);
+}
+
+.cardRarity {
+  color: var(--r-edge);
+  font-size: .64rem;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.cardName {
+  max-width: 100%;
+  overflow: hidden;
+  color: #edf4ff;
+  font-size: .82rem;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.common { --r-edge: var(--rarity-common); }
+.basic { --r-edge: var(--rarity-basic); }
+.excellent { --r-edge: var(--rarity-excellent); }
+.exotic { --r-edge: var(--rarity-exotic); }
+.extraordinary { --r-edge: var(--rarity-extraordinary); }
+.mystery { --r-edge: #fff; }
+
+.winnerCard {
+  box-shadow:
+          0 0 24px color-mix(in srgb, var(--r-edge) 22%, transparent),
+          inset 0 1px 0 rgba(255,255,255,.08);
+}
+
+.centerMarker {
+  position: absolute;
+  z-index: 20;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  transform: translateX(-50%);
+  background: linear-gradient(transparent, #fff 14%, #fff 86%, transparent);
+  box-shadow: 0 0 10px #fff, 0 0 22px rgba(68,215,255,.65);
+  pointer-events: none;
+}
+
+.centerMarker::before,
+.centerMarker::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  width: 0;
+  height: 0;
+  transform: translateX(-50%);
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+}
+
+.centerMarker::before {
+  top: 0;
+  border-top: 10px solid #fff;
+}
+
+.centerMarker::after {
+  bottom: 0;
+  border-bottom: 10px solid #fff;
+}
+
+.fadeLeft,
+.fadeRight {
+  position: absolute;
+  z-index: 10;
+  top: 0;
+  bottom: 0;
+  width: 16%;
+  pointer-events: none;
+}
+
+.fadeLeft {
+  left: 0;
+  background: linear-gradient(90deg, rgba(4,8,17,.98), transparent);
+}
+
+.fadeRight {
+  right: 0;
+  background: linear-gradient(-90deg, rgba(4,8,17,.98), transparent);
+}
+
+.locked .centerMarker {
+  animation: winnerPulse .55s ease-in-out 2;
+}
+
+.rollStatus {
+  min-height: 1.3rem;
+  margin: .75rem 0 0;
+  color: #92a2bf;
+  text-align: center;
+  font-size: .72rem;
+  font-weight: 600;
+  letter-spacing: .11em;
+  text-transform: uppercase;
+}
+
+.loadingState {
+  min-height: 15rem;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: .55rem;
+  color: #edf4ff;
+  text-align: center;
+}
+
+.loadingState span {
+  color: #8fa0c4;
+  font-size: .82rem;
+}
+
+.loader {
+  width: 2rem;
+  height: 2rem;
+  margin-bottom: .4rem;
+  border: 2px solid rgba(255,255,255,.1);
+  border-top-color: #44d7ff;
+  border-radius: 50%;
+  animation: spin .7s linear infinite;
+}
+
+.revealPanel {
+  --r-edge: #fff;
+  width: min(29rem, 100%);
+  margin: 1rem auto 0;
+  padding: 1.15rem;
+  text-align: center;
+  border: 1px solid color-mix(in srgb, var(--r-edge) 38%, rgba(255,255,255,.08));
+  border-radius: 18px;
+  background:
+          radial-gradient(circle at 50% 30%, color-mix(in srgb, var(--r-edge) 13%, transparent), transparent 52%),
+          rgba(255,255,255,.035);
+  box-shadow: 0 0 34px color-mix(in srgb, var(--r-edge) 10%, transparent);
+}
+
+.revealEyebrow {
+  color: #8fa0c4;
+  font-size: .65rem;
+  font-weight: 600;
+  letter-spacing: .16em;
+}
+
+.revealArt {
+  margin: .35rem auto;
+  color: var(--r-edge);
+  font-size: 3rem;
+  font-weight: 600;
+  text-shadow: 0 0 24px color-mix(in srgb, var(--r-edge) 55%, transparent);
+}
+
+.revealRarity {
+  color: var(--r-edge);
+  font-size: .72rem;
+  font-weight: 600;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.revealName {
+  margin: .3rem 0 0;
+  color: #fff;
+  font-size: 1.55rem;
+  font-weight: 600;
+  letter-spacing: -.03em;
+}
+
+.inventoryNote {
+  margin: .45rem 0 0;
+  color: #91a1bd;
+  font-size: .78rem;
+}
+
+.extraordinary .revealName,
+.mystery .revealName {
+  font-family: var(--font-body);
+}
+
+.closeButton {
+  display: block;
+  min-width: 9rem;
+  min-height: 2.75rem;
+  margin: 1rem auto 0;
+  padding: .65rem 1.2rem;
+  color: #071019;
+  background: linear-gradient(135deg, #9af0ff, #44d7ff 55%, #a392ff 135%);
+  border: 1px solid rgba(255,255,255,.4);
+  border-radius: 13px;
+  font: 600 .82rem/1 var(--font-body);
+  cursor: pointer;
+}
+
+.closeButton:disabled {
+  opacity: .36;
+  cursor: default;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+@keyframes winnerPulse {
+  50% {
+    box-shadow: 0 0 16px white, 0 0 42px #44d7ff;
+  }
+}
+
+@media (max-width: 650px) {
+  .overlay { padding: .5rem; }
+  .shell { padding: .85rem; border-radius: 20px; }
+  .topline { align-items: flex-start; flex-direction: column; }
+  .secureTag { display: none; }
+  .reelViewport { height: 12.4rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loader, .locked .centerMarker { animation: none; }
+}
+
+.overlay { background: rgba(5,9,17,.75); overflow-y: auto; }
+.shell { background: linear-gradient(145deg, rgba(255,255,255,.035), transparent 55%), rgba(24,32,50,.92); border-radius: 28px; box-shadow: 0 25px 80px rgba(0,0,0,.35); max-height: calc(100dvh - 2rem); overflow-y: auto; }
+.kicker, .secureTag { font-weight: 500; letter-spacing: .08em; }
+.crateTitle { font-size: clamp(1.35rem,3vw,2rem); font-weight: 600; }
+.reelCard { border-bottom-width: 2px; background: rgba(27,36,56,.9); }
+.itemArt { text-shadow: none; }
+.cardRarity, .revealRarity { font-weight: 500; text-transform: none; letter-spacing: .02em; }
+.revealName { font-weight: 600; }
+.revealArt { display: flex; justify-content: center; text-shadow: none; }
+.revealPanel { box-shadow: none; }
+.closeButton { margin: 1.25rem auto 0; display: flex; min-width: 9rem; font: 600 .875rem/1.25 var(--font-body); background: linear-gradient(180deg, #a5ddff, #78c5f6); }

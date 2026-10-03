@@ -1,0 +1,52 @@
+HELP.md
+target/
+.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+.env
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+
+# Secrets and machine-local configuration (at every directory depth)
+.env
+.env.*
+!.env.example
+application-local.properties
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Dependencies, build output, and embedded history
+node_modules/
+dist/
+repo-mirror.git/
+*.bundle
+*.log
+.claude/

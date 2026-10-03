@@ -1,0 +1,5 @@
+.page { composes: page from "../styles/Glass.module.css"; display: grid; place-items: center; min-height: 50vh; }
+.panel { composes: surface from "../styles/Glass.module.css"; padding: clamp(2rem, 5vw, 4rem); text-align: center; }
+.title { composes: title from "../styles/Glass.module.css"; }
+.sub { composes: sub from "../styles/Glass.module.css"; margin-bottom: 2rem; }
+.badge { display: inline-block; margin-bottom: 1.5rem; padding: .4rem .85rem; border: var(--border); border-radius: 999px; color: var(--text-dim); font-size: .75rem; }

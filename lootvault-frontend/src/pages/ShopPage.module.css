@@ -1,0 +1,203 @@
+.page { composes: page from "../styles/Glass.module.css";
+
+  --shop-surface: rgba(18, 26, 48, .78);
+  --shop-line: rgba(255,255,255,.11);
+  --shop-muted: #aebbd6;
+
+  position: relative;
+  isolation: isolate;
+ }
+
+.page::before {
+  display: none;
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: -9rem;
+  left: 50%;
+  width: 36rem;
+  height: 20rem;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: rgba(68, 215, 255, .12);
+  filter: blur(85px);
+  pointer-events: none;
+}
+
+.head {
+  text-align: left;
+  max-width: 52rem;
+  margin: 0 0 clamp(2rem, 5vw, 3.5rem);
+}
+
+.title { composes: title from "../styles/Glass.module.css";
+
+ }
+
+.sub { composes: sub from "../styles/Glass.module.css";
+
+ }
+
+.errorText { composes: error from "../styles/Glass.module.css";
+
+  margin: 0 0 1.5rem;
+ }
+
+.grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: clamp(1rem, 2vw, 1.35rem);
+}
+
+.card { composes: surface from "../styles/Glass.module.css";
+
+  --glow: var(--r-edge);
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: .7rem;
+  min-height: 22rem;
+  padding: 1.35rem;
+  overflow: hidden;
+  text-align: left;
+  transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+ }
+
+.card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background: linear-gradient(125deg, rgba(255,255,255,.08), transparent 28%);
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  border-color: color-mix(in srgb, var(--glow) 72%, white);
+  box-shadow: 0 24px 60px rgba(0,0,0,.25);
+}
+
+.common        { --r1: #192135; --r2: #12192b; --r-edge: var(--rarity-common); }
+.basic         { --r1: #192135; --r2: #12192b; --r-edge: var(--rarity-basic); }
+.excellent     { --r1: #192135; --r2: #12192b; --r-edge: var(--rarity-excellent); }
+.exotic        { --r1: #192135; --r2: #12192b; --r-edge: var(--rarity-exotic); }
+.extraordinary { --r1: #192135; --r2: #12192b; --r-edge: var(--rarity-extraordinary); }
+
+.rarityTag {
+  position: relative;
+  z-index: 1;
+  padding: .35rem .65rem;
+  color: color-mix(in srgb, var(--r-edge) 82%, white);
+  background: color-mix(in srgb, var(--r-edge) 12%, rgba(10,13,24,.72));
+  border: 1px solid color-mix(in srgb, var(--r-edge) 32%, transparent);
+  border-radius: 999px;
+  font-size: .68rem;
+  font-weight: 650;
+  text-transform: uppercase;
+  letter-spacing: .09em;
+}
+
+.art {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  min-height: 8rem;
+  margin: .2rem 0 .4rem;
+  font-size: 4.5rem;
+  font-weight: 650;
+  line-height: 1;
+  color: var(--r-edge);
+  text-shadow: 0 0 30px color-mix(in srgb, var(--r-edge) 40%, transparent);
+}
+
+.itemName {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  font-family: var(--font-body);
+  font-weight: 650;
+  font-size: 1.2rem;
+  line-height: 1.15;
+  letter-spacing: -.025em;
+}
+
+.price {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: .45rem;
+  margin: auto 0 .25rem;
+  font-family: var(--font-body);
+  font-weight: 650;
+  font-size: 1.35rem;
+  letter-spacing: -.02em;
+}
+
+.coin {
+  width: 1rem;
+  height: 1rem;
+  background: linear-gradient(145deg, #fff58a, var(--yellow, #fdf100));
+  border: 1px solid rgba(255,255,255,.5);
+  border-radius: 50%;
+  box-shadow: 0 0 14px rgba(253,241,0,.28);
+}
+
+.card > button {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  min-height: 2.65rem;
+  border-radius: 13px;
+  font-family: var(--font-body);
+  font-weight: 650;
+  transition: transform .16s ease, filter .16s ease;
+}
+
+.card > button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  filter: brightness(1.08);
+}
+
+.extraordinary .itemName {
+  font-family: var(--font-body);
+  font-weight: 700;
+}
+
+@media (max-width: 600px) {
+
+.page {  padding-inline: .75rem;  }
+  .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .75rem; }
+
+.card {  min-height: 18rem; padding: 1rem;  }
+  .art { min-height: 6rem; font-size: 3.5rem; }
+  .itemName { font-size: 1rem; }
+}
+
+@media (max-width: 390px) {
+  .grid { grid-template-columns: 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card, .card > button { transition: none; }
+  .card:hover, .card > button:hover:not(:disabled) { transform: none; }
+}
+
+.head { margin-bottom: 2.5rem; }
+.grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+.card { padding: 1.5rem; border-top: 2px solid color-mix(in srgb, var(--r-edge) 50%, transparent); }
+.card::after { display: none; }
+.card:hover { transform: translateY(-2px); }
+.art { display: grid; place-items: center; color: var(--r-edge); border-radius: 20px; box-shadow: none; background: color-mix(in srgb, var(--r-edge) 6%, transparent); }
+.rarityTag { color: var(--r-edge); text-transform: none; letter-spacing: .02em; font-weight: 500; }
+.itemName { font-size: 1.1rem; font-weight: 600; }
+.card > button { min-height: 44px; font-weight: 600; }
+.price { font-weight: 600; }

@@ -1,0 +1,21 @@
+.page { composes: page from "../styles/Glass.module.css"; display: grid; grid-template-columns: minmax(0, 1fr) minmax(230px, 300px); gap: 1.5rem; align-items: start; }
+.board { composes: surface from "../styles/Glass.module.css"; padding: clamp(1.5rem, 4vw, 2.5rem); }
+.head { display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap; }
+.headCenter { flex: 1; }
+.title { composes: title from "../styles/Glass.module.css"; }
+.sub { composes: sub from "../styles/Glass.module.css"; }
+.streak { display: grid; place-items: center; min-width: 5rem; padding: .8rem 1rem; border: var(--border); border-radius: 16px; background: rgba(255,255,255,.035); }
+.streakLabel { color: var(--text-dim); font-size: .75rem; }
+.streakNum { font-size: 2rem; font-weight: 600; line-height: 1.2; letter-spacing: -.04em; }
+.openArea { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 330px; padding: 2rem 0; gap: 2rem; }
+.crateArt { display: grid; place-items: center; width: 130px; height: 130px; border-radius: 32px; color: #b8e3ff; background: linear-gradient(150deg, rgba(114,201,255,.16), rgba(161,139,224,.06)); border: 1px solid rgba(114,201,255,.15); box-shadow: 0 20px 55px rgba(0,0,0,.15), inset 0 1px 0 rgba(255,255,255,.06); }
+.crateEmpty { filter: grayscale(1); opacity: .5; }
+.detail { composes: surface from "../styles/Glass.module.css"; padding: 1.5rem; min-height: 180px; }
+.detailKind { margin: 0; color: var(--text-dim); font-size: .75rem; }
+.detailName { margin: .8rem 0; font-size: 1.6rem; font-weight: 600; line-height: 1.3; }
+.detailText { margin: 0; font-size: .875rem; color: var(--text-dim); }
+.errorText { composes: error from "../styles/Glass.module.css"; margin: 1rem 0; }
+.common { color: var(--rarity-common); } .basic { color: var(--rarity-basic); }
+.excellent { color: var(--rarity-excellent); } .exotic { color: var(--rarity-exotic); } .extraordinary { color: var(--rarity-extraordinary); }
+@media (max-width: 850px) { .page { grid-template-columns: 1fr; } }
+.dailyCoins { grid-column: 1 / -1; }

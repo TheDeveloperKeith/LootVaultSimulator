@@ -1,0 +1,12 @@
+.crate { composes: surface from "../styles/Glass.module.css"; display: flex; align-items: center; gap: 1.25rem; padding: 1.5rem; position: relative; overflow: hidden; }
+.icon { width: 64px; height: 64px; border-radius: 18px; display: grid; place-items: center; background: rgba(233,214,152,.07); color: var(--yellow); flex-shrink: 0; }
+.copy { flex: 1; min-width: 0; }
+.copy h2 { font-size: 1.1rem; margin: .3rem 0; }
+.copy p { color: var(--text-dim); font-size: .8125rem; margin: .3rem 0; }
+.copy small { color: var(--text-dim); font-size: .75rem; }
+.eyebrow { color: var(--yellow); font-size: .6rem; letter-spacing: .12em; }
+.copy .success { color: #a7e4c4; }
+.copy .error { color: #ffb1bf; }
+.opened { animation: coinGlow 1s ease; }
+@keyframes coinGlow { 35% { border-color: var(--yellow); box-shadow: 0 0 32px rgba(233,214,152,.18); } }
+@media (max-width: 650px) { .crate { flex-wrap: wrap; padding: 1.25rem; gap: 1rem; } .copy { flex-basis: calc(100% - 80px); } .crate > button { width: 100%; } }

@@ -1,0 +1,289 @@
+.page { composes: page from "../styles/Glass.module.css";
+ display: flex; flex-direction: column; gap: 2rem;  }
+
+.head { text-align: center; }
+
+.title { composes: title from "../styles/Glass.module.css";
+  }
+
+.sub { composes: sub from "../styles/Glass.module.css";
+  }
+
+.errorText { composes: error from "../styles/Glass.module.css";
+
+  margin: 0;
+ }
+
+.sectionTitle {
+  margin: 0 0 1rem;
+  font-family: var(--font-body);
+  font-size: 1.3rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.empty { composes: empty from "../styles/Glass.module.css";
+  }
+
+.buyGrid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  gap: 1rem;
+}
+
+.buyCard { composes: surface from "../styles/Glass.module.css";
+
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 1rem;
+ }
+
+.crateName { margin: 0; font-family: var(--font-body); font-size: 1.15rem; }
+
+.price {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 1.2rem;
+}
+.coin {
+  width: 1rem; height: 1rem;
+  background: var(--yellow, #fdf100);
+  border: 2px solid var(--yellow-dark, #c9bd00);
+  border-radius: 50%;
+}
+
+.oddsList { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.15rem; }
+.oddsRow {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.78rem;
+  color: var(--text-dim, #8fa0c4);
+}
+
+.ownedGrid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  gap: 0.75rem;
+}
+
+.ownedCard { composes: surface from "../styles/Glass.module.css";
+
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 0.9rem;
+ }
+
+.ownedName { font-weight: 700; }
+.ownedActions { display: flex; gap: 0.5rem; }
+
+.page {  gap: 3rem;  }
+.head { max-width: 46rem; margin: 0 auto; }
+
+.sub {  max-width: 36rem;  }
+.page section { display:flex; flex-direction:column; gap:1.25rem; }
+.page section + section { padding-top:2.5rem; border-top:1px solid var(--edge-light,#2f3b5c); }
+.sectionTitle { margin:0; font-size:clamp(1.35rem,3vw,1.7rem); }
+.buyGrid { grid-template-columns:repeat(auto-fit,minmax(15rem,1fr)); gap:1.25rem; }
+
+.buyCard {  min-height:20rem; padding:1.4rem; gap:.85rem; transition:transform .16s ease,border-color .16s ease;  }
+.buyCard:hover { transform:translateY(-3px); border-color:var(--blue,#00b2ff); }
+.crateName { font-size:1.35rem; }
+.price { font-size:1.45rem; }
+.oddsList { margin:.15rem 0 auto; padding:.8rem 0; gap:.35rem; border-top:1px solid rgba(255,255,255,.08); border-bottom:1px solid rgba(255,255,255,.08); }
+.ownedGrid { grid-template-columns:repeat(auto-fit,minmax(14rem,1fr)); gap:1rem; }
+
+.ownedCard {  gap:1rem; padding:1.15rem;  }
+.ownedName { font-family: var(--font-body); font-size:1.05rem; }
+.ownedActions { flex-wrap:wrap; margin-top:auto; }
+
+.empty {  margin:0;  }
+@media (max-width:600px) {
+
+.page {  gap:2.25rem;  }
+  .buyGrid,.ownedGrid { grid-template-columns:1fr; }
+.buyCard {  min-height:0;  }
+}
+@media (prefers-reduced-motion:reduce) { .buyCard { transition:none; } .buyCard:hover { transform:none; } }
+
+.head {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.25rem;
+  width: 100%;
+}
+
+.devToggle {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  min-height: 2.55rem;
+  padding: .55rem .8rem;
+  color: #91a1bd;
+  background: rgba(255,255,255,.035);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 12px;
+  font: 850 .7rem/1 Inter, ui-sans-serif, sans-serif;
+  letter-spacing: .08em;
+  cursor: pointer;
+  transition: color .15s ease, background .15s ease, border-color .15s ease;
+}
+
+.devToggle:hover,
+.devToggleActive {
+  color: #dff8ff;
+  background: rgba(68,215,255,.08);
+  border-color: rgba(68,215,255,.25);
+}
+
+.devPanel { composes: surface from "../styles/Glass.module.css";
+
+  gap: 1rem !important;
+  padding: 1.25rem;
+ }
+
+.devPanelHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.devPanelHead h2 {
+  margin: .2rem 0 0;
+  color: #eef6ff;
+  font: 900 1.15rem/1.15 Inter, sans-serif;
+  letter-spacing: -.025em;
+}
+
+.devEyebrow,
+.devSafe {
+  color: #7f91af;
+  font-size: .62rem;
+  font-weight: 650;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.devSafe {
+  padding: .35rem .55rem;
+  color: #b9ffcf;
+  background: rgba(72,255,130,.06);
+  border: 1px solid rgba(72,255,130,.16);
+  border-radius: 999px;
+}
+
+.devGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .85rem 1rem;
+}
+
+.devField {
+  display: flex;
+  flex-direction: column;
+  gap: .45rem;
+}
+
+.devField > span,
+.checkRow span {
+  color: #a9b6cd;
+  font-size: .72rem;
+  font-weight: 650;
+}
+
+.devField select {
+  min-height: 2.55rem;
+  padding: .55rem .7rem;
+  color: #edf5ff;
+  background: rgba(5,9,18,.8);
+  border: 1px solid rgba(255,255,255,.09);
+  border-radius: 10px;
+  font: 750 .8rem/1 Inter, sans-serif;
+}
+
+.speedButtons {
+  display: flex;
+  gap: .35rem;
+}
+
+.speedButton,
+.speedActive {
+  min-width: 3.1rem;
+  min-height: 2.55rem;
+  color: #91a1bd;
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 10px;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.speedActive {
+  color: #071019;
+  background: linear-gradient(135deg, #9af0ff, #44d7ff);
+  border-color: rgba(255,255,255,.32);
+}
+
+.checkRow {
+  display: flex;
+  align-items: center;
+  gap: .55rem;
+  min-height: 2.5rem;
+}
+
+.checkRow input {
+  width: 1rem;
+  height: 1rem;
+  accent-color: #44d7ff;
+}
+
+.devNote {
+  margin: 0;
+  color: #70809e;
+  font-size: .7rem;
+  line-height: 1.45;
+}
+
+@media (max-width: 700px) {
+  .head {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .devGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .devPanelHead {
+    flex-direction: column;
+  }
+}
+
+.head { text-align: left; align-items: center; flex-wrap: wrap; }
+.sectionTitle { text-transform: none; letter-spacing: -.025em; font-size: 1.15rem; font-weight: 600; }
+.buyCard, .ownedCard { border-radius: 22px; }
+.buyCard:hover { border-color: rgba(114,201,255,.28); transform: translateY(-2px); }
+.crateName { font-size: 1.1rem; font-weight: 600; }
+.price { font-size: 1.5rem; font-weight: 600; letter-spacing: -.04em; }
+.coin { width: .65rem; height: .65rem; border: 0; background: var(--yellow); }
+.oddsRow { font-size: .8rem; }
+.ownedName { font-weight: 600; }
+.devToggle { font: 500 .8125rem/1.2 var(--font-body); min-height: 44px; text-transform: none; letter-spacing: normal; }
+.devNote { color: var(--text-dim); font-size: .8rem; }
+.devField select, .speedButton, .speedActive { min-height: 44px; font-weight: 500; }
+.speedActive { color: #b8e3ff; background: rgba(114,201,255,.12); border-color: rgba(114,201,255,.3); }

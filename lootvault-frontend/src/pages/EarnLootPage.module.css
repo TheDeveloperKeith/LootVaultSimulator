@@ -1,0 +1,119 @@
+.page { composes: page from "../styles/Glass.module.css"; display: grid; gap: 1.75rem; }
+.title { composes: title from "../styles/Glass.module.css"; margin-top: .6rem; }
+.sub { composes: sub from "../styles/Glass.module.css"; }
+.header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+.header > a { font-size: .8125rem; text-decoration: none; }
+.eyebrow { color: #aebed7; font-size: .625rem; font-weight: 500; letter-spacing: .12em; }
+.stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 1rem; }
+.stats > div { padding: .25rem 1.25rem; border-left: 1px solid var(--line); }
+.stats > div:first-child { padding-left: 0; border: 0; }
+.stats span { display: block; color: var(--text-dim); font-size: .75rem; }
+.stats strong { display: block; font-size: 1.5rem; font-weight: 600; letter-spacing: -.04em; font-variant-numeric: tabular-nums; }
+.tabs { display: flex; gap: .5rem; padding: .4rem; border: var(--border); border-radius: 20px; background: rgba(255,255,255,.025); }
+.tabs > button { display: flex; align-items: center; gap: .9rem; flex: 1; text-align: left; min-width: 0; padding: 1rem 1.25rem; color: var(--text-dim); background: transparent; border: 1px solid transparent; border-radius: 15px; cursor: pointer; font-size: .9375rem; font-weight: 600; }
+.tabs > button > span:first-child { font-size: 1.6rem; }
+.tabs small { display: block; font-size: .6875rem; font-weight: 400; margin-top: .25rem; }
+.tabs > button[aria-pressed="true"] { background: rgba(114,201,255,.08); border-color: rgba(114,201,255,.16); color: #dcecff; }
+.tabs > button:disabled { cursor: default; opacity: .45; }
+.layout { display: grid; grid-template-columns: minmax(0,1fr) 300px; gap: 1.25rem; align-items: start; }
+.table { composes: surface from "../styles/Glass.module.css"; position: relative; padding: clamp(1.25rem,3vw,2rem); overflow: hidden; min-width: 0; background: radial-gradient(ellipse at 50% 45%, rgba(52,107,112,.12), transparent 70%), var(--glass); transition: border-color .5s ease, box-shadow .5s ease; }
+.tableHeader { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1.75rem; }
+.tableHeader h2 { font-size: 1.4rem; margin: .3rem 0 0; }
+.pot { display: block; color: var(--text-dim); font-size: .6875rem; text-align: right; }
+.pot strong { display: block; color: var(--yellow); font-size: 1.35rem; font-weight: 600; font-variant-numeric: tabular-nums; }
+.pot small { font-size: .6875rem; font-weight: 400; }
+.opponents { display: flex; justify-content: center; gap: clamp(1rem,5vw,4rem); }
+.seat { display: grid; justify-items: center; gap: .5rem; transition: opacity .3s ease; }
+.seat small { color: var(--text-dim); font-size: .6875rem; }
+.avatar { display: grid; place-items: center; width: 34px; height: 34px; background: rgba(165,153,232,.1); border: 1px solid rgba(165,153,232,.16); border-radius: 50%; color: #c4c0e8; font-size: .75rem; }
+.seatName { color: #d3e0f1; font-size: .8125rem; }
+.folded { opacity: .4; }
+.cards { display: flex; gap: clamp(5px,1vw,10px); justify-content: center; }
+.community { margin: 2rem 0; text-align: center; padding: 1.25rem .3rem; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.community > span { display: block; font-size: .625rem; color: var(--text-dim); margin-bottom: .75rem; }
+.player { display: grid; justify-items: center; gap: 1rem; margin: 2rem 0 1.25rem; }
+.handBadge { margin-left: .5rem; display: inline-block; color: #aedeca; font-size: .75rem; border: 1px solid rgba(128,213,172,.17); padding: .25rem .6rem; border-radius: 999px; background: rgba(128,213,172,.05); }
+.message { margin: 1.25rem 0; text-align: center; color: #d3def0; font-size: .875rem; min-height: 1.6rem; }
+.pressure { margin: 1rem auto 0; max-width: 350px; text-align: center; }
+.pressure > span { color: var(--text-dim); font-size: .6875rem; }
+.pressure > div { margin: .6rem 0; height: 4px; background: rgba(255,255,255,.06); border-radius: 999px; overflow: hidden; }
+.pressure i { display: block; width: calc(var(--pressure) * 100%); height: 100%; background: linear-gradient(90deg,#72c9ff,#e9c59e); transition: width .5s ease; }
+.pressure small { color: var(--text-dim); font-size: .625rem; }
+.closeGame { border-color: rgba(233,198,150,.4); box-shadow: 0 0 32px rgba(233,198,150,.08); }
+.closeGame .handBadge { color: #ead6b3; border-color: rgba(233,198,150,.25); }
+.win { border-color: rgba(128,213,172,.4); animation: victory 1.2s ease; }
+.loss { border-color: rgba(255,138,155,.25); }
+.controls { composes: surface from "../styles/Glass.module.css"; padding: 1.5rem; min-width: 0; }
+.controls h2 { margin: 0; font-size: 1.1rem; }
+.controls p { color: var(--text-dim); font-size: .8125rem; margin: .75rem 0 1.25rem; }
+.controls > button { width: 100%; }
+.stake { display: grid; gap: .25rem; margin: 1.5rem 0; }
+.stake strong { font-size: 2.2rem; letter-spacing: -.06em; font-weight: 600; font-variant-numeric: tabular-nums; }
+.stake span { color: var(--text-dim); font-size: .75rem; }
+.range { display: grid; gap: .5rem; color: var(--text-dim); font-size: .75rem; }
+.range input { padding: 0; accent-color: var(--cyan); width: 100%; cursor: pointer; }
+.presets { display: flex; gap: .4rem; margin: .75rem 0 1.5rem; }
+.presets button { flex: 1; min-height: 40px; border-radius: 10px; border: var(--border); background: rgba(255,255,255,.03); color: var(--text-dim); font-size: .75rem; cursor: pointer; }
+.presets button[aria-pressed="true"] { color: #c7e6ff; border-color: rgba(114,201,255,.3); background: rgba(114,201,255,.08); }
+.note { display: block; color: var(--text-dim); font-size: .7rem; line-height: 1.7; margin-top: 1rem; }
+.actionStack { display: grid; gap: .75rem; }
+.field { display: grid; gap: .5rem; color: var(--text-dim); font-size: .75rem; margin-top: .5rem; }
+.field input { width: 100%; }
+.rules { border-top: 1px solid var(--line); padding-top: 1rem; margin-top: 1.5rem; color: var(--text-dim); font-size: .75rem; }
+.rules summary { cursor: pointer; min-height: 32px; }
+.rules p { font-size: .75rem; margin-bottom: 0; }
+.emptyTable { min-height: 330px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+.emptyTable h3 { margin: 1.75rem 0 .5rem; font-size: 1.25rem; }
+.emptyTable p { color: var(--text-dim); font-size: .875rem; margin: 0 0 1rem; }
+.emptyTable > span { color: var(--text-dim); font-size: .6875rem; }
+.fannedCards { display: flex; }
+.fannedCards > div:first-child { transform: rotate(-12deg) translateY(8px); }
+.fannedCards > div:last-child { transform: rotate(12deg) translateY(8px); }
+.result { display: grid; justify-items: center; gap: .5rem; padding: 1.25rem; margin-top: 1rem; border: var(--border); border-radius: 18px; background: rgba(255,255,255,.03); }
+.result > span { font-size: 1.5rem; color: var(--text-dim); }
+.result > strong { font-size: 1.75rem; font-weight: 600; letter-spacing: -.045em; }
+.win .result > strong, .win .result > span { color: #a6e2c1; }
+.loss .result > strong { color: #ffabbc; }
+.result small { color: var(--text-dim); font-size: .6875rem; }
+.result a { font-size: .75rem; margin-top: .25rem; }
+.sparkles { pointer-events: none; position: absolute; inset: 0; overflow: hidden; }
+.sparkles i { position: absolute; width: 5px; height: 5px; border-radius: 50%; background: #bce9cc; left: calc(var(--i) * 8% + 4%); top: 70%; animation: sparkle 1.5s ease both; animation-delay: calc(var(--i) * 40ms); }
+.error { composes: error from "../styles/Glass.module.css"; }
+.error button { background: transparent; border: 0; color: #cbe6ff; cursor: pointer; text-decoration: underline; }
+.loop { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: .75rem; padding: .75rem 0; color: var(--text-dim); font-size: .75rem; }
+.loop i { font-style: normal; opacity: .4; }
+@keyframes victory { 40% { box-shadow: 0 0 50px rgba(128,213,172,.16); } }
+@keyframes sparkle { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(-200px); } }
+@media (max-width: 900px) { .layout { grid-template-columns: 1fr; } .controls { width: 100%; } .actionStack { grid-template-columns: repeat(2,minmax(0,1fr)); } .field { grid-column: 1 / -1; } }
+@media (max-width: 550px) { .stats { grid-template-columns: repeat(2,1fr); } .stats > div { border: 0; padding: .5rem 0; } .stats strong { font-size: 1.3rem; } .tabs > button { padding: .85rem; gap: .5rem; font-size: .8125rem; } .tabs small { font-size: .625rem; } .tabs > button > span:first-child { display: none; } .table { padding: 1.25rem .8rem; } .tableHeader h2 { font-size: 1.1rem; } .pot strong { font-size: 1.1rem; } .tableHeader { gap: .5rem; } .opponents { gap: 1.5rem; } .community { padding-inline: 0; } .result { padding-inline: .5rem; } .actionStack { grid-template-columns: 1fr; } }
+@media (prefers-reduced-motion: reduce) { .win, .sparkles i { animation: none; } .sparkles { display: none; } }
+
+/* A quieter glass table with inset controls and a compact segmented switch. */
+.stats { gap: 0; border: 1px solid rgba(255,255,255,.075); border-radius: 24px; background: linear-gradient(145deg,rgba(255,255,255,.045),rgba(255,255,255,.015)); padding: 1.25rem .5rem; box-shadow: inset 0 1px rgba(255,255,255,.04); }
+.stats > div, .stats > div:first-child { padding: .2rem 1.25rem; }
+.stats span { font-size: .6875rem; margin-bottom: .35rem; }
+.stats strong { font-size: 1.65rem; font-weight: 500; }
+.tabs { max-width: 650px; width: 100%; margin: 0 auto; border-radius: 18px; padding: .3rem; background: rgba(7,12,23,.3); }
+.tabs > button { padding: .8rem 1rem; border-radius: 14px; transition: background .25s ease,box-shadow .25s ease; }
+.tabs > button[aria-pressed="true"] { background: linear-gradient(145deg,rgba(255,255,255,.12),rgba(255,255,255,.04)); border-color: rgba(255,255,255,.1); box-shadow: inset 0 1px rgba(255,255,255,.09),0 4px 12px rgba(0,0,0,.12); color: #eff4fc; }
+.table, .controls { border-radius: 28px; border-color: rgba(255,255,255,.095); box-shadow: inset 0 1px rgba(255,255,255,.045),0 20px 60px rgba(0,0,0,.12); }
+.table { background: radial-gradient(ellipse at 50% 40%,rgba(108,150,187,.09),transparent 65%),linear-gradient(150deg,rgba(255,255,255,.035),rgba(255,255,255,.01)),var(--glass); }
+.controls { background: linear-gradient(145deg,rgba(255,255,255,.06),rgba(255,255,255,.02)),var(--glass); }
+.tableHeader h2 { font-weight: 500; letter-spacing: -.035em; }
+.pot { padding: .6rem .9rem; background: rgba(255,255,255,.035); border: 1px solid rgba(255,255,255,.05); border-radius: 16px; }
+.pot strong { color: #e3eafa; font-weight: 500; }
+.stake { padding: 1.2rem; border-radius: 18px; background: rgba(5,10,20,.2); border: 1px solid rgba(255,255,255,.05); }
+.stake strong { font-weight: 500; }
+.presets { padding: .25rem; border-radius: 13px; background: rgba(5,10,20,.25); gap: .2rem; }
+.presets button { border-color: transparent; background: transparent; min-height: 36px; }
+.presets button[aria-pressed="true"] { background: rgba(255,255,255,.09); border-color: rgba(255,255,255,.075); color: #edf5ff; }
+.closeGame { border-color: rgba(233,198,150,.32); box-shadow: inset 0 1px rgba(255,255,255,.05),0 0 40px rgba(233,198,150,.075); }
+.win { border-color: rgba(128,213,172,.35); }
+.loss { border-color: rgba(255,138,155,.22); }
+@media(max-width:550px) { .stats { padding: .75rem; gap: .75rem; } .stats > div,.stats > div:first-child { padding: .5rem; } .stats strong { font-size: 1.4rem; } .tabs > button { padding: .75rem .65rem; } .table,.controls { border-radius: 22px; } .pot { padding: .5rem .6rem; } }
+.atmosphere { display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1rem 1.2rem;margin:1rem 0;border:1px solid rgba(180,199,255,.18);border-radius:20px;background:linear-gradient(120deg,rgba(111,105,210,.12),rgba(255,255,255,.03)); }
+.atmosphere small { display:block;font-size:.7rem;opacity:.55;margin-top:.25rem; }
+.atmosphere button { border:1px solid rgba(255,255,255,.12);border-radius:12px;background:rgba(255,255,255,.06);color:inherit;padding:.6rem .8rem;cursor:pointer; }
+.intense { border-color:rgba(236,180,116,.45);box-shadow:0 0 45px rgba(212,109,60,.12);animation:riverGlow 2s ease-in-out infinite alternate; }
+@keyframes riverGlow { to { box-shadow:0 0 65px rgba(212,109,60,.22); } }
+@media(prefers-reduced-motion:reduce) { .intense { animation:none; } }

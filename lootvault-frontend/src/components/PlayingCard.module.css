@@ -1,0 +1,10 @@
+.card { position: relative; width: clamp(48px, 8vw, 78px); aspect-ratio: .7; flex-shrink: 0; background: linear-gradient(150deg, #fff, #e5ecf6); color: #20304b; border: 1px solid #fff; border-radius: 12px; box-shadow: 0 6px 16px rgba(0,0,0,.18); display: grid; place-items: center; animation: deal .35s ease both; animation-delay: var(--deal-delay); }
+.red { color: #c74b66; }
+.corner { position: absolute; left: 8px; top: 5px; font-size: clamp(.75rem, 2vw, 1rem); font-weight: 650; line-height: 1.2; }
+.corner small { display: block; font-size: .65rem; }
+.suit { font-size: clamp(1.1rem, 4vw, 2rem); }
+.bottom { position: absolute; bottom: 5px; right: 8px; font-weight: 600; transform: rotate(180deg); font-size: .75rem; }
+.back { color: #b9d8f6; background: repeating-linear-gradient(45deg, transparent, transparent 7px, rgba(255,255,255,.025) 7px, rgba(255,255,255,.025) 8px), linear-gradient(135deg, #355477, #232c48); border: 1px solid rgba(160,198,234,.3); }
+.monogram { width: 60%; aspect-ratio: 1; border: 1px solid rgba(187,215,243,.3); border-radius: 50%; display: grid; place-items: center; font-weight: 500; font-size: .75rem; letter-spacing: .05em; }
+@keyframes deal { from { opacity: 0; transform: translateY(12px) rotate(-4deg); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .card { animation: none; } }
