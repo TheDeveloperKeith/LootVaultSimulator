@@ -8,8 +8,8 @@ import { fireConfetti } from "../sandbox/effects";
 import { RARITY_LABEL, RARITY_ORDER, BURST_RARITIES } from "../rarities";
 import { useWallet } from "../wallet/WalletContext";
 import styles from "./CrateModePage.module.css";
-import { getPity } from "../api/progression";
-import PityMeter from "../components/PityMeter";
+import CrateIcon from "../components/CrateIcon";
+
 import { WEAPON_DESIGNS } from "../items/designs";
 
 function toDisplayPercents(odds) {
@@ -34,14 +34,6 @@ export default function CrateModePage() {
   const [error, setError] = useState(null);
   const [buyingCode, setBuyingCode] = useState(null);
   const [sellingId, setSellingId] = useState(null);
-  const [pity, setPity] = useState(null);
-  const [pityError, setPityError] = useState(null);
-
-  async function refreshPity() {
-    try { setPity(await getPity()); setPityError(null); }
-    catch { setPityError("Pity progress is unavailable."); }
-  }
-
   const [openingId, setOpeningId] = useState(null);
   const [openingCrateName, setOpeningCrateName] = useState("Vault Crate");
   const [openResult, setOpenResult] = useState(null);
@@ -58,7 +50,6 @@ export default function CrateModePage() {
   const [overlayIsDev, setOverlayIsDev] = useState(false);
 
   useEffect(() => {
-    getPity().then(setPity).catch(() => setPityError("Pity progress is unavailable."));
     Promise.all([getCrateTypes(), getMyCrates()])
         .then(([types, crates]) => {
           setCrateTypes(types);
@@ -95,7 +86,7 @@ export default function CrateModePage() {
       const item = await openCrate(crate.id);
       setOpenResult(item);
       setMyCrates((prev) => prev.filter((c) => c.id !== crate.id));
-      await Promise.all([refreshPity(), refreshWallet()]);
+      await refreshWallet();
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Couldn't open that crate.");
       setOpeningId(null);
@@ -264,8 +255,8 @@ export default function CrateModePage() {
 
               return (
                   <li key={crate.code} className={styles.buyCard}>
-                    <h3 className={styles.crateName}>{crate.displayName}</h3>
-                    {pityError ? <small>{pityError}</small> : pity ? <PityMeter counter={pity.find(counter => counter.poolCode === crate.code) ?? { current: 0, guaranteeAt: 50 }} /> : <small>Loading pity…</small>}
+                    <div className={styles.crateArt}><CrateIcon code={crate.code} size={100}/></div><h3 className={styles.crateName}>{crate.displayName}</h3>
+                    <small className={styles.floor}>Guaranteed {crate.code === "COMMON" ? "Common" : crate.code === "BASIC" ? "Basic" : "Excellent"} or better · odds total 100%</small>
 
                     <p className={styles.price}>
                       <span className={styles.coin} aria-hidden="true" />
@@ -308,7 +299,7 @@ export default function CrateModePage() {
               <ul className={styles.ownedGrid}>
                 {myCrates.map((crate) => (
                     <li key={crate.id} className={styles.ownedCard}>
-                      <span className={styles.ownedName}>{crate.crateDisplayName}</span>
+                      <div className={styles.ownedIdentity}><CrateIcon code={crate.crateCode} size={68}/><div><span className={styles.ownedName}>{crate.crateCode === "EXTRA_EXTRAORDINARY" ? "Mystery Crate" : crate.crateDisplayName}</span><small>{crate.crateCode === "EXTRA_EXTRAORDINARY" ? "Celestial seal" : crate.crateCode === "EXCELLENT" ? "Prism seal" : crate.crateCode === "BASIC" ? "Guardian seal" : "Vault seal"}</small></div></div>
 
                       <div className={styles.ownedActions}>
                         <Button
@@ -336,5 +327,3 @@ export default function CrateModePage() {
       </div>
   );
 }
-
-

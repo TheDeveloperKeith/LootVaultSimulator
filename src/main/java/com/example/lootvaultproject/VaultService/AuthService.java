@@ -49,7 +49,7 @@ public class AuthService {
 
         // Atomic wallet creation + starting balance, in the same transaction as the account itself.
         Wallet wallet = new Wallet(savedPlayer.getId(), SIGNUP_BONUS_SOFT, 0L);
-        walletRepository.save(wallet);
+        wallet = walletRepository.save(wallet);
         ledgerEntryRepository.save(
                 new LedgerEntry(wallet, CurrencyType.SOFT, SIGNUP_BONUS_SOFT, SIGNUP_BONUS_SOFT, "SIGNUP_BONUS"));
 
@@ -59,5 +59,15 @@ public class AuthService {
     public Player getByUsername(String username) {
         return playerRepository.findByUsername(username)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
+    }
+
+    @Transactional
+    public Player createTestPlayer() {
+        String suffix = java.util.UUID.randomUUID().toString().replace("-", "");
+        Player player = registerPlayer(new RegisterRequest("dev_" + suffix, "dev_" + suffix + "@testing.invalid", java.util.UUID.randomUUID().toString()));
+        Wallet wallet = walletRepository.findByPlayerId(player.getId()).orElseThrow();
+        wallet.setSoftBalance(com.example.lootvaultproject.Config.DevMode.TEST_BALANCE);
+        walletRepository.save(wallet);
+        return player;
     }
 }

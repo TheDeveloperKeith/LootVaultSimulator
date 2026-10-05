@@ -45,6 +45,13 @@ class CardTableSecurityTest {
             throw new org.springframework.security.authentication.BadCredentialsException("Internal diagnostic");
         }
     }
+    static MockHttpSession csrfSession() {
+        var session = new MockHttpSession();
+        var request = new MockHttpServletRequest(); request.setSession(session);
+        new org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository().saveToken(
+            new org.springframework.security.web.csrf.DefaultCsrfToken("X-CSRF-TOKEN", "_csrf", "test-token"), request, new MockHttpServletResponse());
+        return session;
+    }
     @BeforeEach void setup() {
         context=new AnnotationConfigWebApplicationContext();
         context.setServletContext(new MockServletContext()); context.register(TestConfig.class); context.refresh();
@@ -52,11 +59,11 @@ class CardTableSecurityTest {
     }
     @AfterEach void cleanup() { context.close(); SecurityContextHolder.clearContext(); }
     @Test void signedOutRoundStartReturns401WithSessionMessage() throws Exception {
-        var response=mvc.perform(post("/api/earn/rounds")).andReturn().getResponse();
+        var response=mvc.perform(post("/api/earn/rounds").session(csrfSession()).header("X-CSRF-TOKEN","test-token")).andReturn().getResponse();
         assertEquals(401,response.getStatus()); assertTrue(response.getContentAsString().contains("Sign in again"));
     }
     @Test void invalidLoginReportsCredentialsRatherThanExpiredSession() throws Exception {
-        var response=mvc.perform(post("/api/auth/login").header("Origin","http://localhost:5174")).andReturn().getResponse();
+        var response=mvc.perform(post("/api/auth/login").session(csrfSession()).header("X-CSRF-TOKEN","test-token").header("Origin","http://localhost:5174")).andReturn().getResponse();
         assertEquals(401,response.getStatus());
         assertTrue(response.getContentAsString().contains("Incorrect username or password"));
         assertFalse(response.getContentAsString().contains("Internal diagnostic"));
@@ -64,8 +71,8 @@ class CardTableSecurityTest {
     @Test void authenticatedPlayerWithoutSpecialRolesCanStartHand() throws Exception {
         var security=SecurityContextHolder.createEmptyContext();
         security.setAuthentication(UsernamePasswordAuthenticationToken.authenticated("player","unused",List.of()));
-        var session=new MockHttpSession(); session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,security);
-        var response=mvc.perform(post("/api/earn/rounds").session(session)).andReturn().getResponse();
+        var session=csrfSession(); session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,security);
+        var response=mvc.perform(post("/api/earn/rounds").session(session).header("X-CSRF-TOKEN","test-token")).andReturn().getResponse();
         assertEquals(200,response.getStatus()); assertTrue(response.getContentAsString().contains("hand started"));
     }
     @Test void authenticatedViteOriginsCanStartHand() throws Exception {
@@ -73,9 +80,9 @@ class CardTableSecurityTest {
                 "http://localhost:5174", "http://127.0.0.1:5174")) {
             var security=SecurityContextHolder.createEmptyContext();
             security.setAuthentication(UsernamePasswordAuthenticationToken.authenticated("player","unused",List.of()));
-            var session=new MockHttpSession();
+            var session=csrfSession();
             session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,security);
-            var response=mvc.perform(post("/api/earn/rounds").session(session).header("Origin",origin)).andReturn().getResponse();
+            var response=mvc.perform(post("/api/earn/rounds").session(session).header("X-CSRF-TOKEN","test-token").header("Origin",origin)).andReturn().getResponse();
             assertEquals(200,response.getStatus(),origin + ": " + response.getContentAsString());
         }
     }
@@ -86,14 +93,33 @@ class CardTableSecurityTest {
     @Test void unrelatedOriginIsStillRejected() throws Exception {
         var security=SecurityContextHolder.createEmptyContext();
         security.setAuthentication(UsernamePasswordAuthenticationToken.authenticated("player","unused",List.of()));
-        var session=new MockHttpSession();
+        var session=csrfSession();
         session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,security);
-        var response=mvc.perform(post("/api/earn/rounds").session(session).header("Origin","https://unrelated.example")).andReturn().getResponse();
+        var response=mvc.perform(post("/api/earn/rounds").session(session).header("X-CSRF-TOKEN","test-token").header("Origin","https://unrelated.example")).andReturn().getResponse();
         assertEquals(403,response.getStatus());
         assertEquals("Invalid CORS request",response.getContentAsString());
     }
     @Test void directHttpRequestCannotUseInternalErrorPermission() throws Exception {
         assertEquals(401,mvc.perform(get("/error")).andReturn().getResponse().getStatus());
     }
-}
+    @Test void cookieAuthenticatedWriteWithoutCsrfIsRejected() throws Exception {
+        var security=SecurityContextHolder.createEmptyContext();
+        security.setAuthentication(UsernamePasswordAuthenticationToken.authenticated("player","unused",List.of()));
+        var session=csrfSession(); session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,security);
+        var response=mvc.perform(post("/api/earn/rounds").session(session)).andReturn().getResponse();
+        assertEquals(403,response.getStatus()); assertTrue(response.getContentAsString().contains("CSRF_INVALID"));
+    }
+    @Test void regularPlayerCannotTopUpAnyWalletOrReadSomeoneElsesWallet() throws Exception {
+        var security=SecurityContextHolder.createEmptyContext();
+        security.setAuthentication(UsernamePasswordAuthenticationToken.authenticated("player","unused",List.of()));
+        var session=csrfSession(); session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,security);
+        assertEquals(403,mvc.perform(post("/api/wallets/123/credit").session(session).header("X-CSRF-TOKEN","test-token")).andReturn().getResponse().getStatus());
+        assertEquals(403,mvc.perform(get("/api/wallets/123").session(session)).andReturn().getResponse().getStatus());
+    }
+    @Test void frontendNavigationIsPublicButPrivateApiStillNeedsSession() throws Exception {
+        // No frontend controller in this isolated fixture: 404 confirms security allowed routing.
+        assertEquals(404,mvc.perform(get("/login")).andReturn().getResponse().getStatus());
+        assertEquals(401,mvc.perform(get("/api/inventory")).andReturn().getResponse().getStatus());
+    }
 
+}

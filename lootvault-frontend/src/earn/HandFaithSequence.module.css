@@ -1,0 +1,11 @@
+.scene { position:fixed;inset:0;z-index:999;pointer-events:none;overflow:hidden; }
+.card { position:absolute;opacity:.65;filter:drop-shadow(0 12px 22px #0009); }
+.phrase { position:absolute;bottom:-15%;max-width:65vw;transform:translateX(-50%);font-family:"Palatino Linotype","Book Antiqua",Palatino,Georgia,serif;font-size:clamp(1rem,2.6vw,var(--phrase-size,2rem));font-style:normal;font-weight:600;letter-spacing:.12em;line-height:1.15;text-transform:uppercase;text-align:center;color:#bfc6dc;text-shadow:0 0 10px #8393c233;opacity:0;animation:rise 19s linear infinite; }
+@keyframes rise { 0% { opacity:0;transform:translate(-50%,0) scale(.92); } 12%,65% { opacity:.36; } 90%,100% { opacity:0;transform:translate(-50%,-120vh) scale(1.04); } }
+@media(prefers-reduced-motion:reduce) { .phrase { animation:none;display:none; }.card { opacity:.3; } }
+
+.phraseScene { position:fixed;inset:0;z-index:1001;pointer-events:none;overflow:hidden; }
+
+
+.playerGlow { filter:drop-shadow(0 0 12px #ffe5a1) drop-shadow(0 0 35px #ffc35ddd); }
+.riverGlow { filter:drop-shadow(0 0 14px #c896ff) drop-shadow(0 0 38px #8d3cffee); }

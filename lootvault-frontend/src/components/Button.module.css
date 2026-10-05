@@ -12,3 +12,6 @@
 .md { min-height: 44px; padding: .7rem 1.1rem; font-size: .875rem; }
 .lg { min-height: 50px; padding: .85rem 1.5rem; font-size: .9375rem; border-radius: 14px; }
 @media (prefers-reduced-motion: reduce) { .btn { transition: none; } .btn:hover:not(:disabled), .btn:active:not(:disabled) { transform: none; } }
+
+.btn:focus-visible {outline:2px solid #b7dfff;outline-offset:4px}
+.btn {min-height:44px}

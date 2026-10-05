@@ -7,6 +7,8 @@ export const login = (username, password) =>
   api.post("/api/auth/login", { username, password });
 
 export const logout = () => api.post("/api/auth/logout");
+export const devStatus = () => api.get("/api/auth/dev-status");
+export const devLogin = phrase => api.post("/api/auth/dev", { phrase });
 
 // Called on app load to check for an existing session (e.g. after a refresh).
 // Resolves to null instead of throwing on a 401, since "not logged in" is

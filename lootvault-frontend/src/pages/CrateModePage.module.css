@@ -287,3 +287,6 @@
 .devNote { color: var(--text-dim); font-size: .8rem; }
 .devField select, .speedButton, .speedActive { min-height: 44px; font-weight: 500; }
 .speedActive { color: #b8e3ff; background: rgba(114,201,255,.12); border-color: rgba(114,201,255,.3); }
+.crateArt { display:grid;place-items:center;min-height:120px;background:radial-gradient(ellipse,#ffffff09,transparent 70%); }
+.floor { color:var(--text-dim,#b3bfd2);font-size:.75rem;line-height:1.5; }
+.ownedIdentity { display:flex;align-items:center;gap:.65rem; }.ownedIdentity svg { flex-shrink:0; }.ownedIdentity small { display:block;color:var(--text-dim,#b3bfd2);font-size:.72rem;margin-top:.35rem; }

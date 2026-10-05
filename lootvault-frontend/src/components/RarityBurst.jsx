@@ -1,6 +1,7 @@
+import { useReducedMotion } from "../preferences/motion";
 import { createPortal } from "react-dom";
 import { useEffect } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
 import { RARITY_LABEL } from "../rarities";
 import styles from "./RarityBurst.module.css";
 import { playRarityFanfare } from "../sfx";
@@ -65,4 +66,3 @@ export default function RarityBurst({ rarity, itemName, itemType }) {
         </motion.div>, document.body
     );
 }
-

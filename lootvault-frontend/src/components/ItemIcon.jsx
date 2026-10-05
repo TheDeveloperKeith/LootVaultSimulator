@@ -1,6 +1,8 @@
+import RelicIcon from "./RelicIcon";
 import { resolveItemDesign } from "../items/designs";
 export default function ItemIcon({ name = "", type, size = 40 }) {
     const item = resolveItemDesign(name, type);
+    if (["EXCELLENT","EXOTIC","EXTRAORDINARY","EXTRA_EXTRAORDINARY"].includes(item.rarity)) return <RelicIcon item={item} size={size} />;
     return <svg width={size} height={size} viewBox="0 0 64 64" fill="none" stroke={item.color} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
         {item.type === "sword" ? <g transform="rotate(35 32 32)">
             {item.design === "block" ? <><path d="M27 6h10v34H27Z" fill={item.color} fillOpacity=".2"/><path d="M30 10h4v24h-4Z" fill={item.color} fillOpacity=".4"/><path d="M22 38h20v6H22Z" fill={item.color} fillOpacity=".35"/></>

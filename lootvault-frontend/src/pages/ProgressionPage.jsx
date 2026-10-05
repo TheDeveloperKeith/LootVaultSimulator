@@ -1,10 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { claimQuest, getCollection, getPity, getQuests } from "../api/progression";
+import { claimQuest, getCollection, getQuests } from "../api/progression";
 import { RARITY_LABEL, RARITY_CLASS, RARITY_ORDER } from "../rarities";
 import { useWallet } from "../wallet/WalletContext";
 import Button from "../components/Button";
-import PityMeter from "../components/PityMeter";
 import { getEarnState } from "../api/earn";
 import styles from "./ProgressionPage.module.css";
 
@@ -19,7 +18,6 @@ function resetLabel(expiresAt, now) {
 export default function ProgressionPage() {
     const [collection, setCollection] = useState(null);
     const [quests, setQuests] = useState(null);
-    const [pity, setPity] = useState(null);
     const [earn, setEarn] = useState(null);
     const [errors, setErrors] = useState({});
     const [claiming, setClaiming] = useState(null);
@@ -29,11 +27,11 @@ export default function ProgressionPage() {
     const { refresh: refreshWallet } = useWallet();
 
     const load = useCallback(async () => {
-        const results = await Promise.allSettled([getCollection(), getQuests(), getPity(), getEarnState()]);
+        const results = await Promise.allSettled([getCollection(), getQuests(), getEarnState()]);
         const nextErrors = {};
         results.forEach((result, index) => {
-            const key = ["collection", "quests", "pity", "earn"][index];
-            if (result.status === "fulfilled") [setCollection, setQuests, setPity, setEarn][index](result.value);
+            const key = ["collection", "quests", "earn"][index];
+            if (result.status === "fulfilled") [setCollection, setQuests, setEarn][index](result.value);
             else nextErrors[key] = result.reason.message || `Couldn't load ${key}.`;
         });
         setErrors(nextErrors);
@@ -64,21 +62,21 @@ export default function ProgressionPage() {
 
     return <div className={styles.page}>
         <header className={styles.row}><div><span className={styles.eyebrow}>EVERY PULL COUNTS</span><h1>Progression</h1><p className={styles.dim}>Discover the catalog, complete quests, and build toward your next reward.</p></div><Button size="sm" variant="secondary" onClick={load}>Refresh</Button></header>
-        <div className={styles.links}><Link to="/crates">Open crates →</Link><Link to="/inventory">Craft in inventory →</Link></div>
+        <div className={styles.links}><Link to="/crates">Open crates →</Link><Link to="/inventory">View inventory →</Link></div>
         <section className={styles.panel}><div className={styles.row}><div><span className={styles.eyebrow}>EARN YOUR LOOT</span><h2>Your table record</h2></div><Link to="/earn">Take a seat ↗</Link></div>
             {errors.earn ? <p role="alert">{errors.earn}</p> : earn ? <div className={styles.grid}>
                 <div className={styles.tile}><strong>{earn.stats.handsPlayed.toLocaleString()}</strong><small>Hands finished</small></div>
                 <div className={styles.tile}><strong>{earn.stats.wins.toLocaleString()}</strong><small>Hands won</small></div>
                 <div className={styles.tile}><strong>{earn.stats.netCoins > 0 ? "+" : ""}{earn.stats.netCoins.toLocaleString()} coins</strong><small>Net table result · after stakes</small></div>
             </div> : <p>Loading your table record…</p>}
-            <p className={styles.dim}>Claim daily coins, finish hands, and win at Jack No Black or The River to advance your card-table quests.</p>
+            <p className={styles.dim}>Claim daily coins and finish hands to advance your quests. Wins are optional.</p>
         </section>
         <section className={styles.panel}>
             <h2>Permanent collection</h2>
             {errors.collection ? <p role="alert">{errors.collection}</p> : !collection ? <p>Loading collection…</p> : <>
                 <div className={styles.row}><strong className={styles.total}>{collection.collected} / {collection.total} collected</strong><span>{collection.total ? Math.round(collection.collected / collection.total * 100) : 0}%</span></div>
                 <progress className={styles.meter} value={collection.collected} max={collection.total || 1} aria-label="Overall collection" />
-                <p className={styles.dim}>Discoveries stay collected after selling or crafting. Tier bonuses are awarded automatically.</p>
+                <p className={styles.dim}>Discoveries stay collected after selling. Tier bonuses are awarded automatically.</p>
                 <div className={styles.grid}>{[...RARITY_ORDER].reverse().map(rarity => {
                     const tier = collection.byRarity[rarity];
                     if (!tier) return null;
@@ -105,9 +103,6 @@ export default function ProgressionPage() {
                 </article>)}
                 {!quests.some(quest => quest.period === period) && <p className={styles.dim}>No active quests.</p>}
             </div>)}</div>}
-        </section>
-        <section className={styles.panel}><h2>Crate pity</h2><p className={styles.dim}>Each crate pool builds progress toward its own guaranteed drop.</p>
-            {errors.pity ? <p role="alert">{errors.pity}</p> : !pity ? <p>Loading pity…</p> : pity.length === 0 ? <p>Open your first crate to start building pity.</p> : <div className={styles.grid}>{pity.map(counter => <div className={styles.tile} key={counter.poolCode}><h3>{counter.poolCode.replaceAll("_", " ")}</h3><PityMeter counter={counter} /><small className={styles.dim}>{counter.totalPulls} lifetime pulls</small></div>)}</div>}
         </section>
     </div>;
 }

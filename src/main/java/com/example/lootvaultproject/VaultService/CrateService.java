@@ -27,12 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
  * ShopService uses for prices. Only actual ownership (which crates a
  * player has) is real state, tracked in inventory_crates.
  *
- * Odds below are stored exactly as given, as relative weights rather than
- * numbers forced to sum to 100 — rollRarity() sums whatever's in a
- * crate's map and normalizes against that total, so a crate whose numbers
- * add up to 90 (Basic Crate) or 100.00001 (Excellent Crate) still resolves
- * correctly: the ratios between tiers are preserved exactly as specified,
- * the roll just doesn't waste the shortfall as "nothing."
+ * Every odds table totals 100%; Basic and Excellent crates have matching rarity floors.
  */
 @Service
 public class CrateService {
@@ -53,19 +48,19 @@ public class CrateService {
     static {
         CRATE_DEFINITIONS.put("COMMON", new CrateDefinition(
                 "COMMON", "Common Crate", 50L, CurrencyType.SOFT, 25L,
-                odds("COMMON", 90.0, "BASIC", 9.0, "EXCELLENT", 0.9, "EXTRAORDINARY", 0.1)));
+                odds("COMMON", 65.0, "BASIC", 25.0, "EXCELLENT", 8.0, "EXOTIC", 1.5, "EXTRAORDINARY", 0.5)));
 
         CRATE_DEFINITIONS.put("BASIC", new CrateDefinition(
                 "BASIC", "Basic Crate", 150L, CurrencyType.SOFT, 75L,
-                odds("COMMON", 40.0, "BASIC", 40.0, "EXCELLENT", 8.0, "EXTRAORDINARY", 1.9, "EXOTIC", 0.1)));
+                odds("BASIC", 60.0, "EXCELLENT", 30.0, "EXOTIC", 8.0, "EXTRAORDINARY", 2.0)));
 
         CRATE_DEFINITIONS.put("EXCELLENT", new CrateDefinition(
                 "EXCELLENT", "Excellent Crate", 400L, CurrencyType.SOFT, 200L,
-                odds("BASIC", 15.0, "EXCELLENT", 80.0, "EXTRAORDINARY", 4.9, "EXOTIC", 0.1, "EXTRA_EXTRAORDINARY", 0.00001)));
+                odds("EXCELLENT", 75.0, "EXOTIC", 18.0, "EXTRAORDINARY", 6.0, "EXTRA_EXTRAORDINARY", 1.0)));
 
         CRATE_DEFINITIONS.put("EXTRA_EXTRAORDINARY", new CrateDefinition(
-                "EXTRA_EXTRAORDINARY", "ExtraExtraOrdinary Crate", 1000L, CurrencyType.SOFT, 500L,
-                odds("EXCELLENT", 40.0, "EXTRAORDINARY", 40.0, "EXOTIC", 9.0, "EXTRA_EXTRAORDINARY", 1.0)));
+                "EXTRA_EXTRAORDINARY", "Mystery Crate", 1000L, CurrencyType.SOFT, 500L,
+                odds("EXCELLENT", 15.0, "EXOTIC", 45.0, "EXTRAORDINARY", 35.0, "EXTRA_EXTRAORDINARY", 5.0)));
     }
 
     // What selling a real (non-crate) item pays out, by its rarity.
@@ -83,6 +78,8 @@ public class CrateService {
     private final ItemCatalogRepository itemCatalogRepository;
     private final PlayerRepository playerRepository;
     private final WalletService walletService;
+    private final CollectionService collections;
+    private final QuestService quests;
     private final Random random = new Random();
 
     public CrateService(
@@ -90,12 +87,13 @@ public class CrateService {
             InventoryItemRepository inventoryItemRepository,
             ItemCatalogRepository itemCatalogRepository,
             PlayerRepository playerRepository,
-            WalletService walletService) {
+            WalletService walletService, CollectionService collections, QuestService quests) {
         this.inventoryCrateRepository = inventoryCrateRepository;
         this.inventoryItemRepository = inventoryItemRepository;
         this.itemCatalogRepository = itemCatalogRepository;
         this.playerRepository = playerRepository;
         this.walletService = walletService;
+        this.collections = collections; this.quests = quests;
     }
 
     public List<CrateDefinition> getCrateTypes() {
@@ -110,6 +108,7 @@ public class CrateService {
     public InventoryCrate buyCrate(String username, String crateCode) {
         CrateDefinition def = requireDefinition(crateCode);
         UUID playerId = playerId(username);
+        walletService.lockAccount(playerId);
 
         walletService.debit(playerId, def.priceCurrency(), def.priceAmount(), "CRATE_PURCHASE", null);
 
@@ -120,6 +119,7 @@ public class CrateService {
     @Transactional
     public InventoryItem openCrate(String username, UUID inventoryCrateId) {
         UUID playerId = playerId(username);
+        walletService.lockAccount(playerId);
 
         InventoryCrate owned = inventoryCrateRepository.findByIdAndPlayerId(inventoryCrateId, playerId)
                 .orElseThrow(() -> new IllegalArgumentException("Crate not found"));
@@ -130,12 +130,16 @@ public class CrateService {
 
         inventoryCrateRepository.delete(owned); // the crate is consumed the moment it's opened
 
-        return inventoryItemRepository.save(new InventoryItem(playerId, rolledItem, "CRATE_OPEN"));
+        InventoryItem granted = inventoryItemRepository.save(new InventoryItem(playerId, rolledItem, "CRATE_OPEN"));
+        collections.recordDiscovery(playerId, rolledItem);
+        quests.record(playerId, QuestService.Event.CRATE_OPENED);
+        return granted;
     }
 
     @Transactional
     public void sellCrate(String username, UUID inventoryCrateId) {
         UUID playerId = playerId(username);
+        walletService.lockAccount(playerId);
 
         InventoryCrate owned = inventoryCrateRepository.findByIdAndPlayerId(inventoryCrateId, playerId)
                 .orElseThrow(() -> new IllegalArgumentException("Crate not found"));
@@ -148,6 +152,7 @@ public class CrateService {
     @Transactional
     public void sellItem(String username, UUID inventoryItemId) {
         UUID playerId = playerId(username);
+        walletService.lockAccount(playerId);
 
         InventoryItem owned = inventoryItemRepository.findByIdAndPlayerId(inventoryItemId, playerId)
                 .orElseThrow(() -> new IllegalArgumentException("Item not found"));
@@ -155,6 +160,7 @@ public class CrateService {
         long value = ITEM_SELL_VALUE.getOrDefault(owned.getItemCatalog().getRarity(), 5L);
         inventoryItemRepository.delete(owned);
         walletService.creditWithReason(playerId, CurrencyType.SOFT, value, "ITEM_SOLD", owned.getId());
+        quests.record(playerId, QuestService.Event.ITEM_SOLD);
     }
 
     // ---------------------------------------------------------------

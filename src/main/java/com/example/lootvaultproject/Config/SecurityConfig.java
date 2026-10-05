@@ -59,12 +59,16 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable()) // Disabled for local REST testing / Vite proxy
+                .csrf(csrf -> csrf.csrfTokenRequestHandler(new org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler()))
                 .authorizeHttpRequests(auth -> auth
                         // Container error dispatches must retain their original status,
                         // rather than turning a database/controller error into a 403.
                         .dispatcherTypeMatchers(DispatcherType.ERROR).permitAll()
-                        .requestMatchers("/api/auth/register", "/api/auth/login").permitAll()
+                        .requestMatchers("/api/auth/register", "/api/auth/login", "/api/auth/dev", "/api/auth/dev-status", "/api/auth/me", "/api/auth/csrf").permitAll()
+                        .requestMatchers("/api/wallets/*/credit").denyAll()
+                        .requestMatchers(HttpMethod.GET, "/api/wallets/me").authenticated()
+                        .requestMatchers("/api/wallets/**").denyAll()
+                        .requestMatchers(HttpMethod.GET, "/", "/index.html", "/assets/**", "/audio-credits.html", "/favicon.ico", "/actuator/health", "/menu", "/login", "/earn", "/modes", "/crates", "/shop", "/inventory", "/progression", "/lootboxes", "/sandbox").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/shop/offers").permitAll()
                         .anyRequest().authenticated()
                 )
@@ -77,7 +81,9 @@ public class SecurityConfig {
                         .accessDeniedHandler((request, response, exception) -> {
                             response.setStatus(403);
                             response.setContentType("application/json");
-                            response.getWriter().write("{\"error\":\"You do not have permission to perform this action.\"}");
+                            response.getWriter().write(exception instanceof org.springframework.security.web.csrf.CsrfException
+                                    ? "{\"code\":\"CSRF_INVALID\",\"error\":\"Refresh this page before trying again.\"}"
+                                    : "{\"error\":\"You do not have permission to perform this action.\"}");
                         })
                 )
                 .securityContext(context -> context

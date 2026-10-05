@@ -50,3 +50,7 @@ repo-mirror.git/
 *.bundle
 *.log
 .claude/
+
+# Private backup archives and temporary verification artifacts
+.backups/
+tmp/

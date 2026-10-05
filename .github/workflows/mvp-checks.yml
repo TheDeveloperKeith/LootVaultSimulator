@@ -1,0 +1,27 @@
+name: MVP checks
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: lootvault-frontend/package-lock.json
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+          cache: maven
+      - run: node scripts/check-publish-safety.mjs --worktree
+      - run: npm ci
+        working-directory: lootvault-frontend
+      - run: npm run build
+        working-directory: lootvault-frontend
+      - run: node scripts/verify-poker-atmosphere.mjs && node scripts/verify-poker-pitch.mjs && node scripts/verify-onboarding.mjs && node scripts/verify-api-security.mjs
+        working-directory: lootvault-frontend
+      - run: mvn -B -Prelease verify

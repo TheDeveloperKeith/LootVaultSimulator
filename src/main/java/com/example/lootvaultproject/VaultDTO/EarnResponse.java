@@ -11,5 +11,5 @@ public record EarnResponse(Daily daily, Stats stats, Round round) {
     public record Round(UUID id, String game, String stage, int version, long stake, long committed,
                         long pot, long payout, String outcome, String message, List<Card> cards,
                         List<Card> board, List<Seat> opponents, Integer total, String hand,
-                        int pressure, List<String> actions) {}
+                        int pressure, List<String> actions, com.example.lootvaultproject.VaultService.CardGameEngine.ShowdownReveal showdown, long toCall) {}
 }

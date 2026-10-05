@@ -33,12 +33,12 @@ public class CollectionService {
     );
 
     private static final Map<String, Long> REWARDS = Map.of(
-            "COMMON", 1000L,
-            "BASIC", 2500L,
-            "EXCELLENT", 5000L,
-            "EXOTIC", 15000L,
-            "EXTRAORDINARY", 50000L,
-            "EXTRA_EXTRAORDINARY", 100000L
+            "COMMON", 100L,
+            "BASIC", 200L,
+            "EXCELLENT", 300L,
+            "EXOTIC", 500L,
+            "EXTRAORDINARY", 6000L,
+            "EXTRA_EXTRAORDINARY", 15000L
     );
 
     private final PlayerCollectionRepository collections;
@@ -75,11 +75,13 @@ public class CollectionService {
      */
     @Transactional
     public boolean recordDiscovery(UUID playerId, ItemCatalog item) {
+        walletService.lockAccount(playerId);
 
         if (collections.existsByPlayerIdAndItemCatalog_Id(
                 playerId,
                 item.getId())) {
 
+            awardTierIfComplete(playerId, item.getRarity());
             return false;
         }
 

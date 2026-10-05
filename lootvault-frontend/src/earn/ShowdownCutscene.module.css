@@ -1,0 +1,53 @@
+.scene { --star:#b4d7ff;position:fixed;inset:0;z-index:2147482300;overflow:hidden;background:radial-gradient(ellipse at 50% 65%,#060811,#000 75%);color:#eff5ff;display:grid;place-items:center;isolation:isolate;animation:arrival .4s ease-out; }
+.youWin { --star:#b5fff0;background:radial-gradient(ellipse at 50% 65%,#041211,#000 75%); }
+.stars { position:absolute;inset:0; }.stars i { position:absolute;width:2px;height:2px;background:#d8edff;border-radius:50%;box-shadow:0 0 10px #a4cbff;animation:twinkle 1.7s ease-in-out infinite alternate; }
+.heading { position:absolute;top:15%;text-align:center;animation:heading 8.5s both; }.heading span,.winner>span { letter-spacing:.28em;font-size:.7rem;color:var(--star); }.heading h2 { font-size:clamp(2rem,6vw,4rem);letter-spacing:-.05em;font-weight:500; }
+.rings { position:absolute;width:min(70vw,650px);aspect-ratio:1;border:1px solid #8bbcf82b;border-radius:50%;box-shadow:0 0 100px #6297fb15,inset 0 0 80px #8cbaff10;animation:ring 8.5s both; }
+.comet { position:absolute;left:50%;top:57%;width:64px;height:64px;color:var(--star);filter:drop-shadow(0 0 22px var(--star));animation:comet 4.8s cubic-bezier(.45,.05,.75,.55) both; }.comet svg { position:absolute;width:100%;height:100%; }.comet>span { position:absolute;right:50%;bottom:50%;width:12px;height:60vh;background:linear-gradient(transparent,var(--star));transform-origin:bottom;transform:rotate(35deg);border-radius:100%;opacity:.8; }
+.impact { position:absolute;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,#fff,var(--star) 20%,transparent 65%);top:57%;left:50%;animation:impact 1.5s 4.5s both;pointer-events:none; }
+.winner { position:relative;text-align:center;padding:2rem;max-width:95vw;animation:winner 1.4s both;text-shadow:0 0 35px #80bbff45; }.winner h3 { font-size:clamp(2.8rem,9vw,6rem);letter-spacing:-.06em;margin:.4rem 0;font-weight:600; }.winner p { color:var(--star);font-size:1.25rem;margin:.5rem; }.winner small { display:block;color:#b6c5d9;margin-top:1rem; }
+.skip { position:absolute;bottom:6%;border:1px solid #ffffff25;border-radius:99px;background:#ffffff0c;backdrop-filter:blur(16px);color:#d4e2f6;padding:.8rem 1.3rem;cursor:pointer; }.skip:focus-visible { outline:2px solid var(--star);outline-offset:4px; }
+@keyframes arrival { from { opacity:0; } }
+@keyframes twinkle { to { opacity:.2; } }
+@keyframes heading { 0%,30% { opacity:1; } 45%,100% { opacity:0;transform:translateY(-15px); } }
+@keyframes comet { 0% { transform:translate(65vw,-100vh) scale(.2);opacity:0; } 20% { opacity:1; } 85% { opacity:1; } 100% { transform:translate(-50%,-50%) scale(.1);opacity:0; } }
+@keyframes impact { 0% { transform:translate(-50%,-50%) scale(.1);opacity:0; } 20% { opacity:.85; } 100% { transform:translate(-50%,-50%) scale(9);opacity:0; } }
+@keyframes winner { from { opacity:0;transform:translateY(35px) scale(.88);filter:blur(14px); } to { opacity:1;transform:none;filter:none; } }
+@keyframes ring { 0% { opacity:0;transform:scale(.3); } 45% { opacity:1; } 100% { opacity:.3;transform:scale(1.3); } }
+@media(prefers-reduced-motion:reduce) { .scene,.stars i,.winner,.rings { animation:none; }.comet,.impact,.heading { display:none; } }
+
+.scene::after { content:"";position:absolute;inset:0;background:radial-gradient(ellipse,transparent 20%,rgba(0,0,0,.65) 90%);pointer-events:none;z-index:-1; }
+.stars { opacity:.4; }.rings { opacity:.3; }.heading h2 { color:#c6d2e3; }.comet { width:85px;height:85px; }.comet>span { height:85vh;width:8px;box-shadow:0 0 25px var(--star); }
+.blackjack { --star:#e1af76;background:radial-gradient(ellipse at center,#211006,#000 65%);animation:arrival .6s ease-out; }
+.blackjack.youWin { --star:#ffdc8f;background:radial-gradient(ellipse at center,#281d06,#000 65%); }
+.blackout,.blackout.youWin { background:#000;animation:none; }
+.blackjackWinner { animation:winner 1.3s both; }.crown { width:110px;height:90px;display:block;margin:0 auto 1.2rem;color:#ffdc8f;filter:drop-shadow(0 0 22px #ffc85780); }
+@media(prefers-reduced-motion:reduce) { .blackjackWinner { animation:none; } }
+.extreme,.extreme.youWin { background:#010207;animation:none; }
+.sky { position:absolute;inset:-180% -25% -80%;background:radial-gradient(ellipse at 50% 20%,#4e64a844,transparent 24%),radial-gradient(ellipse at 30% 45%,#6552a52b,transparent 18%),radial-gradient(ellipse at 70% 65%,#123c6438,transparent 25%),linear-gradient(#010207,#070c1d 50%,#010207);animation:skyAscent 10s cubic-bezier(.35,0,.8,1) both; }
+.extreme .stars { height:300%;opacity:.7;animation:starAscent 10s ease-in both; }
+.extreme .stars i { height:18px;background:linear-gradient(transparent,#d8edff); }
+.extreme .comet { top:50%;animation:ascendingStar 10s cubic-bezier(.3,.05,.8,.9) both; }
+.extreme .comet>span { top:50%;bottom:auto;transform:rotate(0);background:linear-gradient(var(--star),transparent);height:100vh; }
+.extreme .heading { animation:heading 10s both; }
+.extreme .rings { animation:ring 10s both; }
+.extreme .impact { top:50%;animation:impact 1.8s 9.8s both; }
+.cracks { position:absolute;inset:0;width:100%;height:100%;fill:none;stroke:#dbe9ff;stroke-width:3;filter:drop-shadow(0 0 12px #839dff);stroke-dasharray:1800;stroke-dashoffset:1800;animation:fracture 1.5s 9s both; }
+.shatter { position:absolute;inset:0;background:linear-gradient(125deg,transparent 48%,#b9d9ff50 49%,transparent 51%),linear-gradient(35deg,transparent 48%,#c0dbff40 49%,transparent 51%);animation:skyBreak 1.5s 9.8s both;pointer-events:none; }
+@keyframes skyAscent { from { transform:translateY(-30%) scale(1); } 90% { opacity:1; } to { transform:translateY(35%) scale(1.8);opacity:.2; } }
+@keyframes starAscent { from { transform:translateY(-65%) scale(.7); } to { transform:translateY(0) scale(2.4);opacity:0; } }
+@keyframes ascendingStar { 0% { transform:translate(-50%,65vh) scale(.3);opacity:0; } 15% { opacity:1; } 70% { transform:translate(-50%,-28vh) scale(.65); } 92% { transform:translate(-50%,-50%) scale(1.6);opacity:1; } 100% { transform:translate(-50%,-50%) scale(8);opacity:0; } }
+@keyframes fracture { 0% { opacity:0;stroke-dashoffset:1800; } 25% { opacity:1; } 70% { stroke-dashoffset:0;opacity:1;transform:scale(1); } 100% { stroke-dashoffset:0;opacity:0;transform:scale(1.6); } }
+@keyframes skyBreak { 0% { opacity:0;transform:scale(1); } 20% { opacity:1; } 100% { opacity:0;transform:scale(3); } }
+@media(prefers-reduced-motion:reduce) { .sky,.extreme .stars { animation:none; }.cracks,.shatter { display:none; } }
+.scene { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+.collisionField { position:absolute;inset:0;pointer-events:none; }
+.collisionStar { position:absolute;left:50%;top:57%;width:72px;height:72px;color:var(--star-color);filter:drop-shadow(0 0 22px currentColor);opacity:0;animation:starCollision 2.2s 7.8s cubic-bezier(.15,.65,.45,1) both; }
+.collisionStar svg { width:100%;height:100%; }
+.collisionStar span { position:absolute;left:50%;top:50%;width:38vw;height:5px;transform-origin:left;background:linear-gradient(currentColor,transparent); }
+@keyframes starCollision { 0% { opacity:0;transform:translate(-50%,-50%) rotate(var(--angle)) translateX(60vmax) scale(.3); } 18%,88% { opacity:1; } 100% { opacity:0;transform:translate(-50%,-50%) rotate(var(--angle)) translateX(0) scale(1.5); } }
+.collisionRing,.collisionBloom { position:absolute;left:50%;top:57%;width:120px;height:120px;opacity:0;animation:collisionShock 1.4s 9.95s both; }
+.collisionRing { border:3px solid #ddd3ff;border-radius:50%;box-shadow:0 0 28px #b89bff; }
+.collisionBloom { background:radial-gradient(circle,#ecdcff99,#9982ff55 22%,transparent 65%); }
+@keyframes collisionShock { 0% { opacity:0;transform:translate(-50%,-50%) scale(.1); } 20% { opacity:.7; } 100% { opacity:0;transform:translate(-50%,-50%) scale(12); } }
+@media(prefers-reduced-motion:reduce) { .collisionField { display:none; } }

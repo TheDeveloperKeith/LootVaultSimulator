@@ -117,3 +117,35 @@
 .intense { border-color:rgba(236,180,116,.45);box-shadow:0 0 45px rgba(212,109,60,.12);animation:riverGlow 2s ease-in-out infinite alternate; }
 @keyframes riverGlow { to { box-shadow:0 0 65px rgba(212,109,60,.22); } }
 @media(prefers-reduced-motion:reduce) { .intense { animation:none; } }
+.extremeVeil { position:fixed;inset:0;z-index:1000;pointer-events:none;background:radial-gradient(ellipse at 50% 50%,rgba(0,0,0,.42),rgba(0,0,0,.8));box-shadow:inset 0 0 140px #000; }
+
+.extremeVeil { animation:extremeDarken 1.1s ease-in both; }
+@keyframes extremeDarken { from { opacity:0; } to { opacity:1; } }
+@media(prefers-reduced-motion:reduce) { .extremeVeil { animation:none; } }
+
+.faithCards .cards { opacity:0; }
+.field select { border:1px solid #ffffff25;border-radius:12px;padding:.8rem;background:#172135;color:#fff;font:inherit; }
+
+
+.faithCards .community { box-shadow:0 0 45px #9e45ff55,inset 0 0 30px #7626b530;border-radius:24px; }
+.actionGlow > button { animation:actionBeacon 3s ease-in-out infinite; }
+.actionGlow > button:nth-of-type(2) { animation-delay:1s; }
+.actionGlow > button:nth-of-type(3) { animation-delay:2s; }
+@keyframes actionBeacon { 0%,12%,66%,100% { box-shadow:0 0 0 transparent;filter:brightness(1); } 28%,42% { box-shadow:0 0 24px #c496ff99,0 0 48px #876bff66;filter:brightness(1.35); } }
+@media(prefers-reduced-motion:reduce) { .actionGlow > button { animation:none;box-shadow:0 0 16px #c496ff66; } }
+.cataclysmVeil { background:radial-gradient(ellipse at 50% 45%,rgba(1,2,8,.84),rgba(0,0,0,.97) 75%);box-shadow:inset 0 0 200px #000; }
+.cataclysmVeil::before { content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 25%,#918aff55 49%,transparent 58%);opacity:0;animation:skyFlicker 4s ease-in-out infinite; }
+@keyframes skyFlicker { 0%,30%,45%,75%,100% { opacity:0; } 36% { opacity:.65; } 66% { opacity:.3; } }
+.criticalControls { position:fixed;z-index:1004;left:50%;bottom:clamp(1rem,4vh,3rem);transform:translateX(-50%);width:min(680px,calc(100vw - 2rem));max-height:65vh;overflow:auto;background:rgba(12,17,30,.97);border:1px solid #d9c5ff99;box-shadow:0 0 45px #8b69d944,0 24px 80px #000c;padding:1.15rem; }
+.criticalControls h2 { font-size:1rem; }
+.criticalControls .actionStack { grid-template-columns:repeat(3,minmax(0,1fr)); }
+.criticalControls .field { grid-column:1 / -1; }
+.criticalControls .actionGlow > button { border:1px solid #ddc8ff;box-shadow:0 0 12px #b698ff88;color:#fff;background:#302544;animation:criticalBeacon 3s ease-in-out infinite; }
+.criticalControls .actionGlow > button:nth-of-type(2) { animation-delay:1s; }
+.criticalControls .actionGlow > button:nth-of-type(3) { animation-delay:2s; }
+.criticalControls button:disabled { opacity:.5;animation:none; }
+@keyframes criticalBeacon { 0%,12%,66%,100% { box-shadow:0 0 12px #b698ff66; } 28%,42% { box-shadow:0 0 22px #e4caffcc,0 0 52px #a57bff88;filter:brightness(1.25); } }
+@media(max-width:550px) { .criticalControls .actionStack { grid-template-columns:1fr; }.criticalControls { max-height:55vh;bottom:.75rem; } }
+@media(prefers-reduced-motion:reduce) { .cataclysmVeil::before { animation:none; }.criticalControls .actionGlow > button { animation:none; } }
+html[data-reduced-motion="true"] .criticalControls .actionGlow > button { animation:none; }
+.criticalHeader { display:flex;align-items:center;justify-content:space-between;gap:.75rem; }

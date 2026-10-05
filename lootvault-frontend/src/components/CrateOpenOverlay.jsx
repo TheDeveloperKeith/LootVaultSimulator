@@ -1,6 +1,7 @@
+import { useReducedMotion } from "../preferences/motion";
 import { useEffect, useEffectEvent, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { motion, useAnimationControls, useReducedMotion } from "framer-motion";
+import { motion, useAnimationControls } from "framer-motion";
 import { blip } from "../sfx.js";
 import { RARITY_LABEL, RARITY_CLASS } from "../rarities.js";
 import styles from "./CrateOpenOverlay.module.css";

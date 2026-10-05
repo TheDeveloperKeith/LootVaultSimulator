@@ -332,3 +332,5 @@
 .field { font-weight: 500; font-size: .8125rem; }
 .field input { font-weight: 400; font-size: .9375rem; }
 .submit { font-weight: 600; min-height: 50px; }
+.devEntry { margin-top:2rem;max-width:360px;padding:1rem 1.2rem;border:1px solid rgba(255,255,255,.12);border-radius:20px;background:rgba(255,255,255,.04);backdrop-filter:blur(20px); }
+.devEntry summary { cursor:pointer;font-weight:500; }.devEntry summary span { float:right;color:#b8e3ff; }.devEntry p { font-size:.8rem;opacity:.7;line-height:1.6; }.devEntry form { display:grid;gap:1rem; }

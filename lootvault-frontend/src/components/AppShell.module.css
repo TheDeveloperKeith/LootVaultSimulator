@@ -117,3 +117,11 @@
 .bottom { font-weight: 400; background: rgba(12,18,30,.55); }
 .statusDot { box-shadow: none; }
 @media (max-width: 650px) { .tabs { justify-content: flex-start; width: calc(100% - 1.5rem); } .top { gap: .75rem; } .chip { font-size: .75rem; } }
+
+.content::before {display:none}
+.tab {gap:.45rem}
+.tab svg {transition:transform .18s ease;color:inherit}
+.tab:hover svg {transform:translateY(-2px)}
+.tab:active svg {transform:scale(.9)}
+.actions {flex-wrap:wrap}
+@media(prefers-reduced-motion:reduce){.tab svg{transition:none}.tab:hover svg,.tab:active svg{transform:none}}

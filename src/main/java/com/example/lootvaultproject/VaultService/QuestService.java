@@ -63,7 +63,7 @@ public class QuestService {
             new Definition("WEEKLY_CARD_HANDS_15", "Finish 15 card hands", "WEEKLY", Event.CARD_HAND_FINISHED, 15, 1000L),
             new Definition(
                     "DAILY_OPEN_3",
-                    "Open 3 crates",
+                    "Open 3 boxes or crates",
                     "DAILY",
                     Event.CRATE_OPENED,
                     3,
@@ -79,7 +79,7 @@ public class QuestService {
 
             new Definition(
                     "WEEKLY_OPEN_15",
-                    "Open 15 crates",
+                    "Open 15 boxes or crates",
                     "WEEKLY",
                     Event.CRATE_OPENED,
                     15,
@@ -94,6 +94,8 @@ public class QuestService {
                     2500L)
     );
 
+    // MVP goals reward participation and discovery. Preserve completed legacy rewards.
+    private static final java.util.Set<String> MVP_QUESTS = java.util.Set.of("DAILY_COIN_CRATE", "DAILY_CARD_HANDS_3", "DAILY_OPEN_3", "WEEKLY_CARD_HANDS_15", "WEEKLY_OPEN_15");
     private final PlayerQuestRepository repository;
     private final WalletService walletService;
     private final com.example.lootvaultproject.VaultRepository.WalletRepository wallets;
@@ -224,6 +226,7 @@ public class QuestService {
                 weeklyStart();
 
         for (Definition definition : DEFINITIONS) {
+            if (!MVP_QUESTS.contains(definition.code())) continue;
 
             OffsetDateTime periodStart;
 
@@ -278,7 +281,7 @@ public class QuestService {
         return repository
                 .findByPlayerIdAndExpiresAtAfter(
                         playerId,
-                        now);
+                        now).stream().filter(quest -> MVP_QUESTS.contains(quest.getQuestCode()) || quest.isCompleted()).toList();
     }
 
     /**

@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { devStatus } from "../api/auth";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import Button from "../components/Button";
 import { ApiError } from "../api/client";
@@ -6,7 +7,7 @@ import { useAuth } from "../auth/AuthContext";
 import styles from "./LoginPage.module.css";
 
 export default function LoginPage() {
-    const { login, register, player } = useAuth();
+    const { login, register, player, devLogin } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -16,6 +17,16 @@ export default function LoginPage() {
     const [password, setPassword] = useState("");
     const [error, setError] = useState(null);
     const [submitting, setSubmitting] = useState(false);
+    const [devEnabled, setDevEnabled] = useState(false);
+    const [phrase, setPhrase] = useState("");
+    const [devError, setDevError] = useState("");
+    useEffect(() => { let alive = true; devStatus().then(data => { if (alive) setDevEnabled(data.enabled); }).catch(() => {}); return () => { alive = false; }; }, []);
+    async function enterDev(event) {
+        event.preventDefault(); setSubmitting(true); setDevError("");
+        try { await devLogin(phrase); setPhrase(""); navigate("/menu", {replace:true}); }
+        catch (error) { setDevError(error.status === 401 ? "That developer phrase doesn't match." : error.message || "Couldn't enter testing mode."); }
+        finally { setSubmitting(false); }
+    }
 
     // Already logged in (e.g. navigated here manually) — bounce to the lobby.
     if (player) {
@@ -33,7 +44,7 @@ export default function LoginPage() {
             } else {
                 await register(username, email, password);
             }
-            navigate("/menu", { replace: true });
+            navigate(location.state?.from || "/menu", { replace: true });
         } catch (err) {
             // ApiError carries the backend's message (e.g. "Username already taken");
             // anything else (network down, etc.) gets a generic fallback.
@@ -47,19 +58,18 @@ export default function LoginPage() {
         <div className={styles.page}>
             <section className={styles.hero} aria-label="LootVault introduction">
                 <div className={styles.eyebrow}>
-                    <span className={styles.liveDot} aria-hidden="true" />
+
                     Build your vault
                 </div>
 
                 <h1 className={styles.heroTitle}>
                     Collect.<br />
-                    Trade.<br />
+                    Learn.<br />
                     <span>Unbox.</span>
                 </h1>
 
                 <p className={styles.heroCopy}>
-                    Enter a competitive item economy built around rare drops,
-                    evolving collections, and the next pull.
+                    Discover original equipment, learn a few card games, and grow a collection at your own pace.
                 </p>
 
                 <div className={styles.rarityRail} aria-hidden="true">
@@ -70,9 +80,11 @@ export default function LoginPage() {
                     <span className={styles.extraordinary} />
                     <span className={styles.mystery} />
                 </div>
+                {devEnabled && <details className={styles.devEntry}><summary>Developer playground <span>∞</span></summary><p>A separate test vault with coins that never run out.</p><form onSubmit={enterDev}><label className={styles.field}>Developer phrase<input type="password" autoComplete="off" value={phrase} onChange={event => setPhrase(event.target.value)} required maxLength={256} /></label>{devError && <p className={styles.error} role="alert">{devError}</p>}<Button type="submit" disabled={submitting}>Enter test vault</Button></form></details>}
             </section>
 
             <form className={styles.card} onSubmit={handleSubmit}>
+                {location.state?.message && <p role="status">{location.state.message}</p>}
                 <div className={styles.brandRow}>
                     <h2 className={styles.title}>
                         Loot<span>Vault</span>

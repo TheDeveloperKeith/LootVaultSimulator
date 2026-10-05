@@ -201,3 +201,18 @@
 .itemName { font-size: 1.1rem; font-weight: 600; }
 .card > button { min-height: 44px; font-weight: 600; }
 .price { font-weight: 600; }
+
+.grid {grid-template-columns:repeat(3,minmax(0,1fr));gap:1.25rem}
+.card {background:radial-gradient(ellipse at 50% 15%,color-mix(in srgb,var(--r-edge) 19%,transparent),transparent 65%),var(--glass);min-height:25rem;border-radius:24px}
+.art {min-height:11rem;background:transparent;filter:drop-shadow(0 12px 20px color-mix(in srgb,var(--r-edge) 20%,transparent))}
+.mystery {--r-edge:#ff7dba}
+.shopIntro {padding:1.4rem 1.6rem;margin-bottom:1.5rem;border:var(--border);border-radius:22px;background:linear-gradient(110deg,rgba(116,190,255,.12),rgba(180,138,255,.06))}
+.shopIntro span {font-size:.7rem;letter-spacing:.15em;color:#bde7ff;font-weight:700}
+.shopIntro p {color:var(--text-dim);margin-bottom:0;line-height:1.6}
+@media(max-width:760px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.card{min-height:23rem;padding:1rem}}
+@media(max-width:420px){.grid{grid-template-columns:1fr}}
+
+.savings {font-size:.75rem;color:#b4c2d6;line-height:1.5;margin-bottom:.5rem}
+.card {background:var(--glass);box-shadow:var(--shadow)}
+.shopIntro {background:transparent;border:0;border-radius:0;padding:0;margin-bottom:1.5rem}
+.art {filter:none}

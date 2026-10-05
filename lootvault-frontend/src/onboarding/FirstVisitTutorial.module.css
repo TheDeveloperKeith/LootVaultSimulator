@@ -1,0 +1,22 @@
+.backdrop {position:fixed;inset:0;z-index:2000;background:rgba(4,8,14,.88);display:grid;place-items:center;padding:1.5rem;overflow:auto}
+.dialog {background:#151e2d;border:1px solid #334052;border-radius:24px;padding:clamp(1.25rem,4vw,2.5rem);width:min(100%,760px);max-height:calc(100dvh - 3rem);overflow:auto;box-shadow:0 24px 80px #0005}
+.header,.footer,.controls,.options {display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+.header>span,.practiceLabel {font-size:.7rem;letter-spacing:.1em;color:#b6c4d8}
+.dialog progress {width:100%;height:4px;accent-color:#a7d9f4;margin:1.25rem 0}
+.dialog h1 {font-size:clamp(1.7rem,4vw,2.4rem);margin:0 0 1.25rem;color:#f1f5fb}
+.dialog h1:focus {outline:none}
+.dialog p {color:#c4cede;line-height:1.65}
+.lead {font-size:1.1rem;color:#f1f5fb!important}
+.note {font-size:.8rem;color:#a9b9cf!important}
+.list {padding-left:1.2rem}.list li {padding-left:.5rem;margin-bottom:1rem}.list p {margin:.3rem 0}
+.modeList {list-style:none;padding:0;display:grid;gap:1.25rem}.modeList li {display:flex;gap:1.25rem;align-items:flex-start}.modeList svg {color:#a7d9f4}.modeList p {margin:.25rem 0}
+.options {justify-content:flex-start;margin:1.2rem 0}.options label {display:flex;align-items:center;gap:.5rem;font-size:.82rem}
+.preview {position:relative;isolation:isolate;height:300px;overflow:hidden;background:#0d1623;border-radius:18px;border:1px solid #344155}
+.table {position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.6rem}
+.cards {display:flex;gap:.4rem;justify-content:center}.cards>div {width:44px;height:64px;font-size:.7rem}
+.seats {display:flex;gap:4rem;font-size:.8rem;color:#b6c4d8}.seats span {display:flex;gap:.5rem;align-items:center}
+.practiceLabel {position:absolute;bottom:10px;left:14px;z-index:4}.scattered .cards {opacity:0}
+.demoCopy {margin:1rem 0}.demoCopy p {margin:.4rem 0}
+.footer {border-top:1px solid #334052;padding-top:1.25rem;margin-top:1.5rem}.footer>span {color:#a9b9cf;font-size:.8rem}
+.error {color:#ffd0d7!important}
+@media(max-width:550px){.backdrop{padding:.5rem}.dialog{max-height:calc(100dvh - 1rem);border-radius:18px}.footer>span{display:none}.preview{height:290px}.options{gap:.6rem}}

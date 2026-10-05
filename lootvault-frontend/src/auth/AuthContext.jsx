@@ -1,27 +1,30 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 import * as authApi from "../api/auth";
 
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
   const [player, setPlayer] = useState(null);
+  const generation = useRef(0);
   const [loading, setLoading] = useState(true); // true until the initial /me check finishes
 
   // On first load, ask the backend if there's already a valid session
   // (e.g. the player refreshed the page). Runs once.
   useEffect(() => {
+    const request = ++generation.current;
     authApi.getCurrentPlayer()
-      .then(setPlayer)
-      .catch(() => setPlayer(null))
-      .finally(() => setLoading(false));
-    const expire = () => setPlayer(null);
+      .then(value => { if (generation.current === request) setPlayer(value); })
+      .catch(() => { if (generation.current === request) setPlayer(null); })
+      .finally(() => { if (generation.current === request) setLoading(false); });
+    const expire = () => { generation.current++; setPlayer(null); setLoading(false); };
     window.addEventListener("lootvault:session-expired", expire);
     return () => window.removeEventListener("lootvault:session-expired", expire);
   }, []);
 
   async function login(username, password) {
+    const request = ++generation.current;
     const loggedInPlayer = await authApi.login(username, password);
-    setPlayer(loggedInPlayer);
+    if (generation.current === request) { setPlayer(loggedInPlayer); setLoading(false); }
     return loggedInPlayer;
   }
 
@@ -31,11 +34,18 @@ export function AuthProvider({ children }) {
   }
 
   async function logout() {
-    await authApi.logout();
+    generation.current++;
+    try { await authApi.logout(); } catch (error) { if (error.status !== 401) throw error; }
     setPlayer(null);
   }
+  async function devLogin(phrase) {
+    const request = ++generation.current;
+    const testPlayer = await authApi.devLogin(phrase);
+    if (generation.current === request) { setPlayer(testPlayer); setLoading(false); }
+    return testPlayer;
+  }
 
-  const value = { player, loading, login, register, logout };
+  const value = { player, loading, login, register, logout, devLogin };
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 

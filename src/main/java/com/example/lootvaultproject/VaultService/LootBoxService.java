@@ -26,6 +26,8 @@ public class LootBoxService {
     private final InventoryItemRepository inventoryItemRepository;
     private final PlayerRepository playerRepository;
     private final WalletService walletService;
+    private final CollectionService collections;
+    private final QuestService quests;
     private final Random random;
     @org.springframework.beans.factory.annotation.Value("${app.game.zone:America/New_York}")
     private String gameZone = "America/New_York";
@@ -35,12 +37,13 @@ public class LootBoxService {
             ItemCatalogRepository itemCatalogRepository,
             InventoryItemRepository inventoryItemRepository,
             PlayerRepository playerRepository,
-            WalletService walletService) {
+            WalletService walletService, CollectionService collections, QuestService quests) {
         this.dailyBoxGrantRepository = dailyBoxGrantRepository;
         this.itemCatalogRepository = itemCatalogRepository;
         this.inventoryItemRepository = inventoryItemRepository;
         this.playerRepository = playerRepository;
         this.walletService = walletService;
+        this.collections = collections; this.quests = quests;
         this.random = new Random(); // single shared instance — see LootBoxServiceTest for how to inject a seeded one
     }
 
@@ -49,6 +52,7 @@ public class LootBoxService {
         Player player = playerRepository.findByUsername(username)
                 .orElseThrow(() -> new IllegalArgumentException("Player not found"));
 
+        walletService.lockAccount(player.getId());
         LocalDate today = LocalDate.now(java.time.ZoneId.of(gameZone));
         return dailyBoxGrantRepository.findByPlayerIdAndGrantDate(player.getId(), today)
                 .orElseGet(() -> dailyBoxGrantRepository.save(new DailyBoxGrant(player.getId(), today, 3, 0)));
@@ -60,6 +64,7 @@ public class LootBoxService {
         Player player = playerRepository.findByUsername(username)
                 .orElseThrow(() -> new IllegalArgumentException("Player not found"));
 
+        walletService.lockAccount(player.getId());
         LocalDate today = LocalDate.now(java.time.ZoneId.of(gameZone));
 
         DailyBoxGrant grant = dailyBoxGrantRepository
@@ -77,6 +82,8 @@ public class LootBoxService {
 
         grant.setBoxesOpened(grant.getBoxesOpened() + 1); // dirty-checked, flushed on commit
 
+        collections.recordDiscovery(player.getId(), rolledItem);
+        quests.record(player.getId(), QuestService.Event.CRATE_OPENED);
         return inventoryItem;
     }
 
@@ -95,8 +102,19 @@ public class LootBoxService {
 
         ItemCatalog rolledItem = rollWeightedRandomItem();
 
-        return inventoryItemRepository.save(
-                new InventoryItem(player.getId(), rolledItem, "GACHA_PULL_PAID"));
+        InventoryItem granted = inventoryItemRepository.save(new InventoryItem(player.getId(), rolledItem, "GACHA_PULL_PAID"));
+        collections.recordDiscovery(player.getId(), rolledItem);
+        quests.record(player.getId(), QuestService.Event.CRATE_OPENED);
+        return granted;
+    }
+
+    public java.util.Map<String, Double> dailyOdds() {
+        List<ItemCatalog> active = itemCatalogRepository.findByIsActiveTrue();
+        double total = active.stream().mapToDouble(item -> item.getDropRate().doubleValue()).sum();
+        var result = new java.util.LinkedHashMap<String, Double>();
+        if (total <= 0) return result;
+        for (ItemCatalog item : active) result.merge(item.getRarity(), item.getDropRate().doubleValue() * 100 / total, Double::sum);
+        return result;
     }
 
     public long getUnlimitedBoxCost() {
@@ -128,4 +146,3 @@ public class LootBoxService {
         return catalog.get(catalog.size() - 1);
     }
 }
-

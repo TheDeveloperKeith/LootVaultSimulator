@@ -1,6 +1,8 @@
 package com.example.lootvaultproject.VaultService;
 
 import com.example.lootvaultproject.Domain.CurrencyType;
+import com.example.lootvaultproject.Config.DevMode;
+import org.springframework.security.access.AccessDeniedException;
 import com.example.lootvaultproject.VaultDTO.EarnResponse;
 import com.example.lootvaultproject.VaultEntity.Wallet;
 import com.example.lootvaultproject.VaultRepository.WalletRepository;
@@ -20,6 +22,7 @@ public class EarnLootService {
     private final WalletRepository wallets;
     private final WalletService walletService;
     private final QuestService quests;
+    private final DevMode devMode;
     private final JsonMapper json = JsonMapper.builder().build();
     private final SecureRandom random = new SecureRandom();
     private final long dailyCoins;
@@ -27,10 +30,11 @@ public class EarnLootService {
     private record Row(UUID id, CardGameEngine.State state) {}
 
     public EarnLootService(JdbcTemplate jdbc, WalletRepository wallets, WalletService walletService,
-                           QuestService quests, @Value("${app.earn.daily-coins:500}") long dailyCoins,
+                           QuestService quests, DevMode devMode, @Value("${app.earn.daily-coins:500}") long dailyCoins,
                            @Value("${app.game.zone:America/New_York}") String zone) {
         if (dailyCoins <= 0) throw new IllegalArgumentException("Daily coins must be positive.");
         this.jdbc=jdbc; this.wallets=wallets; this.walletService=walletService; this.quests=quests;
+        this.devMode=devMode;
         this.dailyCoins=dailyCoins; this.zone=ZoneId.of(zone);
     }
 
@@ -51,6 +55,13 @@ public class EarnLootService {
 
     @Transactional
     public EarnResponse start(UUID playerId, UUID requestId, String game, long stake) {
+        return start(playerId,requestId,game,stake,null,null);
+    }
+
+    @Transactional
+    public EarnResponse start(UUID playerId, UUID requestId, String game, long stake, String testHand, String testResult) {
+        if ((testHand != null || testResult != null) && !devMode.isTestPlayer(playerId)) throw new AccessDeniedException("Test deals require a developer session.");
+        if (testHand != null && !"HOLDEM".equals(game)) throw new IllegalArgumentException("Test deals are for The River.");
         Wallet wallet=lockWallet(playerId);
         if(requestId==null) throw new IllegalArgumentException("A round request ID is required.");
         List<Row> repeated=jdbc.query("SELECT id, state FROM earn_rounds WHERE id=? AND player_id=?",(rs,n)->new Row(rs.getObject("id",UUID.class),read(rs.getString("state"))),requestId,playerId);
@@ -61,6 +72,7 @@ public class EarnLootService {
         long minimum=balance/10+(balance%10==0?0:1);
         if(balance<=0 || stake<Math.max(1,minimum) || stake>balance) throw new IllegalArgumentException("Stake between 10% and 100% of your current coins.");
         CardGameEngine.State state=CardGameEngine.start(game,stake,random);
+        if (testHand != null) CardGameEngine.testDeal(state,testHand,testResult);
         walletService.debit(playerId,CurrencyType.SOFT,stake,"CARD_GAME_STAKE",requestId);
         jdbc.update("INSERT INTO earn_rounds(id,player_id,game,status,state,coins_committed) VALUES (?,?,?,'ACTIVE',?,?)",requestId,playerId,game,json.writeValueAsString(state),stake);
         Row row=new Row(requestId,state);
@@ -71,6 +83,7 @@ public class EarnLootService {
     @Transactional
     public EarnResponse act(UUID playerId, UUID roundId, int version, String action, long raise) {
         Wallet wallet=lockWallet(playerId);
+        long availableCoins=wallet.getSoftBalance();
         Row row=jdbc.query("SELECT id,state FROM earn_rounds WHERE id=? AND player_id=?",(rs,n)->new Row(rs.getObject("id",UUID.class),read(rs.getString("state"))),roundId,playerId)
                 .stream().findFirst().orElseThrow(()->new IllegalArgumentException("Hand not found."));
         if(row.state.stage.equals("COMPLETE")) return response(playerId,row);
@@ -79,7 +92,11 @@ public class EarnLootService {
             if(raise<=0 || raise>wallet.getSoftBalance()) throw new IllegalArgumentException("Raise exceeds your remaining coins.");
             walletService.debit(playerId,CurrencyType.SOFT,raise,"CARD_GAME_RAISE",row.id);
         }
-        CardGameEngine.act(row.state,action,raise,random);
+        if ("CALL".equals(action) && row.state.toCall > 0) {
+            if(row.state.toCall>wallet.getSoftBalance()) throw new IllegalArgumentException("Not enough coins to call.");
+            walletService.debit(playerId,CurrencyType.SOFT,row.state.toCall,"CARD_GAME_CALL",row.id);
+        }
+        CardGameEngine.act(row.state,action,raise,random,availableCoins);
         saveAndSettle(playerId,row);
         return response(playerId,row);
     }
@@ -125,7 +142,8 @@ public class EarnLootService {
         Integer total=blackjack?CardGameEngine.blackjackTotal(state.player):null;
         String hand=blackjack?null:CardGameEngine.bestHand(Stream.concat(state.player.stream(),state.board.stream()).toList()).name();
         int pressure=blackjack?Math.min(100,Math.max(0,(total-12)*11)):state.stage.equals("FLOP")?35:state.stage.equals("TURN")?65:90;
-        List<String> actions=complete?List.of():blackjack?List.of("HIT","STAND"):List.of("CHECK","RAISE","FOLD");
-        return new EarnResponse(daily,stats,new EarnResponse.Round(row.id,state.game,state.stage,state.version,state.stake,state.committed,state.pot,state.payout,state.outcome,state.message,state.player,state.board,seats,total,hand,pressure,actions));
+        if(state.toCall>0) pressure=Math.min(100,pressure+20);
+        List<String> actions=complete?List.of():blackjack?List.of("HIT","STAND"):state.toCall>0?List.of("CALL","FOLD"):List.of("CHECK","RAISE","FOLD");
+        return new EarnResponse(daily,stats,new EarnResponse.Round(row.id,state.game,state.stage,state.version,state.stake,state.committed,state.pot,state.payout,state.outcome,state.message,state.player,state.board,seats,total,hand,pressure,actions,CardGameEngine.showdownReveal(state),state.toCall));
     }
 }

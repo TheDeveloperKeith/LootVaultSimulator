@@ -30,7 +30,7 @@ export default function MainMenuPage() {
             <div className={styles.progression}><DailyCoinCrate /></div>
             <section className={`${progressionStyles.panel} ${styles.progression}`}>
                 <span className={progressionStyles.eyebrow}>YOUR NEXT GOAL</span>
-                <h2>Vault progression</h2>
+                <h2>Your collection is growing</h2>
                 {progression ? <>
                     <strong>{progression.collection.collected} / {progression.collection.total} collected</strong>
                     <progress className={progressionStyles.meter} value={progression.collection.collected} max={progression.collection.total || 1} aria-label="Collection progress" />
@@ -53,7 +53,7 @@ export default function MainMenuPage() {
 
             <section className={styles.play}>
                 <p className={styles.mode}>Earn your loot!</p>
-                <p className={styles.promoText}>Jack No Black or The River. Your coins, your call.</p>
+                <p className={styles.promoText}>Jack No Black or The River. Learn at your own pace. Your hand is saved when you leave.</p>
                 <Button size="lg" onClick={() => navigate("/earn")}>
                     Take a seat
                 </Button>

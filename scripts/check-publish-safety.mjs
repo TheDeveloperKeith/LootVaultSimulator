@@ -1,13 +1,14 @@
 import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 const git = (...args) => execFileSync('git', ['-c', `safe.directory=${process.cwd().replaceAll('\\', '/')}`, ...args], { maxBuffer: 64 * 1024 * 1024 });
-const files = git('ls-files', '-z').toString().split('\0').filter(Boolean);
+const worktree = process.argv.includes('--worktree');
+const files = git('ls-files', ...(worktree ? ['--cached', '--others', '--exclude-standard'] : []), '-z').toString().split('\0').filter(Boolean);
 const known = new Set();
 for (const name of ['.env', 'application-local.properties']) {
     if (!fs.existsSync(name)) continue;
     for (const line of fs.readFileSync(name, 'utf8').split(/\r?\n/)) {
         const match = line.match(/^\s*([^#=]+)=(.*)$/);
-        if (match && /password|secret|token/i.test(match[1])) {
+        if (match && /password|secret|token|phrase/i.test(match[1])) {
             const value = match[2].trim().replace(/^['"]|['"]$/g, '');
             if (value.length >= 8 && !value.includes('${')) known.add(value);
         }
@@ -19,7 +20,7 @@ for (const name of files) {
     if (/(^|\/)\.env(?:\..+)?$/.test(name) && !name.endsWith('.env.example')) reason = 'environment file';
     if (/(^|\/)(node_modules|target|dist|repo-mirror\.git|\.git|\.claude)\//.test(name)) reason = 'generated files or embedded history';
     if (/(^|\/)application-local\.properties$|\.(pem|key|p12|pfx|bundle)$/.test(name)) reason = 'private configuration or key';
-    const buffer = git('show', `:${name}`);
+    const buffer = worktree ? fs.readFileSync(name) : git('show', `:${name}`);
     if (!buffer.includes(0)) {
         const text = buffer.toString();
         if ([...known].some(secret => text.includes(secret))) reason = 'matches a local secret';
@@ -29,4 +30,4 @@ for (const name of files) {
     if (reason) { console.error(`${name}: ${reason}`); failed = true; }
 }
 if (failed) process.exit(1);
-console.log(`Publish check passed for ${files.length} staged files. No known local secrets or excluded paths found. This is not a guarantee against every possible secret.`);
+console.log(`Publish check passed for ${files.length} ${worktree ? 'working-tree' : 'staged'} files. No known local secrets or excluded paths found. This is not a guarantee against every possible secret.`);

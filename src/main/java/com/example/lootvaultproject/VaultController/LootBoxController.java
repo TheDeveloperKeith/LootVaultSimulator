@@ -30,6 +30,9 @@ public class LootBoxController {
         ));
     }
 
+    @GetMapping("/odds")
+    public java.util.Map<String, Double> odds() { return lootBoxService.dailyOdds(); }
+
     @PostMapping("/open")
     public ResponseEntity<InventoryItemResponse> openLootBox(Authentication authentication) {
         InventoryItem item = lootBoxService.openLootBox(authentication.getName());

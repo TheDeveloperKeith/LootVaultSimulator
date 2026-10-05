@@ -162,7 +162,7 @@
     padding: .75rem;
   }
 
-.promo { 
+.promo {
     min-height: 25rem;
     flex-direction: column;
     align-items: flex-start;
@@ -195,3 +195,7 @@
 
 .lobby { overflow: visible; }
 .lobby::before, .lobby::after { display: none; }
+
+.progression {background:transparent!important;border:0!important;box-shadow:none!important;padding:1rem 0!important}
+
+.lobby::before,.lobby::after {display:none}

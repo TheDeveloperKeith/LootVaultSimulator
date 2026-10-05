@@ -19,10 +19,12 @@ public class WalletService {
 
     private final WalletRepository walletRepository;
     private final LedgerEntryRepository ledgerEntryRepository;
+    private final com.example.lootvaultproject.Config.DevMode devMode;
 
-    public WalletService(WalletRepository walletRepository, LedgerEntryRepository ledgerEntryRepository) {
+    public WalletService(WalletRepository walletRepository, LedgerEntryRepository ledgerEntryRepository, com.example.lootvaultproject.Config.DevMode devMode) {
         this.walletRepository = walletRepository;
         this.ledgerEntryRepository = ledgerEntryRepository;
+        this.devMode = devMode;
     }
 
     public WalletResponse getWallet(UUID playerId) {
@@ -33,8 +35,9 @@ public class WalletService {
 
     @Transactional
     public WalletResponse credit(UUID playerId, CreditWalletRequest request) {
-        Wallet wallet = walletRepository.findByPlayerId(playerId)
+        Wallet wallet = walletRepository.findByPlayerIdWithLock(playerId)
                 .orElseThrow(() -> new PlayerNotFoundException(playerId));
+        if (devMode.isTestPlayer(playerId)) return toResponse(wallet);
 
         CurrencyType currency = CurrencyType.valueOf(request.getCurrency());
         long newBalance;
@@ -71,9 +74,10 @@ public class WalletService {
             String entryType,
             UUID refId) {
 
-        Wallet wallet = walletRepository.findByPlayerId(playerId)
+        Wallet wallet = walletRepository.findByPlayerIdWithLock(playerId)
                 .orElseThrow(() ->
                         new PlayerNotFoundException(playerId));
+        if (devMode.isTestPlayer(playerId)) return wallet;
 
         long newBalance;
 
@@ -111,8 +115,10 @@ public class WalletService {
      */
     @Transactional
     public Wallet debit(UUID playerId, CurrencyType currency, long amount, String entryType, UUID refId) {
-        Wallet wallet = walletRepository.findByPlayerId(playerId)
+        Wallet wallet = walletRepository.findByPlayerIdWithLock(playerId)
                 .orElseThrow(() -> new PlayerNotFoundException(playerId));
+        if (amount <= 0) throw new IllegalArgumentException("Debit amount must be positive.");
+        if (devMode.isTestPlayer(playerId)) return wallet;
 
         long available = currency == CurrencyType.SOFT ? wallet.getSoftBalance() : wallet.getHardBalance();
         if (available < amount) {
@@ -134,11 +140,16 @@ public class WalletService {
         return wallet;
     }
 
+    @Transactional
+    public void lockAccount(UUID playerId) {
+        walletRepository.findByPlayerIdWithLock(playerId).orElseThrow(() -> new PlayerNotFoundException(playerId));
+    }
+
     public WalletResponse getMyWallet(UUID playerId) {
         return getWallet(playerId);
     }
 
     private WalletResponse toResponse(Wallet wallet) {
-        return new WalletResponse(wallet.getId(), wallet.getPlayerId(), wallet.getSoftBalance(), wallet.getHardBalance());
+        return new WalletResponse(wallet.getId(), wallet.getPlayerId(), wallet.getSoftBalance(), wallet.getHardBalance(), devMode.isTestPlayer(wallet.getPlayerId()));
     }
 }

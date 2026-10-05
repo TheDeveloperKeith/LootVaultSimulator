@@ -1,0 +1,11 @@
+import assert from 'node:assert/strict';
+import {pokerButtonPitch} from '../src/earn/pokerButtonPitch.js';
+const hand=(name,board=[{suit:'S'},{suit:'S'},{suit:'H'}])=>({id:'1',game:'HOLDEM',hand:name,cards:[{suit:'S'},{suit:'S'}],board});
+assert.equal(pokerButtonPitch(hand('Pair'),hand('Two pair')),1.25);
+assert.equal(pokerButtonPitch(hand('Two pair'),hand('Pair')),.8);
+assert.equal(pokerButtonPitch(hand('Pair'),hand('Pair', [{suit:'S'},{suit:'S'},{suit:'H'},{suit:'H'},{suit:'D'}])),.8);
+assert.equal(pokerButtonPitch(hand('Pair'),hand('Flush')),1.25);
+assert.equal(pokerButtonPitch(hand('Pair'),{...hand('Pair'),id:'2'}),1);
+assert.equal(pokerButtonPitch(null,hand('Pair')),1);
+assert.equal(pokerButtonPitch(hand('Pair'),hand('Pair')),1);
+console.log('7 poker button pitch checks passed.');

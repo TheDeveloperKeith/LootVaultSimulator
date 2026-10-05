@@ -1,0 +1,10 @@
+const card = (rank, suit) => ({rank, suit});
+const opponents = ["Nova", "Atlas"].map(name => ({name, cards:[{rank:0,suit:"BACK"},{rank:0,suit:"BACK"}],folded:false}));
+export const DEMO_ROUNDS = [
+ {title:"A quiet start",text:"Most hands stay calm. Music and shaking are hand cues, never a promise of winning.",hand:"High card",stage:"FLOP",cards:[card(10,"SPADES"),card(8,"HEARTS")],board:[card(2,"CLUBS"),card(5,"DIAMONDS"),card(13,"SPADES")]},
+ {title:"Two pair brings tension",text:"Two pair, three of a kind, and straights use the original tension track and a gentler shake. It grows from flop to river.",hand:"Two pair",stage:"FLOP",cards:[card(11,"SPADES"),card(11,"HEARTS")],board:[card(7,"SPADES"),card(7,"DIAMONDS"),card(2,"CLUBS")]},
+ {title:"A flush draw",text:"A made two pair or better plus four suited cards can start extreme shaking and a fade into darkness. Draws alone do not start the music.",hand:"Two pair",stage:"TURN",cards:[card(14,"SPADES"),card(14,"HEARTS")],board:[card(13,"SPADES"),card(13,"CLUBS"),card(2,"SPADES"),card(9,"SPADES")]},
+ {title:"Full house at the river",text:"Flushes and full houses bring the strongest darkness and shaking. Full houses keep the original track. Once tension begins it stays until the reveal.",hand:"Full house",stage:"RIVER",cards:[card(14,"SPADES"),card(14,"HEARTS")],board:[card(14,"CLUBS"),card(13,"SPADES"),card(13,"HEARTS"),card(3,"DIAMONDS"),card(2,"CLUBS")]},
+ {title:"Four of a kind",text:"Four of a kind or a straight flush switches the soundtrack, shatters the glass, and scatters the cards. Your cards glow gold and the river glows purple.",hand:"Four of a kind",stage:"RIVER",cards:[card(14,"SPADES"),card(14,"HEARTS")],board:[card(14,"CLUBS"),card(14,"DIAMONDS"),card(13,"SPADES"),card(9,"HEARTS"),card(2,"CLUBS")]},
+].map((round,index)=>({...round,id:"tutorial-river",game:"HOLDEM",version:index,opponents,actions:["CHECK","RAISE","FOLD"],pot:0,payout:0,committed:0,toCall:0}));
+export const DEMO_RESULT = {...DEMO_ROUNDS[4],stage:"COMPLETE",outcome:"WIN",showdown:{extreme:true,close:true,winners:["You"],winningHand:"Four of a kind",playerHand:"Four of a kind",opponentHand:"Full house"}};

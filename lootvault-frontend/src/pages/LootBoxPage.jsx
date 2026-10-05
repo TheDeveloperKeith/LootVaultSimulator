@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { api } from "../api/client";
+import { RARITY_LABEL } from "../rarities";
 import Button from "../components/Button";
 import { ApiError } from "../api/client";
 import { getTodayGrant, openLootBox } from "../api/game";
@@ -6,10 +8,10 @@ import styles from "./LootBoxPage.module.css";
 import VaultIcon from "../components/VaultIcon";
 import DailyCoinCrate from "../components/DailyCoinCrate";
 
-const RARITY_LABEL = { COMMON: "Common", BASIC: "Basic", EXCELLENT: "Excellent", EXOTIC: "Exotic", EXTRAORDINARY: "Extraordinary" };
 const RARITY_CLASS = { COMMON: "common", BASIC: "basic", EXCELLENT: "excellent", EXOTIC: "exotic", EXTRAORDINARY: "extraordinary" };
 
 export default function LootBoxPage() {
+  const [odds, setOdds] = useState(null);
   const [grant, setGrant] = useState(null);   // { boxesGranted, boxesOpened, boxesRemaining }
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -17,6 +19,7 @@ export default function LootBoxPage() {
   const [lastResult, setLastResult] = useState(null); // most recently opened InventoryItemResponse
 
   useEffect(() => {
+    api.get("/api/lootboxes/odds").then(setOdds).catch(() => {});
     getTodayGrant()
         .then(setGrant)
         .catch((err) => setError(err instanceof ApiError ? err.message : "Couldn't load today's boxes."))
@@ -47,6 +50,7 @@ export default function LootBoxPage() {
   return (
       <div className={styles.page}>
         <div className={styles.dailyCoins}><DailyCoinCrate /></div>
+        <details style={{marginBottom:"1.5rem"}}><summary>Daily box odds</summary>{odds ? <ul>{Object.entries(odds).map(([rarity, chance]) => <li key={rarity}>{RARITY_LABEL[rarity] || rarity}: {chance.toFixed(2)}%</li>)}</ul> : <p>Odds are unavailable right now. You can wait before opening.</p>}<p>Each roll is independent. Daily boxes have no pity guarantee.</p></details>
         <section className={styles.board}>
           <div className={styles.head}>
             <div className={styles.streak}>

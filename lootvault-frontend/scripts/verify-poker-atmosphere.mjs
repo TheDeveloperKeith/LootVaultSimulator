@@ -1,15 +1,25 @@
 import assert from 'node:assert/strict';
-import { pokerAtmosphere } from '../src/earn/pokerAtmosphere.js';
+import { pokerAtmosphere, riverMusicTier } from '../src/earn/pokerAtmosphere.js';
 const card = (rank, suit = 'SPADES') => ({ rank, suit });
-const base = { game:'HOLDEM',stage:'FLOP',cards:[card(14),card(14,'HEARTS')],board:[card(2),card(7,'CLUBS'),card(9,'DIAMONDS')],hand:'Pair' };
-for (const rank of [12,13,14]) assert.equal(pokerAtmosphere({...base,cards:[card(rank),card(rank,'HEARTS')]}).level,2);
-assert.equal(pokerAtmosphere({...base,cards:[card(11),card(11,'HEARTS')]}).level,1);
+const base = { game:'HOLDEM',stage:'FLOP',cards:[card(14),card(14,'HEARTS')],board:[card(2),card(7,'CLUBS'),card(9,'DIAMONDS')] };
+let checks=0;
+for (const hand of ['High card','One pair']) {
+    for (const stage of ['FLOP','TURN','RIVER']) {
+        assert.equal(pokerAtmosphere({...base,hand,stage,toCall:100}).level,1);checks++;
+    }
+    assert.equal(riverMusicTier({...base,hand}),0);checks++;
+}
+for (const hand of ['Two pair','Three of a kind','Straight','Flush','Full house']) {
+    assert.equal(riverMusicTier({...base,hand}),1);checks++;
+    assert.equal(pokerAtmosphere({...base,hand}).level,['Flush','Full house'].includes(hand)?4:2);checks++;
+}
+for (const hand of ['Four of a kind','Straight flush']) {
+    assert.equal(riverMusicTier({...base,hand}),2);checks++;
+    assert.equal(pokerAtmosphere({...base,hand}).level,4);checks++;
+}
 const draw={...base,cards:[card(14),card(10)],board:[card(2),card(7),card(9,'DIAMONDS')]};
-assert.match(pokerAtmosphere(draw).label,/Flush draw/);
-assert.equal(pokerAtmosphere({...draw,stage:'RIVER',board:[...draw.board,card(5,'CLUBS'),card(6,'HEARTS')]}).level,1);
-for (const hand of ['Flush','Full house','Four of a kind','Straight flush']) assert.equal(pokerAtmosphere({...base,hand}).level,3);
-assert.equal(pokerAtmosphere({...base,stage:'COMPLETE'}).level,0);
-assert.equal(pokerAtmosphere({...base,game:'BLACKJACK'}).level,0);
-assert.equal(pokerAtmosphere({...base,cards:[card(2,'CLUBS'),card(6,'DIAMONDS')],opponents:[{cards:[card(14),card(14)]}]}).level,1);
-assert.match(pokerAtmosphere({...base,cards:[card(7),card(7,'HEARTS')]}).label,/Full house potential/);
-console.log('14 River atmosphere cases passed.');
+assert.equal(pokerAtmosphere({...draw,hand:'High card'}).level,1);checks++;
+assert.equal(pokerAtmosphere({...draw,hand:'Two pair'}).level,3);checks++;
+assert.equal(pokerAtmosphere({...base,hand:'Full house',stage:'COMPLETE'}).level,0);checks++;
+assert.equal(pokerAtmosphere({...base,hand:'Full house',game:'BLACKJACK'}).level,0);checks++;
+console.log(`${checks} River atmosphere/music checks passed.`);
