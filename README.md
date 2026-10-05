@@ -1,4 +1,4 @@
-ootVault
+LootVault
 
 LootVault is a browser game about collecting gear, opening daily crates, and risking coins in short card games. The project pairs a React interface with a Spring Boot API and PostgreSQL database. Its current MVP focuses on a small set of complete, connected experiences rather than adding more modes.
 
