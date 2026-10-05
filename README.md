@@ -1,130 +1,122 @@
-LootVault
+ootVault
 
-LootVault is a loot-box style web game with a Spring Boot backend and a React (Vite) frontend. Users spin/open loot boxes, earn items, manage an inventory, and browse a shop — with lobby, daily loot box, modes, inventory, shop, and login screens.
+LootVault is a browser game about collecting gear, opening daily crates, and risking coins in short card games. The project pairs a React interface with a Spring Boot API and PostgreSQL database. Its current MVP focuses on a small set of complete, connected experiences rather than adding more modes.
 
-⚠️ Status: early-stage / learning project. Backend endpoints and persistence are being built out; the frontend currently runs on placeholder data while the API is developed.
+## MVP scope
 
-Table of contents
-Tech stack
-Project structure
-Features
-Getting started
-Prerequisites
-Backend setup
-Frontend setup
-Running with Docker
-Configuration
-Roadmap
-Contributing
-License
-Tech stack
+- **Earn your loot:** play Blackjack against the dealer or The River, a Texas Hold’em game against two AI opponents.
+- **Crates and daily rewards:** claim daily coins and a limited number of daily boxes, then open earned crates to discover collectible items.
+- **Shop and inventory:** spend coins on catalog items, equip or review owned items, and see collection progress.
+- **Quests and introduction:** complete a small set of participation quests and take a short first-login tour. The River includes a no-wager demo that previews its visual effects.
+- **Accessibility and comfort:** sound and motion controls, keyboard support for important interactions, and reduced-motion handling.
 
-Backend
+Unfinished modes such as banners and crafting are outside the main navigation while the MVP is stabilized. The sandbox is a secondary practice area. See [MVP readiness](docs/mvp-readiness.md) for remaining work and the proposed playtest plan.
 
-Java 21
-Spring Boot 4.1 (spring-boot-starter-webmvc, spring-boot-starter-data-jpa, spring-boot-starter-validation, spring-boot-starter-flyway)
-PostgreSQL (via flyway-database-postgresql + postgresql driver)
-Maven (wrapper included — mvnw / mvnw.cmd)
-Lombok (available, not yet used)
-JUnit 5 / JUnit 4 for testing
+## How the project fits together
 
-Frontend
+The browser loads the React app from `lootvault-frontend`. Its API modules send requests to Spring Boot under `/api`. During local development, Vite proxies those requests to Spring Boot, so the browser uses the same origin for API calls and session cookies.
 
-React + Vite (lootvault-frontend/)
-React Router (react-router-dom) for navigation
-CSS Modules for component styling
+Spring Boot handles authentication, game rules, wallet changes, crate openings, shop purchases, quests, and inventory. Controllers expose HTTP endpoints, services enforce game and transaction rules, and repositories read and write JPA entities in PostgreSQL. Flyway applies the ordered SQL migrations in `src/main/resources/db/migration`; Hibernate checks the resulting schema at startup rather than creating tables automatically.
 
-Infra
+The longer guide, [Understanding LootVault](docs/understanding-lootvault.md), walks through the React-to-API request path, Spring and JPA responsibilities, Flyway, and project exercises. The [developer playground guide](docs/developer-playground.md) covers the isolated developer account.
 
-Docker (multi-stage build: Maven build → slim eclipse-temurin:21-jre-alpine runtime image)
-Docker Compose (local PostgreSQL container)
-Project structure
-LootVaultSimulator/
-├── src/main/              # Spring Boot application source
-├── lootvault-frontend/    # React + Vite frontend
-│   └── src/
-├── .mvn/wrapper/          # Maven wrapper
-├── Dockerfile             # Multi-stage build for the backend
-├── docker-compose.yaml    # Local Postgres service
-├── pom.xml                # Backend dependencies (Maven)
-├── PROGRESSLOG            # Running dev log / notes
-└── CHANGELOG.md
-Features
+## Technology
 
-Implemented / in progress (frontend shell)
+- Java 21 and Spring Boot 4.1
+- Spring MVC, Spring Security, Spring Data JPA, and Flyway
+- PostgreSQL 16
+- React 19, Vite 8, React Router, and CSS Modules
+- Maven wrapper for the backend; npm for the frontend
+- Docker Compose for a local PostgreSQL service
 
-Lobby / main menu
-Daily loot box screen
-Navigation shell with tabs: Lobby, Loot Boxes, Modes, Inventory, Shop
-Login route
+## Repository layout
 
-Planned
+```text
+src/main/java/                 Spring Boot controllers, services, entities, repositories, and config
+src/main/resources/            Spring configuration and Flyway migrations
+lootvault-frontend/src/        React pages, components, API clients, styles, and effects
+docs/                          Architecture, economy, readiness, and developer guides
+scripts/                        Local safety and verification utilities
+Dockerfile                      Release build that packages the frontend with the backend
+docker-compose.yaml             Local PostgreSQL service
+pom.xml                         Maven backend build
+```
 
-Backend REST API for loot box openings, drop tables, and item rarities
-Persistent user accounts, inventory, and currency backed by PostgreSQL
-Wiring the frontend up to the live API (currently placeholder data)
-Shop purchases / economy
-Multiple game "modes"
-Getting started
-Prerequisites
-Java 21 (JDK)
-Node.js + npm (for the frontend)
-Docker & Docker Compose (for local PostgreSQL, optional if you run Postgres another way)
-Backend setup
-Start a local PostgreSQL instance (see Running with Docker) or point at your own.
-Configure your database connection — see Configuration.
-From the project root, run the backend:
-bash
-   ./mvnw spring-boot:run
+## Run locally
 
-Or build a jar and run it directly:
+### Prerequisites
 
-bash
-   ./mvnw clean package -DskipTests
-   java -jar target/*.jar
+- Java 21 JDK
+- Node.js and npm
+- Docker Desktop with Docker Compose, or a PostgreSQL 16 server
 
-The API will start on http://localhost:8080 by default.
+### 1. Configure a local database
 
-Frontend setup
-bash
-cd lootvault-frontend
-npm install
-npm run dev
+The Compose file reads credentials from a root `.env` file. Start by copying `.env.example` to `.env`, then replace the placeholder password with a new local password. Keep `.env` private and out of Git.
 
-This starts the Vite dev server (default http://localhost:5173).
-
-Running with Docker
-
-To spin up a local PostgreSQL container:
-
-bash
+```powershell
+Copy-Item .env.example .env
 docker compose up -d
+```
 
-This starts a postgres:16 container named lootvault-postgres, exposed on host port 5433 (mapped to the container's 5432), with a persistent lootvault-pgdata volume.
+The database is available at `localhost:5433`. For a database running elsewhere, set `DB_URL`, `DB_USERNAME`, and `DB_PASSWORD` in the environment used to launch the backend. Spring does not load the root `.env` file by itself; Docker Compose reads it for the database container. A private `application-local.properties` can also supply local Spring configuration and is intentionally excluded from Git.
 
-To build and run the backend as a container:
+### 2. Start the backend
 
-bash
-docker build -t lootvault-backend .
-docker run -p 8080:8080 lootvault-backend
-Configuration
+From the repository root:
 
-The backend connects to PostgreSQL via standard Spring application.properties / application.yml (or environment variables). At minimum you'll need:
+```powershell
+./mvnw.cmd spring-boot:run
+```
 
-properties
-spring.datasource.url=jdbc:postgresql://localhost:5433/<your-db-name>
-spring.datasource.username=<your-db-user>
-spring.datasource.password=${DB_PASSWORD}
-Roadmap
- Define loot box / item / rarity data model + Flyway migrations
- Build REST endpoints for opening loot boxes and returning results
- Connect frontend inventory/shop/loot box screens to real endpoints
- Add authentication (login screen currently exists in the frontend shell)
- Add more game modes
-Contributing
+The local backend listens on `http://localhost:8081`. On macOS or Linux, use `./mvnw spring-boot:run`.
 
-This is currently a solo learning project. Issues and suggestions are welcome via GitHub Issues.
+### 3. Start the frontend
 
-License
+In another terminal:
 
-No license has been specified yet. Until one is added, all rights are reserved by the author.
+```powershell
+cd lootvault-frontend
+npm ci
+npm run dev
+```
+
+Open the Vite URL shown in the terminal, usually `http://localhost:5173`. Vite forwards `/api` requests to the backend at port 8081. Keep the same hostname (`localhost` or `127.0.0.1`) throughout a login session so the browser sends the expected cookies.
+
+Useful frontend commands:
+
+```powershell
+npm run lint
+npm run build
+```
+
+## Database and configuration
+
+Flyway migrations are applied automatically when Spring starts. Do not edit an already-applied migration; add a new numbered migration instead. The application uses `ddl-auto=validate` so schema changes remain explicit and reviewable.
+
+For a production run, configure `DB_URL`, `DB_USERNAME`, and `DB_PASSWORD` in the hosting environment, then activate the `prod` Spring profile. Production settings require HTTPS cookies, turn off developer mode, and use the same origin for the frontend and API unless exact separate frontend origins are configured with `FRONTEND_ORIGINS`. Never put live passwords, tokens, or private config files in Git.
+
+The phrase-based developer account is only enabled with the `dev` profile, explicit local configuration, and a non-production environment. Do not enable it in production. See [Safe publishing](docs/safe-publishing.md) before preparing a release.
+
+## Release build
+
+The release Maven profile builds the React frontend and packages it into the Spring Boot JAR:
+
+```powershell
+cd lootvault-frontend
+npm ci
+npm run lint
+cd ..
+./mvnw.cmd -Prelease clean verify
+java -jar target/LootVaultProject-0.0.1-SNAPSHOT.jar --spring.profiles.active=prod
+```
+
+Provide production database variables through the deployment environment. Do not commit them or pass real secrets on a command line that may be saved in shell history.
+
+## Project status and next steps
+
+The main work now is reliability, balancing, deployment readiness, and a small guided playtest—not expanding the feature list. Important follow-ups include durable request IDs for purchases, login rate limiting, deployment-specific browser checks, and encrypted off-machine backups with a verified restore. Read [MVP readiness](docs/mvp-readiness.md) for the full checklist and open questions.
+
+## License
+
+No license has been specified. All rights are reserved by the author.
