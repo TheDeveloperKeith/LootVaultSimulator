@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import { createPortal } from "react-dom";
-import { useReducedMotion, setReducedMotion } from "../preferences/motion";
 import { Link } from "react-router-dom";
 import { actOnHand, getEarnState, startHand } from "../api/earn";
 import { useWallet } from "../wallet/WalletContext";
@@ -14,7 +13,7 @@ import { useAuth } from "../auth/AuthContext";
 import styles from "./EarnLootPage.module.css";
 import { pokerAtmosphere, riverMusicTier } from "../earn/pokerAtmosphere";
 import OpponentIcon from "../components/OpponentIcon";
-import { playRoundResult } from "../sfx";
+import { playRoundResult, playGameEffect } from "../sfx";
 import { pokerButtonPitch } from "../earn/pokerButtonPitch";
 import HandFaithSequence from "../earn/HandFaithSequence";
 
@@ -24,7 +23,6 @@ function Cards({ cards, prefix }) { return <div className={styles.cards} data-sc
 
 export default function EarnLootPage() {
     const { player } = useAuth();
-    const reducedMotion = useReducedMotion();
     const [testHand, setTestHand] = useState("");
     const [testResult, setTestResult] = useState("WIN");
     const { wallet, refresh: refreshWallet } = useWallet();
@@ -55,11 +53,11 @@ export default function EarnLootPage() {
     const [actionPeak, setActionPeak] = useState({ id:null, level:0 });
     if (actionPeak.id !== round?.id) setActionPeak({ id:round?.id, level:handIntensity });
     else if (handIntensity > actionPeak.level) setActionPeak({ id:round?.id, level:handIntensity });
-    const catastrophic = !complete && riverMusicTier(round) === 2;
-    const controlsRef = useRef(null);
+    const finalWordActions = !complete && riverMusicTier(round) === 2 && round?.stage === "RIVER";
+    const finalChoicesRef = useRef(null);
     useEffect(() => {
-        if (catastrophic) controlsRef.current?.querySelector(`.${styles.actionStack} button:not(:disabled)`)?.focus({preventScroll:true});
-    }, [catastrophic]);
+        if (finalWordActions) finalChoicesRef.current?.querySelector("button:not(:disabled)")?.focus({preventScroll:true});
+    }, [finalWordActions]);
     const extremeActions = !complete && Math.max(handIntensity, actionPeak.id === round?.id ? actionPeak.level : 0) >= 3;
     const net = complete ? round.payout - round.committed : 0;
 
@@ -91,8 +89,8 @@ export default function EarnLootPage() {
         transact(() => startHand(game, stake, startRequest.current.id, player?.devMode && game === "HOLDEM" && testHand ? testHand : undefined, player?.devMode && game === "HOLDEM" && testHand ? testResult : undefined));
     }
 
-    const controls = (<aside ref={controlsRef} className={`${styles.controls} ${catastrophic ? styles.criticalControls : ""}`} aria-label="Hand actions">
-                {active ? <><div className={styles.criticalHeader}><h2>Your move</h2>{catastrophic && <Button variant="secondary" size="sm" onClick={() => setReducedMotion(!reducedMotion)}>{reducedMotion ? "Motion: Reduced" : "Reduce motion"}</Button>}</div><p>{format(round?.committed)} coins committed to this hand.</p><div className={`${styles.actionStack} ${extremeActions ? styles.actionGlow : ""}`}>{round?.actions.includes("HIT") && <><Button soundPitch={game === "HOLDEM" ? buttonPitch : 1} disabled={busy} onClick={() => transact(() => actOnHand(round, "HIT"))}>Hit · one more card</Button><Button soundPitch={game === "HOLDEM" ? buttonPitch : 1} variant="secondary" disabled={busy} onClick={() => transact(() => actOnHand(round, "STAND"))}>Stand · hold your total</Button></>}{round?.actions.includes("CALL") && <><Button soundPitch={buttonPitch} disabled={busy || balance < round.toCall} onClick={() => transact(() => actOnHand(round,"CALL"))}>Call · {format(round.toCall)} coins</Button><Button soundPitch={buttonPitch} variant="danger" disabled={busy} onClick={() => transact(() => actOnHand(round,"FOLD"))}>Fold · leave the pot</Button></>}{round?.actions.includes("CHECK") && <><Button soundPitch={game === "HOLDEM" ? buttonPitch : 1} disabled={busy} onClick={() => transact(() => actOnHand(round, "CHECK"))}>{round.stage === "RIVER" ? "Check · showdown" : "Check · next card"}</Button><label className={styles.field}>Additional raise<input type="number" min="1" max={balance} step="1" value={raise} onChange={event => setRaise(event.target.value)} disabled={busy || balance === 0} /></label><Button soundPitch={buttonPitch} variant="secondary" disabled={busy || !Number.isSafeInteger(Number(raise)) || Number(raise) < 1 || Number(raise) > balance} onClick={() => transact(() => actOnHand(round, "RAISE", Number(raise)))}>Raise {format(raise)} coins</Button><Button soundPitch={buttonPitch} variant="danger" disabled={busy} onClick={() => transact(() => actOnHand(round, "FOLD"))}>Fold · leave the pot</Button></>}</div><small className={styles.note}>Your hand is saved. You can leave and return to finish it.</small></> : <><h2>{complete ? "Next hand?" : "Choose your stake"}</h2><p>Commit at least 10% of your current coins. Choose all-in to put them all on the table.</p><div className={styles.stake}><strong>{format(stake)}</strong><span>coins · {percent}% of your balance</span></div><label className={styles.range}>Stake percentage<input type="range" min="10" max="100" step="1" value={percent} onChange={event => setPercent(Number(event.target.value))} disabled={busy || !wallet} /></label><div className={styles.presets}>{[10,25,50,100].map(value => <button key={value} aria-pressed={percent === value} disabled={busy} onClick={() => setPercent(value)}>{value === 100 ? "All-in" : `${value}%`}</button>)}</div><Button disabled={busy || !data || !wallet || stake <= 0 || stake > 1_000_000_000_000} onClick={deal}>{busy ? "Dealing…" : "Commit coins & deal"}</Button>{balance === 0 && wallet && <small className={styles.note}>Open your daily coin crate or sell an inventory item to get back to the table.</small>}<p className={styles.note}>Stake is deducted when the hand starts. Returns include your original stake. No coin purchases or cash payouts.</p></>}
+    const controls = (<aside className={styles.controls} aria-label="Hand actions">
+                {active ? <><h2>Your move</h2><p>{format(round?.committed)} coins committed to this hand.</p><div className={`${styles.actionStack} ${extremeActions ? styles.actionGlow : ""}`}>{round?.actions.includes("HIT") && <><Button soundPitch={game === "HOLDEM" ? buttonPitch : 1} disabled={busy} onClick={() => transact(() => actOnHand(round, "HIT"))}>Hit · one more card</Button><Button soundPitch={game === "HOLDEM" ? buttonPitch : 1} variant="secondary" disabled={busy} onClick={() => transact(() => actOnHand(round, "STAND"))}>Stand · hold your total</Button></>}{round?.actions.includes("CALL") && <><Button soundPitch={buttonPitch} disabled={busy || balance < round.toCall} onClick={() => transact(() => actOnHand(round,"CALL"))}>Call · {format(round.toCall)} coins</Button><Button soundPitch={buttonPitch} variant="danger" disabled={busy} onClick={() => transact(() => actOnHand(round,"FOLD"))}>Fold · leave the pot</Button></>}{round?.actions.includes("CHECK") && <><Button soundPitch={game === "HOLDEM" ? buttonPitch : 1} disabled={busy} onClick={() => transact(() => actOnHand(round, "CHECK"))}>{round.stage === "RIVER" ? "Check · showdown" : "Check · next card"}</Button><label className={styles.field}>Additional raise<input type="number" min="1" max={balance} step="1" value={raise} onChange={event => setRaise(event.target.value)} disabled={busy || balance === 0} /></label><Button soundPitch={buttonPitch} variant="secondary" disabled={busy || !Number.isSafeInteger(Number(raise)) || Number(raise) < 1 || Number(raise) > balance} onClick={() => transact(() => actOnHand(round, "RAISE", Number(raise)))}>Raise {format(raise)} coins</Button><Button soundPitch={buttonPitch} variant="danger" disabled={busy} onClick={() => transact(() => actOnHand(round, "FOLD"))}>Fold · leave the pot</Button></>}</div><small className={styles.note}>Your hand is saved. You can leave and return to finish it.</small></> : <><h2>{complete ? "Next hand?" : "Choose your stake"}</h2><p>Commit at least 10% of your current coins. Choose all-in to put them all on the table.</p><div className={styles.stake}><strong>{format(stake)}</strong><span>coins · {percent}% of your balance</span></div><label className={styles.range}>Stake percentage<input type="range" min="10" max="100" step="1" value={percent} onChange={event => setPercent(Number(event.target.value))} disabled={busy || !wallet} /></label><div className={styles.presets}>{[10,25,50,100].map(value => <button key={value} aria-pressed={percent === value} disabled={busy} onClick={() => setPercent(value)}>{value === 100 ? "All-in" : `${value}%`}</button>)}</div><Button disabled={busy || !data || !wallet || stake <= 0 || stake > 1_000_000_000_000} onClick={deal}>{busy ? "Dealing…" : "Commit coins & deal"}</Button>{balance === 0 && wallet && <small className={styles.note}>Open your daily coin crate or sell an inventory item to get back to the table.</small>}<p className={styles.note}>Stake is deducted when the hand starts. Returns include your original stake. No coin purchases or cash payouts.</p></>}
                 <details className={styles.rules}><summary>How this table works</summary><p>{MODES[game].rules}</p></details>
             </aside>);
 
@@ -121,7 +119,17 @@ export default function EarnLootPage() {
                     {complete && net > 0 && <div className={styles.sparkles} aria-hidden="true">{Array.from({length: 12}, (_, index) => <i key={index} style={{ "--i": index }} />)}</div>}
                 </> : <div className={styles.emptyTable}><div className={styles.fannedCards}><PlayingCard /><PlayingCard /><PlayingCard /></div><h3>A little nerve. A little luck.</h3><p>{game === "BLACKJACK" ? "Just you, the dealer, and a race to 21." : "Three seats. Five community cards. One pot."}</p><span>In-game coins only · every stake can be lost</span></div>}
             </section>
-            {catastrophic ? createPortal(controls, document.body) : controls}
+            {finalWordActions ? createPortal(
+                <nav ref={finalChoicesRef} className={styles.finalChoices} aria-label="Final hand decision">
+                    <button type="button" disabled={busy || (round.actions.includes("CALL") && balance < round.toCall)}
+                        aria-label={round.actions.includes("CALL") ? `Call ${format(round.toCall)} coins` : "Check and reveal the winner"}
+                        title={round.actions.includes("CALL") ? `Match the bet: ${format(round.toCall)} coins` : undefined}
+                        onClick={() => { playGameEffect("confirm", .45, buttonPitch); transact(() => actOnHand(round, round.actions.includes("CALL") ? "CALL" : "CHECK")); }}>
+                        {round.actions.includes("CALL") ? "CALL!" : "CHECK!"}
+                    </button>
+                    <button type="button" disabled={busy} onClick={() => { playGameEffect("back", .45, buttonPitch); transact(() => actOnHand(round, "FOLD")); }}>FOLD!</button>
+                </nav>, document.body
+            ) : controls}
         </div>
         <div className={styles.loop}><span>Daily crate</span><i>→</i><span>Play a hand</span><i>→</i><span>Complete quests</span><i>→</i><Link to="/crates">Build your vault ↗</Link></div>
     </div>;

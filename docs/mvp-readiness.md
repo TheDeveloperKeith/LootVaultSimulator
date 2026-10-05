@@ -15,7 +15,7 @@ The scope is frozen around blackjack, The River, crates and daily boxes, shop, i
 - Source-derived savings estimates and smaller one-time collection bonuses. No existing payout was reclaimed.
 - Flyway V9 stores tutorial completion; V10 recovers discoveries from still-owned inventory.
 - Production secure cookie settings, explicit developer-mode shutdown, packaged frontend routes, CI checks, a publish scan, and a backup/restore verification script.
-- Four of a kind and straight flush now add near-black table lighting, stronger shaking, slow light flickers, and six colliding stars. Their live actions stay in a stable glowing panel with a reduced-motion control. Mystery crate reveals add original procedural charge, blade sweep, bass impact, and harmonic echoes; muting or closing disposes their audio.
+- Four of a kind and straight flush retain the earlier table lighting and shake strength, with six colliding stars in the reveal. On the river, their final actions are hover-highlighted CHECK! and FOLD! words (CALL! when matching an AI bet); earlier streets use the regular controls. Mystery crate reveals add original procedural charge, blade sweep, bass impact, and harmonic echoes; muting or closing disposes their audio.
 
 ## Verification performed locally
 

@@ -17,8 +17,6 @@ export default function RiverAtmosphere({ round, sceneRef, revealing = false, au
     const intensity = active ? Math.max(1, peak) : revealing && round?.game === "HOLDEM" ? Math.max(peak, round.showdown?.extreme ? 4 : 2) : 0;
     const stage = round?.stage;
     const musicTier = riverMusicTier(round);
-    const catastrophic = musicTier === 2;
-    const chaosMotion = catastrophic && motionAllowed && !reducedMotion;
     const music = musicTier === 2 ? heavenlyMusic : intenseMusic;
     const audioRef = useRef(null);
     const choirRef = useRef(null);
@@ -38,13 +36,13 @@ export default function RiverAtmosphere({ round, sceneRef, revealing = false, au
         const sync = () => {
             animation?.cancel();
             if (!motionAllowed || reducedMotion || preference.matches) return;
-            const strength = catastrophic ? (stage === "RIVER" ? 82 : stage === "TURN" ? 70 : 60) : intensity >= 3 ? (stage === "RIVER" ? 40 : stage === "TURN" ? 34 : 28) + (intensity === 4 ? 6 : 0) : (stage === "RIVER" ? 10 : stage === "TURN" ? 6 : 3) + (intensity === 3 ? 2 : 0);
+            const strength = intensity >= 3 ? (stage === "RIVER" ? 40 : stage === "TURN" ? 34 : 28) + (intensity === 4 ? 6 : 0) : (stage === "RIVER" ? 10 : stage === "TURN" ? 6 : 3) + (intensity === 3 ? 2 : 0);
             const offsets = [[0,0],[-1,.5],[1,-.4],[-.85,-.3],[.75,.35],[-.6,.25],[.5,-.2],[-.35,.15],[.2,-.1],[0,0]];
-            animation = sceneRef.current?.animate(offsets.map(([x,y]) => ({transform:`translate(${x * strength}px,${y * strength}px) ${intensity >= 3 ? "rotate(.3deg)" : ""}`})), {delay:enteringExtreme ? 700 : 0,duration:catastrophic ? 115 : intensity >= 3 ? 160 : stage === "RIVER" ? 430 : 650,iterations:Infinity,easing:"linear"});
+            animation = sceneRef.current?.animate(offsets.map(([x,y]) => ({transform:`translate(${x * strength}px,${y * strength}px) ${intensity >= 3 ? "rotate(.3deg)" : ""}`})), {delay:enteringExtreme ? 700 : 0,duration:intensity >= 3 ? 160 : stage === "RIVER" ? 430 : 650,iterations:Infinity,easing:"linear"});
         };
         sync(); preference.addEventListener("change", sync);
         return () => { animation?.cancel(); preference.removeEventListener("change", sync); };
-    }, [active, intensity, stage, sceneRef, reducedMotion, motionAllowed, catastrophic]);
+    }, [active, intensity, stage, sceneRef, reducedMotion, motionAllowed]);
     useEffect(() => {
         const audio = audioRef.current;
         let fadeInterval;
@@ -90,7 +88,7 @@ export default function RiverAtmosphere({ round, sceneRef, revealing = false, au
         return () => { clearInterval(fadeInterval); clearTimeout(revealTimer); window.removeEventListener("lootvault:sound-changed", sync); };
     }, [intensity, stage, enabled, revealing, round?.game, round?.showdown?.extreme, music, musicTier, reducedMotion, audioAllowed]);
     useEffect(() => { const audio = audioRef.current; return () => { audio.pause(); choirRef.current?.stop(); }; }, []);
-    const veil = <div className={`${styles.extremeVeil} ${chaosMotion ? styles.cataclysmVeil : ""}`} style={contained ? {position:"absolute",zIndex:2} : undefined} aria-hidden="true" />;
+    const veil = <div className={styles.extremeVeil} style={contained ? {position:"absolute",zIndex:2} : undefined} aria-hidden="true" />;
     return <><audio ref={audioRef} src={music} loop preload="none" onLoadedMetadata={() => {
         if (pendingSeek.current) { audioRef.current.currentTime = Number.isFinite(audioRef.current.duration) && audioRef.current.duration > 0 ? seekOffset.current % audioRef.current.duration : seekOffset.current; pendingSeek.current = false; }
     }} />{active && intensity >= 3 && (contained ? veil : createPortal(veil, document.body))}{active && !contained && <div className={`${styles.atmosphere} ${intensity >= 2 ? styles.intense : ""}`}><span role="status">{intensity >= 2 && level < 2 ? "The tension stays · showdown awaits" : label}<small>{intensity >= 3 ? "EXTREME · sky ascent incoming" : intensity >= 2 ? "Intensity locked until the result" : "Hand cues, not winning odds"}</small></span><button aria-pressed={enabled} onClick={() => {

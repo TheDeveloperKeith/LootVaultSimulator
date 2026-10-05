@@ -32,12 +32,19 @@ export function createHeavenlyChoir() {
             voice.start(); vibrato.start(); oscillators.push(voice, vibrato);
         }
     }
+    let stopped = false;
     return {
         async setLevel(level) {
+            if (stopped) return;
             master.gain.cancelScheduledValues(context.currentTime);
             master.gain.setTargetAtTime(level, context.currentTime, .7);
             if (level > 0) await context.resume();
         },
-        stop() { oscillators.forEach(voice => voice.stop()); void context.close(); }
+        stop() {
+            if (stopped) return;
+            stopped = true;
+            oscillators.forEach(voice => voice.stop());
+            if (context.state !== 'closed') void context.close().catch(() => {});
+        }
     };
 }
