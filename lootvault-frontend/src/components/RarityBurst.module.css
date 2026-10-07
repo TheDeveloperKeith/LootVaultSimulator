@@ -46,3 +46,5 @@
 .audioCredit { margin-top: .65rem; font-size: .6rem; color: #8b7480; pointer-events: auto; }
 .audioCredit a { color: #b994a1; }
 @media(max-width:550px) { .rewardArt { width: 150px; height: 150px; } .rewardArt svg { width: 140px; height: 140px; } }
+
+.skipAnimation{position:fixed;z-index:100;right:1rem;top:1rem;pointer-events:auto;min-height:44px;padding:.5rem .8rem;border:1px solid #e9d69c88;border-radius:10px;background:#121c2fee;color:#f3dfaa;cursor:pointer;transform:none}.skipAnimation:focus-visible{outline:2px solid #f3dfaa}

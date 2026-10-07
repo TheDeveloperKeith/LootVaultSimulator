@@ -5,3 +5,5 @@ export const getMyCrates = () => api.get("/api/crates/inventory");
 export const buyCrate = (crateCode) => api.post(`/api/crates/${crateCode}/buy`);
 export const openCrate = (inventoryCrateId) => api.post(`/api/crates/${inventoryCrateId}/open`);
 export const sellCrate = (inventoryCrateId) => api.post(`/api/crates/${inventoryCrateId}/sell`);
+
+export const openCrates = (requestId,crateIds) => api.post("/api/crates/open-bulk",{requestId,crateIds});

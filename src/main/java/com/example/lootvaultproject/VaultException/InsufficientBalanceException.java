@@ -5,7 +5,7 @@ package com.example.lootvaultproject.VaultException;
 // the exception layer is ready before that code exists.
 public class InsufficientBalanceException extends RuntimeException {
     public InsufficientBalanceException(String currency, long requested, long available) {
-        super("Insufficient " + currency + " balance: requested " + requested
+        super("Insufficient " + ("HARD".equals(currency)?"gem":"SOFT".equals(currency)?"coin":currency) + " balance: requested " + requested
                 + " but only " + available + " available");
     }
 }

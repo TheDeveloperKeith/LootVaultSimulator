@@ -4,9 +4,9 @@ import { AuthProvider } from "./auth/AuthContext";
 import ProtectedRoute from "./auth/ProtectedRoute";
 import { WalletProvider } from "./wallet/WalletContext";
 import AppShell from "./components/AppShell";
+const SettingsPage = lazy(() => import("./pages/SettingsPage"));
+const ContainerPage = lazy(() => import("./pages/ContainerPage"));
 const MainMenuPage = lazy(() => import("./pages/MainMenuPage"));
-const LootBoxPage = lazy(() => import("./pages/LootBoxPage"));
-const ShopPage = lazy(() => import("./pages/ShopPage"));
 const InventoryPage = lazy(() => import("./pages/InventoryPage"));
 const ModesPage = lazy(() => import("./pages/ModesPage"));
 const BannerModePage = lazy(() => import("./pages/BannerModePage"));
@@ -29,15 +29,17 @@ export default function App() {
                             <Route element={<AppShell />}>
                                 <Route index element={<Navigate to="/menu" replace />} />
                                 <Route path="menu" element={<MainMenuPage />} />
-                                <Route path="lootboxes" element={<LootBoxPage />} />
+                                <Route path="lootboxes" element={<Navigate to="/menu" replace />} />
                                 <Route path="modes" element={<ModesPage />} />
                                 <Route path="banners" element={<BannerModePage />} />
+                                <Route path="crates/:code" element={<ContainerPage />} />
                                 <Route path="crates" element={<CrateModePage />} />
                                 <Route path="sandbox" element={<SandboxPage />} />
                                 <Route path="inventory" element={<InventoryPage />} />
                                 <Route path="progression" element={<ProgressionPage />} />
                                 <Route path="earn" element={<EarnLootPage />} />
-                                <Route path="shop" element={<ShopPage />} />
+                                <Route path="settings" element={<SettingsPage />} />
+                                <Route path="shop" element={<Navigate to="/menu" replace />} />
                             </Route>
                         </Route>
 

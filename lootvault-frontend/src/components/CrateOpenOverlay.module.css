@@ -321,7 +321,7 @@
 }
 
 .closeButton:disabled {
-  opacity: .36;
+  opasadacity: .36;
   cursor: default;
 }
 
@@ -356,3 +356,5 @@
 .revealArt { display: flex; justify-content: center; text-shadow: none; }
 .revealPanel { box-shadow: none; }
 .closeButton { margin: 1.25rem auto 0; display: flex; min-width: 9rem; font: 600 .875rem/1.25 var(--font-body); background: linear-gradient(180deg, #a5ddff, #78c5f6); }
+
+.skipAnimation{position:relative;z-index:5;min-height:44px;background:#142033;color:#e9d69c;border:1px solid #e9d69c55;border-radius:10px;padding:.5rem .8rem;cursor:pointer}.skipAnimation:focus-visible{outline:2px solid #e9d69c}

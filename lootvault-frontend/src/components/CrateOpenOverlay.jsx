@@ -24,7 +24,7 @@ const WEIGHTED_RARITIES = [
   "EXTRA_EXTRAORDINARY",
 ];
 
-const PLACEHOLDER_NAMES = Object.fromEntries([...new Set(WEAPON_DESIGNS.map(item => item.rarity))].map(rarity => [rarity, WEAPON_DESIGNS.filter(item => item.rarity === rarity).map(item => item.name)]));
+const PLACEHOLDER_NAMES = Object.fromEntries([...new Set(WEAPON_DESIGNS.map(item => item.rarity))].map(rarity => [rarity, WEAPON_DESIGNS.filter(item => item.rarity === rarity && !item.effect).map(item => item.name)]));
 
 function seededRandom(seed) {
   let value = seed % 2147483647;
@@ -69,6 +69,7 @@ export default function CrateOpenOverlay({
                                            skipAnimation = false,
                                            preview = false,
                                          }) {
+  const [userSkipped, setUserSkipped] = useState(false);
   const [phase, setPhase] = useState(result ? "ready" : "waiting");
   const [winnerLocked, setWinnerLocked] = useState(false);
   const controls = useAnimationControls();
@@ -81,7 +82,7 @@ export default function CrateOpenOverlay({
   const rarityClass = result ? styles[RARITY_CLASS[result.rarity]] : "";
 
   const displayPhase = !result ? "waiting" : phase === "waiting" ? "ready" : phase;
-  const reveal = useEffectEvent(item => onReveal?.(item));
+  const reveal = useEffectEvent((item, options) => onReveal?.(item, options));
   const close = useEffectEvent(() => {
     if (result && phase === "revealed") onClose?.();
   });
@@ -92,6 +93,7 @@ export default function CrateOpenOverlay({
     document.body.style.overflow = "hidden";
     dialogRef.current?.focus();
     function handleKey(event) {
+      if (event.defaultPrevented) return;
       if (event.key === "Escape") { event.preventDefault(); close(); }
       if (event.key !== "Tab") return;
       const buttons = dialogRef.current?.querySelectorAll("button:not(:disabled)");
@@ -118,16 +120,16 @@ export default function CrateOpenOverlay({
     if (!result) return;
 
     let cancelled = false;
-    revealedRef.current = false;
 
     async function run() {
-      if (skipAnimation || reducedMotion) {
+      if (skipAnimation || userSkipped || reducedMotion) {
+        controls.set({x:(viewportRef.current?.clientWidth ?? 900)/2 - WINNER_INDEX*STEP - CARD_WIDTH/2});
         setWinnerLocked(true);
         setPhase("revealed");
 
         if (!revealedRef.current && !cancelled) {
           revealedRef.current = true;
-          reveal(result);
+          reveal(result, {skipCutscene:userSkipped});
         }
         return;
       }
@@ -199,7 +201,7 @@ export default function CrateOpenOverlay({
     // Do NOT include `phase` in this dependency list.
     // This effect changes phase itself. Depending on phase would cancel
     // the roll as soon as it changed from "ready" to "rolling".
-  }, [result, controls, speed, skipAnimation, reducedMotion]);
+  }, [result, controls, speed, skipAnimation, userSkipped, reducedMotion]);
 
   return createPortal(
       <div className={styles.overlay}>
@@ -211,7 +213,7 @@ export default function CrateOpenOverlay({
               <span className={styles.kicker}>OPENING</span>
               <h2 className={styles.crateTitle}>{crateName}</h2>
             </div>
-            <div className={styles.secureTag}>Vault reveal</div>
+            {result ? <button className={styles.skipAnimation} onClick={() => { if (displayPhase === "revealed") window.dispatchEvent(new Event("lootvault:skip-reveal")); else setUserSkipped(true); }}>Skip animation ↗</button> : <div className={styles.secureTag}>Vault reveal</div>}
           </div>
 
           {displayPhase === "waiting" ? (

@@ -51,3 +51,5 @@
 .collisionBloom { background:radial-gradient(circle,#ecdcff99,#9982ff55 22%,transparent 65%); }
 @keyframes collisionShock { 0% { opacity:0;transform:translate(-50%,-50%) scale(.1); } 20% { opacity:.7; } 100% { opacity:0;transform:translate(-50%,-50%) scale(12); } }
 @media(prefers-reduced-motion:reduce) { .collisionField { display:none; } }
+
+.sceneShell{position:fixed;inset:0;z-index:2147482300;--star:#d1e6ff}.sceneShell>.scene{z-index:1}.sceneShell>.skip{position:absolute;z-index:2;left:50%;bottom:max(1rem,env(safe-area-inset-bottom));transform:translateX(-50%);min-height:44px;white-space:nowrap;background:#152033ee}

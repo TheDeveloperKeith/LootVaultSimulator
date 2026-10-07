@@ -69,6 +69,7 @@ public class ShopService {
         ShopOffer offer = shopOfferRepository.findById(offerId)
                 .orElseThrow(() -> new IllegalArgumentException("Offer not found"));
 
+        if (offer.getItemCatalog().isLimited()) throw new IllegalArgumentException("Limited items are banner exclusive.");
         if (!offer.getWeekKey().equals(currentWeekKey())) {
             throw new IllegalStateException("This offer is no longer in this week's shop.");
         }

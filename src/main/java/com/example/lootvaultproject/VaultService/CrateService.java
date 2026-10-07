@@ -178,9 +178,22 @@ public class CrateService {
         return weights.keySet().iterator().next(); // floating-point fallback
     }
 
+    public record ContainerItem(String name, String rarity, double chance) {}
+
+    public List<ContainerItem> getContents(String code) {
+        CrateDefinition definition = requireDefinition(code);
+        double total = definition.odds().values().stream().mapToDouble(Double::doubleValue).sum();
+        return definition.odds().entrySet().stream().filter(entry -> entry.getValue() > 0)
+                .flatMap(entry -> {
+                    List<ItemCatalog> candidates = itemCatalogRepository.findByRarityAndLimitedFalse(entry.getKey());
+                    double chance = entry.getValue() / total * 100 / Math.max(1, candidates.size());
+                    return candidates.stream().map(item -> new ContainerItem(item.getName(), entry.getKey(), chance));
+                }).toList();
+    }
+
     /** Picks a random catalog item of the given rarity, ignoring the active flag — see V4 migration for why. */
     private ItemCatalog pickItemOfRarity(String rarity) {
-        List<ItemCatalog> candidates = itemCatalogRepository.findByRarity(rarity);
+        List<ItemCatalog> candidates = itemCatalogRepository.findByRarityAndLimitedFalse(rarity);
         if (candidates.isEmpty()) {
             throw new IllegalStateException("No catalog items exist for rarity " + rarity);
         }

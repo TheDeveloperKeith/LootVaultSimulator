@@ -31,6 +31,11 @@ public class CrateController {
         return ResponseEntity.ok(body);
     }
 
+    @GetMapping("/{crateCode}/contents")
+    public ResponseEntity<List<CrateService.ContainerItem>> contents(@PathVariable String crateCode) {
+        return ResponseEntity.ok(crateService.getContents(crateCode));
+    }
+
     @GetMapping("/inventory")
     public ResponseEntity<List<InventoryCrateResponse>> getMyCrates(Authentication authentication) {
         List<InventoryCrateResponse> body = crateService.getMyCrates(authentication.getName()).stream()

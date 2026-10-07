@@ -1,4 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
+import { getGems } from "../api/gems";
 import { getMyWallet } from "../api/wallet";
 import { useAuth } from "../auth/AuthContext";
 
@@ -13,13 +14,14 @@ export function WalletProvider({ children }) {
   const [snapshot, setSnapshot] = useState(null);
   const latestRequest = useRef(0);
   const wallet = snapshot?.player === player ? snapshot.value : null;
+  const gems = snapshot?.player === player ? snapshot.gems : null;
 
   const refresh = useCallback(async () => {
     const request = ++latestRequest.current;
     if (!player) return;
     try {
-      const value = await getMyWallet();
-      if (request === latestRequest.current) setSnapshot({ player, value });
+      const [value, gems] = await Promise.all([getMyWallet(),getGems()]);
+      if (request === latestRequest.current) setSnapshot({ player, value, gems });
     } catch {
       // A temporary network failure must not erase the last confirmed balance.
     }
@@ -40,7 +42,7 @@ export function WalletProvider({ children }) {
   }, [refresh]);
 
   return (
-    <WalletContext.Provider value={{ wallet, refresh }}>
+    <WalletContext.Provider value={{ wallet, gems, refresh }}>
       {children}
     </WalletContext.Provider>
   );

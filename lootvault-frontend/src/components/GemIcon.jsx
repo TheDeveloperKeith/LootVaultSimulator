@@ -1,0 +1,6 @@
+import { useId } from "react";
+/** Original flat mascot gem: rose facets, lilac edges and an icy-blue point. */
+export default function GemIcon({size=32}) {
+ const id=useId();
+ return <svg viewBox="0 0 80 96" width={size} height={size} aria-hidden="true" focusable="false"><defs><linearGradient id={id} x1="0" y1="0" x2=".5" y2="1"><stop stopColor="#ffb8e7"/><stop offset=".5" stopColor="#dc8bff"/><stop offset="1" stopColor="#62def9"/></linearGradient></defs><path d="M40 4 69 29 69 67 40 91 11 67 11 29Z" fill={`url(#${id})`} stroke="#271636" strokeWidth="4" strokeLinejoin="round"/><path d="m40 4-17 29h34z" fill="#ffd4ec"/><path d="M11 29h12v35L11 67Z" fill="#ed80b8"/><path d="m69 29-12 4v31l12 3z" fill="#a77cf5"/><path d="m23 64 17 27 17-27z" fill="#7ff3ff"/><path d="M23 33h34v31H23z" fill="#ffc1e6" opacity=".7"/><ellipse cx="29" cy="48" rx="4" ry="6" fill="#38213d"/><ellipse cx="51" cy="48" rx="4" ry="6" fill="#38213d"/><circle cx="30" cy="46" r="1.5" fill="white"/><circle cx="52" cy="46" r="1.5" fill="white"/><path d="M34 57q6 9 12 0" fill="#e95698" stroke="#38213d" strokeWidth="2.5" strokeLinecap="round"/><ellipse cx="22" cy="57" rx="5" ry="2.5" fill="#f88bba"/><ellipse cx="58" cy="57" rx="5" ry="2.5" fill="#f88bba"/><path d="m16 20 2 7 7 2-7 2-2 7-2-7-7-2 7-2z" fill="white"/></svg>;
+}

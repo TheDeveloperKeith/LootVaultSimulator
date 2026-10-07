@@ -38,3 +38,72 @@ html[data-reduced-motion="true"] *,html[data-reduced-motion="true"] *::before,ht
 
 [data-reduced-motion="true"] *,[data-reduced-motion="true"] *::before,[data-reduced-motion="true"] *::after {animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
 html[data-reduced-motion="true"] [class*="phraseScene"] {display:none}
+
+/* Scoped arcade accents preserve the inventory and banner design systems. */
+[data-game-theme="arcade"] {
+ --font-body:"Arial Rounded MT Bold","Trebuchet MS",Arial,sans-serif;
+ --font-display:var(--font-body); --glass:#191720; --glass-strong:#211d2b;
+ --text-dim:#c4bbcf; --line:#655276; --cyan:#73dcf4; --blue:#73dcf4;
+ font-family:var(--font-body);
+}
+[data-game-theme="arcade"][data-game-theme] h1,
+[data-game-theme="arcade"][data-game-theme] h2,
+[data-game-theme="arcade"][data-game-theme] h3 {font-family:var(--font-body);font-weight:900;text-shadow:1px 2px 0 #090610;letter-spacing:-.025em}
+[data-game-theme="arcade"] :is(input:not([type="range"]),select) {border-color:#655276;background-color:#15131c;color:#fff;border-radius:8px}
+[data-game-theme="arcade"] :is(button,a):focus-visible {outline:3px solid #b4eeff;outline-offset:3px}
+[data-game-theme="arcade"] button[data-variant="primary"] {
+ border:2px solid #8be4ff;border-radius:8px;color:#fff;
+ background:linear-gradient(#2ac6ef 0 48%,#0c96cf 49%);
+ font-weight:900;text-shadow:1px 2px #07394d;box-shadow:inset 0 0 0 2px #07516c,0 3px 0 #042839;
+}
+[data-game-theme="arcade"] button[data-variant="secondary"] {background:linear-gradient(#524260,#34293f);border:2px solid #9276a8;color:#fff;border-radius:8px;font-weight:800;box-shadow:0 3px 0 #120c1a}
+[data-game-theme="arcade"] button[data-variant="danger"] {background:linear-gradient(#b9465d,#85314a);border:2px solid #ef8da0;color:white;border-radius:8px;font-weight:800;box-shadow:0 3px 0 #381121}
+[data-game-theme="arcade"] button[data-variant]:hover:not(:disabled) {filter:brightness(1.12)}
+[data-game-theme="arcade"] button[data-variant]:active:not(:disabled) {transform:translateY(2px)}
+/* Headings gain a colorful edge without changing their layout or height. */
+[data-game-theme="arcade"] :is([class*="_lobbyHead_"],[class*="_head_"],[class*="_head_"],[class*="_head_"],[class*="_page_"]>header,[class*="_head_"],[class*="_page_"]>header,[class*="_head_"]) {
+ border-bottom:3px solid transparent;border-image:linear-gradient(90deg,#9361ef,#54d7ea,#8fe3a3,#f1d370,#ec79be) 1;
+ background:linear-gradient(100deg,#582d8733,#19172000);border-radius:5px;
+}
+[data-game-theme="arcade"] :is([class*="_panel_"],[class*="_panel_"],[class*="_card_"],[class*="_card_"],[class*="_buyCard_"],[class*="_bannerFeature_"]) {
+ border-color:#9870bc;background-color:#191720;
+ box-shadow:inset 0 1px 0 #ffffff18,0 3px 0 #08070c;
+}
+[data-game-theme="arcade"] :is([class*="_modeIcon_"],[class*="_ownedCard_"]) {border-color:#82dcea;box-shadow:0 0 10px #6bcfe51a}
+[data-game-theme="arcade"] button[aria-pressed="true"]:not([class*="wordAction"]) {border-color:#c999f3;background:linear-gradient(#753db4,#472571);color:#fff;font-weight:900}
+[data-game-theme="arcade"] [class*="_panel_"] {background:linear-gradient(135deg,#292035,#15131c)}
+[data-game-theme="arcade"] [class*="_slider_"] input {accent-color:#a96ae3}
+[data-game-theme="arcade"] [class*="_card_"] {border:2px solid #9b72c0;background:linear-gradient(140deg,#2c223a,#13131c);box-shadow:0 0 0 4px #100d19,0 12px 40px #0005}
+/* Card-table actions keep their established word-button interaction. */
+[data-game-theme="arcade"] button[class*="wordAction"] {border:none;background:transparent;box-shadow:none;text-shadow:1px 2px #081a16}
+
+/* Shared full-color page title bars. Earn Your Loot deliberately opts out. */
+[data-page-header="true"][data-page-header] {
+ width:100%;box-sizing:border-box;flex-shrink:0;
+ background:linear-gradient(110deg,#393e9e 0%,#7733a7 40%,#2a7897 76%,#485db1 100%)!important;
+ border:2px solid #818ed5!important;border-image:none!important;border-radius:12px 12px 5px 5px!important;
+ padding:.65rem 1rem!important;margin-bottom:.35rem;
+ box-shadow:inset 0 2px 0 #ffffff35,0 3px 0 #090b1d!important;color:#fff;
+ font-family:"Arial Rounded MT Bold","Trebuchet MS",Arial,sans-serif;
+}
+[data-page-header="true"][data-page-header] :is(h1,h2) {
+ font-family:"Arial Rounded MT Bold","Trebuchet MS",Arial,sans-serif!important;
+ color:#fff!important;font-weight:900;letter-spacing:-.035em;
+ font-size:clamp(1.35rem,2.5vw,2rem)!important;margin:.15rem 0!important;
+ text-shadow:2px 2px 0 #211b45!important;
+}
+[data-page-header="true"][data-page-header] :is(p,small,[class*="eyebrow"]) {color:#ece7ff!important;font-size:.65rem;line-height:1.35;margin:.2rem 0}
+[data-page-header="true"][data-page-header] :is(small,[class*="eyebrow"]) {font-weight:800;letter-spacing:.1em}
+[data-page-header="true"][data-page-header] button {
+ background:linear-gradient(#32c9ed,#0b90c5)!important;border:2px solid #8ee6fa!important;
+ color:#fff!important;border-radius:7px;box-shadow:0 3px 0 #064963!important;
+ font-family:inherit;font-weight:900;text-shadow:1px 1px #123f59!important;min-height:36px;
+}
+[data-page-header="true"] a {color:#fff!important}
+[data-page-header="true"] button:hover:not(:disabled) {filter:brightness(1.1)}
+[data-page-header="true"] button:focus-visible {outline:3px solid white;outline-offset:3px}
+@media(max-width:650px),(max-height:650px) {
+ [data-page-header="true"][data-page-header] {padding:.4rem .6rem!important;margin-bottom:.15rem}
+ [data-page-header="true"][data-page-header] :is(h1,h2) {font-size:1.25rem!important}
+ [data-page-header="true"][data-page-header] p {font-size:.6rem}
+}

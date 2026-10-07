@@ -117,7 +117,7 @@
   background: linear-gradient(90deg, #8fefff, #fff, #a99cff);
 }
 
-.card { composes: surface from "../styles/Glass.module.css";
+.card { background:var(--glass);border:var(--border);border-radius:var(--radius);box-shadow:var(--shadow);
 
   position: relative;
   display: flex;
@@ -334,3 +334,10 @@
 .submit { font-weight: 600; min-height: 50px; }
 .devEntry { margin-top:2rem;max-width:360px;padding:1rem 1.2rem;border:1px solid rgba(255,255,255,.12);border-radius:20px;background:rgba(255,255,255,.04);backdrop-filter:blur(20px); }
 .devEntry summary { cursor:pointer;font-weight:500; }.devEntry summary span { float:right;color:#b8e3ff; }.devEntry p { font-size:.8rem;opacity:.7;line-height:1.6; }.devEntry form { display:grid;gap:1rem; }
+
+
+.page{height:100dvh;min-height:0;padding:clamp(1rem,3vw,2rem);gap:2rem}.hero{padding:0}.heroTitle{font-size:clamp(3rem,7vw,5.5rem)}.card{gap:.65rem;padding:1.25rem}.formIntro{margin:0}.field{gap:.3rem}.field input{min-height:44px}.devEntry{margin-top:.75rem;padding:.65rem}.devEntry p{margin:.4rem 0}.devEntry form{gap:.5rem}
+@media(max-width:54rem){.page{grid-template-columns:1fr;align-content:center;gap:0;padding:1rem}.hero{display:none}.card{justify-self:center;max-width:27rem;width:100%;gap:.65rem}.formIntro h3{font-size:1.5rem}}
+
+.loginStack{display:flex;flex-direction:column;align-items:center;gap:.5rem}.devLink{min-height:40px;background:transparent;color:#bdd5eb;border:0;cursor:pointer}.devLink:focus-visible{outline:2px solid #e9d698}.devForm{display:grid;gap:1rem}
+@media(max-height:650px){.page{padding:.5rem;gap:1rem}.card{padding:.85rem;gap:.4rem}.title{font-size:1.5rem}.formIntro h3{font-size:1.25rem}.formIntro p{display:none}.field{font-size:.75rem}.field input{padding:.5rem;min-height:44px}.submit{min-height:44px}.error{max-height:15dvh;overflow:auto;padding:.5rem;font-size:.7rem}.devLink{min-height:36px;font-size:.7rem}.heroTitle{font-size:3rem}.heroCopy{font-size:.8rem;margin:.75rem 0}.eyebrow{margin-bottom:.75rem}}

@@ -1,13 +1,19 @@
+import {exchangeCrateForGems} from "../api/gems";
+import GemIcon from "../components/GemIcon";
+import { Link, useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+import OpeningResults from "../components/OpeningResults";
 import Button from "../components/Button";
 import CrateOpenOverlay from "../components/CrateOpenOverlay";
 import RarityBurst from "../components/RarityBurst";
 import { ApiError } from "../api/client";
-import { getCrateTypes, getMyCrates, buyCrate, openCrate, sellCrate } from "../api/crates";
+import { getCrateTypes, getMyCrates, buyCrate, openCrate, openCrates, sellCrate } from "../api/crates";
 import { fireConfetti } from "../sandbox/effects";
 import { RARITY_LABEL, RARITY_ORDER, BURST_RARITIES } from "../rarities";
 import { useWallet } from "../wallet/WalletContext";
 import styles from "./CrateModePage.module.css";
+import PagedGrid from "../components/PagedGrid";
+import ScreenDialog from "../components/ScreenDialog";
 import CrateIcon from "../components/CrateIcon";
 
 import { WEAPON_DESIGNS } from "../items/designs";
@@ -29,16 +35,38 @@ function formatPct(pct) {
 export default function CrateModePage() {
   const { wallet, refresh: refreshWallet } = useWallet();
 
+  const [gemExchange,setGemExchange]=useState(null);
+  const [exchangeBusy,setExchangeBusy]=useState(false);
+  const [exchangeNotice,setExchangeNotice]=useState("");
+  const [bulkCount,setBulkCount]=useState(1);
+  const [bulkResults,setBulkResults]=useState(null);
+  const [bulkBusy,setBulkBusy]=useState(false);
+  const [pendingBulk,setPendingBulk]=useState(null);
+  async function handleBulk(crate){
+    if(bulkBusy)return;
+    const ids=myCrates.filter(item=>item.crateCode===crate.crateCode).slice(0,bulkCount).map(item=>item.id);
+    const request=pendingBulk || {requestId:crypto.randomUUID(),ids,code:crate.crateCode};
+    setPendingBulk(request);
+    setBulkBusy(true);setError(null);
+    try{const items=await openCrates(request.requestId,request.ids);setPendingBulk(null);setBulkResults(items);setMyCrates(previous=>previous.filter(item=>!request.ids.includes(item.id)));getMyCrates().then(setMyCrates).catch(()=>{});window.dispatchEvent(new Event("lootvault:crate-consumed"));await refreshWallet();}
+    catch(error){if(error.status>=400&&error.status<500){setPendingBulk(null);getMyCrates().then(setMyCrates).catch(()=>{});setError(error.message);}else setError(`${error.message || "Opening failed."} Retry bulk opening to recover the same request.`);}
+    finally{setBulkBusy(false);}
+  }
   const [crateTypes, setCrateTypes] = useState(null);
   const [myCrates, setMyCrates] = useState([]);
   const [error, setError] = useState(null);
   const [buyingCode, setBuyingCode] = useState(null);
   const [sellingId, setSellingId] = useState(null);
   const [openingId, setOpeningId] = useState(null);
+  const [openingCrateCode, setOpeningCrateCode] = useState("COMMON");
   const [openingCrateName, setOpeningCrateName] = useState("Vault Crate");
   const [openResult, setOpenResult] = useState(null);
   const [lastBurst, setLastBurst] = useState(null);
 
+  const [searchParams, setSearchParams] = useSearchParams();
+  const view = searchParams.get("view") === "owned" ? "owned" : "store";
+  const setView = value => setSearchParams(value === "owned" ? {view:"owned"} : {});
+  const [oddsCrate, setOddsCrate] = useState(null);
   const [devOpen, setDevOpen] = useState(false);
   const [devRarity, setDevRarity] = useState("EXOTIC");
   const [devItemName, setDevItemName] = useState("");
@@ -60,12 +88,16 @@ export default function CrateModePage() {
         );
   }, []);
 
+  async function exchange(){if(exchangeBusy)return;setExchangeBusy(true);setError(null);try{await exchangeCrateForGems(gemExchange.requestId,gemExchange.crate.id);setGemExchange(null);setExchangeNotice("Mystery Crate exchanged for 10 gems.");setMyCrates(await getMyCrates());window.dispatchEvent(new Event("lootvault:crate-consumed"));await refreshWallet();}catch(err){setError(err.message+" Retry to recover the same exchange.");}finally{setExchangeBusy(false)}}
+  const stacks = Object.values(myCrates.reduce((groups, crate) => { const code=crate.crateCode; if (!groups[code]) groups[code]={...crate,count:0}; groups[code].count++; return groups; }, {}));
+
   async function handleBuy(crateCode) {
     setBuyingCode(crateCode);
     setError(null);
     try {
       const newCrate = await buyCrate(crateCode);
       setMyCrates((prev) => [newCrate, ...prev]);
+      window.dispatchEvent(new CustomEvent("lootvault:crate-notification", {detail:{code:newCrate.crateCode || crateCode, title:"New case in your vault",message:newCrate.crateDisplayName || "Your case is ready to open.",delta:1}}));
       await refreshWallet();
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Purchase failed.");
@@ -78,6 +110,7 @@ export default function CrateModePage() {
     setError(null);
     setOpenResult(null);
     setOverlayIsDev(false);
+    setOpeningCrateCode(crate.crateCode);
     setOpeningCrateName(crate.crateDisplayName ?? "Vault Crate");
     setOpeningId(crate.id);
 
@@ -86,6 +119,7 @@ export default function CrateModePage() {
       const item = await openCrate(crate.id);
       setOpenResult(item);
       setMyCrates((prev) => prev.filter((c) => c.id !== crate.id));
+      window.dispatchEvent(new Event("lootvault:crate-consumed"));
       await refreshWallet();
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Couldn't open that crate.");
@@ -93,8 +127,9 @@ export default function CrateModePage() {
     }
   }
 
-  function handleReveal(item) {
-    const shouldBurst = overlayIsDev ? devForceVfx : BURST_RARITIES.has(item.rarity);
+  function handleReveal(item, { skipCutscene = false } = {}) {
+    window.dispatchEvent(new CustomEvent("lootvault:crate-notification", {detail:{title:overlayIsDev ? "Preview reveal" : "Loot secured",message:item.itemName,code:openingCrateCode,target:"/inventory"}}));
+    const shouldBurst = !skipCutscene && (overlayIsDev ? devForceVfx : BURST_RARITIES.has(item.rarity));
 
     if (shouldBurst) {
       setLastBurst({ rarity: item.rarity, itemName: item.itemName, itemType: item.type, key: Date.now() });
@@ -103,6 +138,7 @@ export default function CrateModePage() {
   }
 
   function runDevRoll(event) {
+    setDevOpen(false);
     const fakeResult = {
       id: `dev-${event.timeStamp}`,
       itemName: devItem.name,
@@ -113,6 +149,7 @@ export default function CrateModePage() {
 
     setError(null);
     setOverlayIsDev(true);
+    setOpeningCrateCode("EXCELLENT");
     setOpeningCrateName("DEV TEST CRATE");
     setOpeningId(fakeResult.id);
     setOpenResult(fakeResult);
@@ -120,6 +157,7 @@ export default function CrateModePage() {
 
   function closeOverlay() {
     setOpeningId(null);
+    setLastBurst(null);
     setOpenResult(null);
     setOverlayIsDev(false);
   }
@@ -130,6 +168,7 @@ export default function CrateModePage() {
     try {
       await sellCrate(crateId);
       setMyCrates((prev) => prev.filter((c) => c.id !== crateId));
+      window.dispatchEvent(new Event("lootvault:crate-consumed"));
       await refreshWallet();
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Couldn't sell that crate.");
@@ -142,7 +181,7 @@ export default function CrateModePage() {
 
   return (
       <div className={styles.page}>
-        {lastBurst && <RarityBurst key={lastBurst.key} rarity={lastBurst.rarity} itemName={lastBurst.itemName} itemType={lastBurst.itemType} />}
+        {bulkResults && <OpeningResults items={bulkResults} onClose={()=>setBulkResults(null)}/>}{lastBurst && <RarityBurst key={lastBurst.key} rarity={lastBurst.rarity} itemName={lastBurst.itemName} itemType={lastBurst.itemType} />}
 
         {openingId && (
             <CrateOpenOverlay
@@ -156,11 +195,11 @@ export default function CrateModePage() {
             />
         )}
 
-        <div className={styles.head}>
+        <div className={styles.head} data-page-header="true">
           <div>
-            <h1 className={styles.title}>Normal Crate Mode</h1>
+            <h1 className={styles.title}>Crate exchange</h1>
             <p className={styles.sub}>
-              Buy crates with coins. Open them through a CS-style reel and keep the item that lands.
+              Inspect a case. Check the odds. Choose your next opening.
             </p>
           </div>
 
@@ -175,7 +214,7 @@ export default function CrateModePage() {
         </div>
 
         {devOpen && (
-            <section className={styles.devPanel}>
+            <ScreenDialog title="Animation preview" onClose={() => setDevOpen(false)}><section className={styles.devPanel}>
               <div className={styles.devPanelHead}>
                 <div>
                   <span className={styles.devEyebrow}>LOCAL ANIMATION TESTING</span>
@@ -240,17 +279,16 @@ export default function CrateModePage() {
                 Test Roll is frontend-only. It does not spend coins, consume a crate,
                 create an inventory item, or call the crate-open endpoint.
               </p>
-            </section>
+            </section></ScreenDialog>
         )}
 
+        {gemExchange&&<ScreenDialog title="Exchange Mystery Crate" onClose={()=>{if(!exchangeBusy)setGemExchange(null)}}><p>Trade one unopened Mystery Crate for <GemIcon size={32}/> <strong>10 gems</strong>? This consumes the crate without an item roll.</p><Button disabled={exchangeBusy} onClick={exchange}>{exchangeBusy?"Exchanging…":"Exchange for 10 gems"}</Button></ScreenDialog>}
+        {exchangeNotice&&<p role="status">{exchangeNotice}</p>}
         {error && <p className={styles.errorText}>{error}</p>}
 
-        <section>
-          <h2 className={styles.sectionTitle}>Buy a crate</h2>
-
-          <ul className={styles.buyGrid}>
-            {(crateTypes ?? []).map((crate) => {
-              const percents = toDisplayPercents(crate.odds);
+        <div className={styles.catalogTabs} aria-label="Crate sections"><button aria-pressed={view === "store"} onClick={() => setView("store")}>Case market</button><button aria-pressed={view === "owned"} onClick={() => setView("owned")}>Your cases ({myCrates.length})</button></div>
+        {view === "owned" && <label className={styles.bulkControl}>Open quantity <select value={bulkCount} disabled={bulkBusy || Boolean(pendingBulk)} onChange={event=>setBulkCount(Number(event.target.value))}>{Array.from({length:10},(_,i)=><option key={i+1} value={i+1}>{i+1}</option>)}</select><small>Up to 10 of the selected crate type · all rewards saved together</small></label>}
+        {view === "store" ? <PagedGrid key="store" items={crateTypes ?? []} label="Cases for sale" minHeight={270} maxColumns={4} className={styles.buyGrid} renderItem={(crate) => {
               const affordable = (wallet?.softBalance ?? 0) >= crate.priceAmount;
 
               return (
@@ -263,19 +301,12 @@ export default function CrateModePage() {
                       {crate.priceAmount}
                     </p>
 
-                    <ul className={styles.oddsList}>
-                      {Object.entries(percents).map(([rarity, pct]) => (
-                          <li key={rarity} className={styles.oddsRow}>
-                            <span>{RARITY_LABEL[rarity] ?? rarity}</span>
-                            <span>{formatPct(pct)}</span>
-                          </li>
-                      ))}
-                    </ul>
+                    <button className={styles.oddsLink} onClick={() => setOddsCrate(crate)}>Drop odds ↗</button><Link className={styles.oddsLink} to={`/crates/${crate.code}`}>Inspect contents ↗</Link>
 
                     <Button
                         size="sm"
                         variant="secondary"
-                        disabled={!affordable || buyingCode === crate.code}
+                        disabled={!affordable || buyingCode === crate.code || bulkBusy}
                         onClick={() => handleBuy(crate.code)}
                     >
                       {buyingCode === crate.code
@@ -286,44 +317,29 @@ export default function CrateModePage() {
                     </Button>
                   </li>
               );
-            })}
-          </ul>
-        </section>
+            }} /> : <PagedGrid key="owned" items={stacks} label="Owned cases" minHeight={245} maxColumns={3} className={styles.ownedGrid} renderItem={(crate) => (
 
-        <section>
-          <h2 className={styles.sectionTitle}>Your crates ({myCrates.length})</h2>
-
-          {myCrates.length === 0 ? (
-              <p className={styles.empty}>No unopened crates yet — buy one above.</p>
-          ) : (
-              <ul className={styles.ownedGrid}>
-                {myCrates.map((crate) => (
                     <li key={crate.id} className={styles.ownedCard}>
-                      <div className={styles.ownedIdentity}><CrateIcon code={crate.crateCode} size={68}/><div><span className={styles.ownedName}>{crate.crateCode === "EXTRA_EXTRAORDINARY" ? "Mystery Crate" : crate.crateDisplayName}</span><small>{crate.crateCode === "EXTRA_EXTRAORDINARY" ? "Celestial seal" : crate.crateCode === "EXCELLENT" ? "Prism seal" : crate.crateCode === "BASIC" ? "Guardian seal" : "Vault seal"}</small></div></div>
+                      <button className={styles.crateOpenIcon} onClick={() => bulkCount > 1 || pendingBulk ? handleBulk(crate) : handleOpen(crate)} disabled={exchangeBusy || openingId !== null || bulkBusy || Boolean(pendingBulk && pendingBulk.code !== crate.crateCode)} aria-label={`Open ${crate.crateDisplayName || "crate"} · ${crate.count} available`}><CrateIcon code={crate.crateCode} size={128}/><b className={styles.stackCount}>{crate.count}</b><span>{bulkBusy ? "OPENING…" : `OPEN ${Math.min(bulkCount,crate.count)} ↗`}</span></button>
+                      <span className={styles.ownedName}>{crate.crateDisplayName}</span><Link className={styles.oddsLink} to={`/crates/${crate.crateCode}`}>Inspect contents ↗</Link>
+
 
                       <div className={styles.ownedActions}>
-                        <Button
-                            size="sm"
-                            onClick={() => handleOpen(crate)}
-                            disabled={openingId !== null}
-                        >
-                          Open
-                        </Button>
+                        {crate.crateCode==="EXTRA_EXTRAORDINARY"&&<Button size="sm" variant="secondary" disabled={sellingId!==null||openingId!==null||bulkBusy||Boolean(pendingBulk)||exchangeBusy} onClick={()=>setGemExchange({requestId:crypto.randomUUID(),crate})}><GemIcon size={20}/> Trade · 10 gems</Button>}
+
 
                         <Button
                             size="sm"
                             variant="danger"
-                            disabled={sellingId === crate.id || openingId !== null}
+                            disabled={exchangeBusy || sellingId === crate.id || openingId !== null || bulkBusy || Boolean(pendingBulk)}
                             onClick={() => handleSell(crate.id)}
                         >
-                          {sellingId === crate.id ? "Selling..." : "Sell"}
+                          {sellingId === crate.id ? "Selling..." : "Sell one"}
                         </Button>
                       </div>
                     </li>
-                ))}
-              </ul>
-          )}
-        </section>
+                )} />}
+        {oddsCrate && <ScreenDialog title={`${oddsCrate.displayName} · drop odds`} onClose={() => setOddsCrate(null)}><ul className={styles.oddsList}>{Object.entries(toDisplayPercents(oddsCrate.odds)).map(([rarity, pct]) => <li key={rarity} className={styles.oddsRow}><span>{RARITY_LABEL[rarity] ?? rarity}</span><span>{formatPct(pct)}</span></li>)}</ul><p>Each opening is independent. These probabilities total 100%.</p></ScreenDialog>}
       </div>
   );
 }

@@ -1,9 +1,9 @@
-.page { composes: page from "../styles/Glass.module.css"; }
+.page { width:100%;min-width:0;margin:0 auto; }
 .head { margin-bottom: 2.5rem; }
-.title { composes: title from "../styles/Glass.module.css"; }
-.sub { composes: sub from "../styles/Glass.module.css"; }
+.title { margin:0;color:var(--white);font-family:var(--font-body);font-weight:650;letter-spacing:-.055em;line-height:1.08; }
+.sub { color:var(--text-dim);font-weight:400;line-height:1.5; }
 .grid { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 290px), 1fr)); gap: 1.25rem; }
-.card { composes: surface from "../styles/Glass.module.css"; display: flex; flex-direction: column; min-height: 12rem; height: 100%; padding: 1.75rem; gap: 1rem; text-decoration: none; color: var(--white); transition: transform .18s ease, border-color .18s ease, background .18s ease; }
+.card { background:var(--glass);border:var(--border);border-radius:var(--radius);box-shadow:var(--shadow); display: flex; flex-direction: column; min-height: 12rem; height: 100%; padding: 1.75rem; gap: 1rem; text-decoration: none; color: var(--white); transition: transform .18s ease, border-color .18s ease, background .18s ease; }
 .card:hover { color: var(--white); border-color: rgba(114,201,255,.25); background: rgba(34,47,70,.7); transform: translateY(-2px); }
 .cardTitle { margin: 0; font-size: 1.25rem; font-weight: 600; }
 .cardBlurb { margin: 0; flex: 1; color: var(--text-dim); font-size: .875rem; line-height: 1.7; }
@@ -17,3 +17,7 @@
 .tabs button[aria-pressed="true"] {background:rgba(132,199,255,.15);color:#e4f3ff}
 .tabs button:focus-visible,.card:focus-visible {outline:2px solid #9fd7ff;outline-offset:4px}
 .modeIcon {width:76px;height:76px;border-radius:22px;color:#b8dcff}
+
+
+.page{height:100%;min-height:0;display:flex;flex-direction:column;gap:.6rem;padding:.25rem;max-width:1400px;width:100%;margin:auto}.head{margin:0}.title{font-size:clamp(1.4rem,3vw,2rem);margin:0}.sub{font-size:.8rem;margin:.3rem 0}.tabs{margin:0}.grid{margin:0;gap:.75rem}.grid>li{min-height:0}.card{height:100%;min-height:0;display:flex;flex-direction:column;justify-content:center;padding:clamp(.8rem,2vw,2rem);gap:.6rem}.cardTitle{font-size:clamp(1.1rem,2.5vw,1.8rem);margin:0}.cardBlurb{margin:0;font-size:.85rem;max-width:40ch}.modeIcon{width:70px;height:70px;margin:0}.cardTag{margin:.5rem 0 0}
+@media(max-width:650px){.sub{font-size:.7rem}.cardBlurb{font-size:.75rem}.modeIcon{width:48px;height:48px}.card{gap:.3rem}}

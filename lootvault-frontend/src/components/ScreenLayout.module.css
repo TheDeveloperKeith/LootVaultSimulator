@@ -1,0 +1,17 @@
+.paged { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: .5rem; width: 100%; }
+.stage { flex: 1; min-height: 0; position: relative; }
+.grid { height: 100%; display: grid; list-style: none; padding: 0; margin: 0; gap: .75rem; }
+.grid > * { min-width: 0; min-height: 0; }
+.pagination { display: flex; align-items: center; justify-content: space-between; gap: .5rem; flex-shrink: 0; }
+.pagination button,.dialogHead button { min-height: 40px; padding: .4rem .7rem; border: 0; border-bottom: 1px solid #8495b044; background: transparent; color: #d1e4f8; font: inherit; font-size: .8rem; cursor: pointer; }
+.pagination button:disabled { color: #9babc1; opacity: .5; cursor: default; }
+.pagination button:hover:not(:disabled),.dialogHead button:hover { color: #f6e1a8; border-color: currentColor; }
+.pagination span { color: #bac9dc; font-size: .7rem; text-align: center; }
+.pagination button:focus-visible,.dialogHead button:focus-visible { outline: 2px solid #ddc993; outline-offset: 2px; }
+.empty { color: #bac9dc; text-align: center; }
+.dialog { width: min(720px,calc(100vw - 2rem)); max-height: 85dvh; overflow: auto; padding: 1.5rem; color: #e4edf9; background: #152033; border: 1px solid #ffffff22; border-radius: 20px; }
+.dialog::backdrop { background: #03070dcc; backdrop-filter: blur(8px); }
+.dialogHead { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 1rem; }
+.dialogHead h2 { margin: 0; font-size: 1.35rem; }
+.dialog p { color: #bdcce0; line-height: 1.6; }
+.empty{position:absolute;inset:0;display:grid;place-items:center;margin:0;padding:1rem}

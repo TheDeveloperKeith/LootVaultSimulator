@@ -45,6 +45,7 @@ export default function OnboardingGate() {
         setError("");
         try {
             await api.post("/api/onboarding/complete");
+            window.dispatchEvent(new Event("lootvault:onboarding-complete"));
             setCompleted(true);
             setOpen(false);
         } catch (error) {

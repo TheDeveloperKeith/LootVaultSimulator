@@ -1,11 +1,18 @@
 import { useReducedMotion } from "../preferences/motion";
 import { createPortal } from "react-dom";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { RARITY_LABEL } from "../rarities";
 import styles from "./RarityBurst.module.css";
 import { playRarityFanfare } from "../sfx";
+import { resolveItemDesign } from "../items/designs";
+import LimitedReveal from "./LimitedReveal";
 import ItemIcon from "./ItemIcon";
+import VoidsealReveal from "./VoidsealReveal";
+import useRevealSounds from "./useRevealSounds";
+import swordSlice from "../assets/audio/crimson-sword-slice.mp3";
+import shieldImpact from "../assets/audio/crimson-shield-impact.mp3";
+const CRIMSON_CUES=[{src:swordSlice,delay:1150},{src:shieldImpact,delay:1480}];
 
 const SCENES = {
     EXOTIC: { color: "#9ee3c6", eyebrow: "A RARE DISCOVERY", caption: "A rare reward, quietly revealed.", symbol: "◇" },
@@ -14,15 +21,27 @@ const SCENES = {
 };
 
 export default function RarityBurst({ rarity, itemName, itemType }) {
+    const [skipped, setSkipped] = useState(false);
+    const stopAudio = useRef(null);
+    const skipButton = useRef(null);
     const reduced = useReducedMotion();
     const scene = SCENES[rarity];
+    const limitedItem=resolveItemDesign(itemName);
+    const limited=Boolean(limitedItem.effect);
+    const voidseal=itemName === "Voidseal Aegis" && rarity === "EXTRA_EXTRAORDINARY";
+    useRevealSounds(CRIMSON_CUES,itemName === "Mystery Harbor" && rarity === "EXTRA_EXTRAORDINARY" && !skipped && !reduced);
     const mystery = rarity === "EXTRA_EXTRAORDINARY";
-    useEffect(() => playRarityFanfare(rarity), [rarity]);
-    if (!scene) return null;
+    useEffect(() => { if (!limited && !voidseal) stopAudio.current = playRarityFanfare(rarity); return () => stopAudio.current?.(); }, [rarity,limited,voidseal]);
+    useEffect(() => { const timer = setTimeout(() => setSkipped(true), reduced ? 2000 : limited ? 30000 : voidseal ? 7800 : 4800); const skip = () => { stopAudio.current?.(); setSkipped(true); }; window.addEventListener("lootvault:skip-reveal", skip); return () => { clearTimeout(timer); window.removeEventListener("lootvault:skip-reveal", skip); }; }, [reduced,limited,voidseal]);
+    useEffect(() => { if (skipped) return; const previous = document.activeElement; skipButton.current?.focus({preventScroll:true}); return () => { if (previous?.isConnected) previous.focus({preventScroll:true}); }; }, [skipped]);
+    if (!scene || skipped) return null;
+    if(voidseal) return <VoidsealReveal reduced={reduced} onDone={() => setSkipped(true)}/>;
+    if(limitedItem.effect) return <LimitedReveal item={limitedItem} onDone={() => setSkipped(true)}/>;
     return createPortal(
-        <motion.div className={`${styles.cinema} ${mystery ? styles.ominous : ""}`} style={{ "--accent": scene.color }} aria-hidden="true"
+        <motion.div className={`${styles.cinema} ${mystery ? styles.ominous : ""}`} style={{ "--accent": scene.color }} role="dialog" aria-modal="true" aria-label="Rare item cutscene" onKeyDown={event => { if (event.key === "Tab") { event.preventDefault(); skipButton.current?.focus(); } if (event.key === "Escape") { event.preventDefault(); stopAudio.current?.(); setSkipped(true); } }}
             initial={{ opacity: mystery ? 1 : 0 }} animate={{ opacity: [mystery ? 1 : 0, 1, 1, 0] }}
             transition={{ duration: reduced ? 2 : 4.8, times: [0, .18, .78, 1], ease: "easeInOut" }}>
+            <button ref={skipButton} className={styles.skipAnimation} onClick={() => { stopAudio.current?.(); setSkipped(true); }}>Skip animation ↗</button>
             <div className={styles.letterboxTop} /><div className={styles.letterboxBottom} />
             <div className={styles.ambient} /><div className={styles.beam} />
             {mystery && !reduced && <>

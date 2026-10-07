@@ -67,6 +67,7 @@ public class AuthService {
         Player player = registerPlayer(new RegisterRequest("dev_" + suffix, "dev_" + suffix + "@testing.invalid", java.util.UUID.randomUUID().toString()));
         Wallet wallet = walletRepository.findByPlayerId(player.getId()).orElseThrow();
         wallet.setSoftBalance(com.example.lootvaultproject.Config.DevMode.TEST_BALANCE);
+        wallet.setHardBalance(com.example.lootvaultproject.Config.DevMode.TEST_BALANCE);
         walletRepository.save(wallet);
         return player;
     }

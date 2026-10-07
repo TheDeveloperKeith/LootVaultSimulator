@@ -1,4 +1,4 @@
-.page { composes: page from "../styles/Glass.module.css";
+.page { width:100%;min-width:0;margin:0 auto;
 
   --shop-surface: rgba(18, 26, 48, .78);
   --shop-line: rgba(255,255,255,.11);
@@ -30,15 +30,15 @@
   margin: 0 0 clamp(2rem, 5vw, 3.5rem);
 }
 
-.title { composes: title from "../styles/Glass.module.css";
+.title { margin:0;color:var(--white);font-family:var(--font-body);font-weight:650;letter-spacing:-.055em;line-height:1.08;
 
  }
 
-.sub { composes: sub from "../styles/Glass.module.css";
+.sub { color:var(--text-dim);font-weight:400;line-height:1.5;
 
  }
 
-.errorText { composes: error from "../styles/Glass.module.css";
+.errorText { color:#ffd3db;background:#ff648214;border:1px solid #ff8a9b33;border-radius:12px;padding:.7rem;font-size:.8rem;
 
   margin: 0 0 1.5rem;
  }
@@ -52,7 +52,7 @@
   gap: clamp(1rem, 2vw, 1.35rem);
 }
 
-.card { composes: surface from "../styles/Glass.module.css";
+.card { background:var(--glass);border:var(--border);border-radius:var(--radius);box-shadow:var(--shadow);
 
   --glow: var(--r-edge);
 
@@ -216,3 +216,33 @@
 .card {background:var(--glass);box-shadow:var(--shadow)}
 .shopIntro {background:transparent;border:0;border-radius:0;padding:0;margin-bottom:1.5rem}
 .art {filter:none}
+
+.page { height: 100%; min-height: 0; display: flex; flex-direction: column; gap: .5rem; padding: .25rem; max-width: 1400px; }
+.head { margin: 0; max-width: none; display: flex; flex-direction: column; gap: .2rem; }
+.title { font-size: clamp(1.25rem,3vw,2rem); }
+.eyebrow { font-size: .6rem; letter-spacing: .12em; color: #dfca99; }
+.sub { margin: 0; font-size: .75rem; }
+.shopIntro { margin: 0; padding: .35rem 0; color: #bbc9dc; font-size: .75rem; }
+.page > p { margin: 0; font-size: .75rem; }
+.page > p:empty { display: none; }
+.grid .card { min-height: 0; padding: clamp(.75rem,1.5vw,1.25rem); gap: .35rem; border-radius: 14px; border: 1px solid #ffffff18; border-bottom: 3px solid var(--r-edge); background: linear-gradient(145deg,#263249,#151c2b); box-shadow: inset 0 0 0 4px #0a101a55; }
+.grid .card:hover { transform: none; border-color: var(--r-edge); }
+.grid .art { flex: 1; min-height: 50px; max-height: 120px; margin: 0; background: radial-gradient(ellipse,#ffffff08,transparent 70%); }
+.grid .art svg { height: 100%; max-height: 100px; }
+.grid .rarityTag { padding: .15rem .4rem; font-size: .6rem; }
+.grid .itemName { font-size: clamp(.8rem,1.2vw,1.05rem); line-height: 1.25; }
+.grid .price { margin: 0; font-size: 1.1rem; color: #eddfb5; }
+.grid .coin { width: .7rem; height: .7rem; box-shadow: none; }
+.grid .card > button { min-height: 40px; font-size: .75rem; padding: .35rem; margin-top: .25rem; }
+.productPreview { display: flex; align-items: center; gap: 1.5rem; padding: 1rem; background: #ffffff04; border-radius: 14px; }
+@media(max-width:650px) { .head .sub { font-size: .65rem; } .shopIntro { font-size: .65rem; } .productPreview { flex-direction: column; } }
+
+.grid .art{max-height:none;width:100%;display:grid;place-items:center}.grid .art svg{width:120px;height:120px;max-height:100%}.grid .itemName{margin:.5rem 0}.grid .card>button{margin-top:.5rem}
+
+.grid .art{overflow:hidden}@media(max-width:650px){.grid .art{min-height:64px}.grid .art svg{width:64px;height:64px}}
+
+@media(max-height:650px){.sub,.shopIntro{font-size:.65rem}.grid .art svg{width:60px;height:60px}.grid .art{min-height:50px}.grid .card{padding:.6rem;gap:.2rem}.grid .itemName{margin:.2rem 0;font-size:.85rem}}
+
+.page{background:radial-gradient(ellipse at 100% 0,#315b4322,transparent 65%)}
+
+.card{background:linear-gradient(150deg,#203c33,#18232c);border-color:#7ca68f44}

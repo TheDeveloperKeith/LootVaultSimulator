@@ -10,6 +10,7 @@ public final class CardGameEngine {
     public record Hand(long value, String name) {}
     public static class State {
         public String game;
+        public String currency = "SOFT";
         public String stage;
         public String outcome;
         public String message;

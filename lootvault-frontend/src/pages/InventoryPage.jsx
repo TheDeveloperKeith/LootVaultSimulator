@@ -1,4 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
+import { useAuth } from "../auth/AuthContext";
+import { readLoadout,saveLoadout,eligibleRelic } from "../items/loadout";
+import { resolveItemDesign } from "../items/designs";
+import ScreenDialog from "../components/ScreenDialog";
 import Button from "../components/Button";
 import { ApiError } from "../api/client";
 import { getInventory, sellItem } from "../api/game";
@@ -8,16 +12,22 @@ import styles from "./InventoryPage.module.css";
 import ItemIcon from "../components/ItemIcon";
 
 const SOURCE_LABEL = {
-  GACHA_PULL: "Daily box",
+  GACHA_PULL: "Daily crate",
   GACHA_PULL_PAID: "Unlimited box",
   SHOP_PURCHASE: "Shop",
   CRATE_OPEN: "Crate",
+  BANNER_PULL: "Limited banner",
   ADMIN_GRANT: "Granted",
   CRAFT: "Crafted",
   CRAFTING: "Crafted",
 };
 
 export default function InventoryPage() {
+  const {player}=useAuth();
+  const [loadout,setLoadout]=useState(()=>readLoadout(player?.username));
+  const [selected,setSelected]=useState(null);
+  const [search,setSearch]=useState("");
+  function updateLoadout(next){setLoadout(next);saveLoadout(player?.username,next);}
   const { refresh: refreshWallet } = useWallet();
   const [items, setItems] = useState(null); // null = loading
   const [error, setError] = useState(null);
@@ -31,8 +41,8 @@ export default function InventoryPage() {
 
   const filtered = useMemo(() => {
     if (!items) return [];
-    return rarityFilter === "ALL" ? items : items.filter((i) => i.rarity === rarityFilter);
-  }, [items, rarityFilter]);
+    return items.filter(i => (rarityFilter === "ALL" || i.rarity === rarityFilter) && i.itemName.toLowerCase().includes(search.toLowerCase()));
+  }, [items, rarityFilter, search]);
 
   async function handleSell(itemId) {
     setSellingId(itemId);
@@ -40,6 +50,8 @@ export default function InventoryPage() {
     try {
       await sellItem(itemId);
       setItems((prev) => prev.filter((i) => i.id !== itemId));
+      if(loadout.sword===itemId || loadout.shield===itemId) updateLoadout({...loadout,sword:loadout.sword===itemId?null:loadout.sword,shield:loadout.shield===itemId?null:loadout.shield});
+      setSelected(null);
       await refreshWallet();
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Couldn't sell that item.");
@@ -53,16 +65,18 @@ export default function InventoryPage() {
 
   return (
       <div className={styles.page}>
-        <div className={styles.head}>
+        <div className={styles.head} data-page-header="true">
           <div>
             <h1 className={styles.title}>Inventory</h1>
-            <p className={styles.sub}>Your collected items, all in one place.</p>
+            <p className={styles.sub}>Your collection. Your next great discovery.</p>
           </div>
           <p className={styles.count}>{items.length} item{items.length === 1 ? "" : "s"}</p>
         </div>
 
         {error && <p className={styles.errorText}>{error}</p>}
 
+        <div className={styles.workbench}><label>Filter name<input value={search} onChange={event=>setSearch(event.target.value)} placeholder="Find an item…"/></label><label><input type="checkbox" checked={loadout.enabled} onChange={event=>updateLoadout({...loadout,enabled:event.target.checked})}/> Mythic action effects</label><small>???? only · cosmetic slash and guard effects · reduced motion respected</small></div>
+        {selected && <ScreenDialog title={selected.itemName} onClose={()=>setSelected(null)}><ItemIcon name={selected.itemName} size={120}/><p>{RARITY_LABEL[selected.rarity]} · {SOURCE_LABEL[selected.acquiredVia] || selected.acquiredVia}</p>{eligibleRelic(selected) && ["sword","shield"].includes(resolveItemDesign(selected.itemName).type) && <Button onClick={()=>{const type=resolveItemDesign(selected.itemName).type;updateLoadout({...loadout,[type]:loadout[type]===selected.id?null:selected.id});}}>{loadout[resolveItemDesign(selected.itemName).type]===selected.id ? "Unequip effect" : "Equip action effect"}</Button>}<p>Effects change basic actions at both card tables. They do not change results or payouts.</p><Button variant="danger" disabled={sellingId!==null} onClick={()=>handleSell(selected.id)}>Sell item</Button></ScreenDialog>}
         <div className={styles.filters}>
           <button
               aria-pressed={rarityFilter === "ALL"}
@@ -91,18 +105,7 @@ export default function InventoryPage() {
             <ul className={styles.grid}>
               {filtered.map((item) => (
                   <li key={item.id} className={`${styles.card} ${styles[RARITY_CLASS[item.rarity]] ?? ""}`}>
-                    <span className={styles.art}><ItemIcon name={item.itemName} size={48} /></span>
-                    <h2 className={styles.itemName}>{item.itemName}</h2>
-                    <span className={styles.rarityTag}>{RARITY_LABEL[item.rarity] ?? item.rarity}</span>
-                    <span className={styles.source}>{SOURCE_LABEL[item.acquiredVia] ?? item.acquiredVia}</span>
-                    <Button
-                        size="sm"
-                        variant="danger"
-                        disabled={sellingId !== null}
-                        onClick={() => handleSell(item.id)}
-                    >
-                      {sellingId === item.id ? "Selling..." : "Sell"}
-                    </Button>
+                    <button className={styles.inspect} onClick={()=>setSelected(item)} aria-label={`Inspect ${item.itemName}`}><span className={styles.art}><ItemIcon name={item.itemName} size={90}/></span><span className={styles.nameplate}><strong>{item.itemName}</strong><small>{RARITY_LABEL[item.rarity]}{loadout.sword===item.id || loadout.shield===item.id ? " · EQUIPPED" : ""}</small></span></button>
                   </li>
               ))}
             </ul>

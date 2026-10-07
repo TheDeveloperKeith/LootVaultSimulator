@@ -1,6 +1,6 @@
 # LootVault MVP readiness — 5 October 2026
 
-The scope is frozen around blackjack, The River, crates and daily boxes, shop, inventory, and five simple quests. Sandbox remains secondary practice. Unfinished banners and crafting are outside the primary flow.
+The scope is frozen around blackjack, The River, crates and daily boxes, shop, inventory, and five simple quests. Sandbox remains secondary practice. Limited banners now join the primary flow; crafting remains unfinished. See [banner and bulk opening notes](banner-and-bulk-openings.md) for the V11–V13 rollout and verification limits.
 
 ## Implemented
 
@@ -15,7 +15,7 @@ The scope is frozen around blackjack, The River, crates and daily boxes, shop, i
 - Source-derived savings estimates and smaller one-time collection bonuses. No existing payout was reclaimed.
 - Flyway V9 stores tutorial completion; V10 recovers discoveries from still-owned inventory.
 - Production secure cookie settings, explicit developer-mode shutdown, packaged frontend routes, CI checks, a publish scan, and a backup/restore verification script.
-- Four of a kind and straight flush retain the earlier table lighting and shake strength, with six colliding stars in the reveal. On the river, their final actions are hover-highlighted CHECK! and FOLD! words (CALL! when matching an AI bet); earlier streets use the regular controls. Mystery crate reveals add original procedural charge, blade sweep, bass impact, and harmonic echoes; muting or closing disposes their audio.
+- Four of a kind and straight flush retain the earlier table lighting and shake strength, with six colliding stars in the reveal. The River uses a wide rectangular table with embedded Check, Raise, and Fold controls; Call replaces Check when matching an AI bet. Mystery crate reveals add original procedural charge, blade sweep, bass impact, and harmonic echoes; muting or closing disposes their audio.
 
 ## Verification performed locally
 

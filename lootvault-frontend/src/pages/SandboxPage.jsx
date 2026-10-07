@@ -5,6 +5,8 @@ import { fireConfetti } from "../sandbox/effects";
 import { RARITY_LABEL, RARITY_ORDER, RARITY_WEIGHT } from "../sandbox/items";
 import RarityBurst from "../components/RarityBurst";
 import styles from "./SandboxPage.module.css";
+import PagedGrid from "../components/PagedGrid";
+import ScreenDialog from "../components/ScreenDialog";
 import ItemIcon from "../components/ItemIcon";
 
 const FEED_LIMIT = 18; // how many rows stay visible before old ones scroll off
@@ -18,6 +20,7 @@ function emptyCounts() {
 }
 
 export default function SandboxPage() {
+  const [showOdds, setShowOdds] = useState(false);
   const [feed, setFeed] = useState([]);           // capped list, newest first — what's on screen
   const [counts, setCounts] = useState(emptyCounts()); // uncapped running totals — what the stats bar uses
   const [total, setTotal] = useState(0);
@@ -82,7 +85,7 @@ export default function SandboxPage() {
           {burst && <RarityBurst key={burst.key} rarity={burst.rarity} itemName={burst.itemName} itemType={burst.itemType} />}
         </AnimatePresence>
 
-        <div className={styles.head}>
+        <div className={styles.head} data-page-header="true">
           <h1 className={styles.title}>Sandbox Mode</h1>
           <p className={styles.sub}>
             Unlimited practice rolls. Nothing here spends currency or touches your real inventory.
@@ -102,6 +105,7 @@ export default function SandboxPage() {
           >
             {autoOpen ? "Stop auto-open" : "Auto-open"}
           </button>
+          <button className={styles.resetBtn} onClick={() => setShowOdds(true)}>Odds & stats</button>
           <button className={styles.resetBtn} onClick={reset}>
             Reset
           </button>
@@ -109,7 +113,7 @@ export default function SandboxPage() {
 
         <div className={styles.layout}>
           {/* Live stats: running counts + how far they've drifted from the target odds */}
-          <aside className={styles.stats}>
+          {showOdds && <ScreenDialog title="Practice roll statistics" onClose={() => setShowOdds(false)}><aside className={styles.stats}>
             <h2 className={styles.statsTitle}>Live odds ({total} opened)</h2>
             {RARITY_ORDER.map((rarity) => {
               const count = counts[rarity];
@@ -135,14 +139,12 @@ export default function SandboxPage() {
                   </div>
               );
             })}
-          </aside>
+          </aside></ScreenDialog>}
 
           {/* The feed: newest pull animates in at the top and pushes everything else down */}
           <section className={styles.feedPanel}>
             <h2 className={styles.feedTitle}>Drop feed</h2>
-            <ul className={styles.feed}>
-              <AnimatePresence initial={false}>
-                {feed.map((entry) => (
+            <PagedGrid items={feed} label="Practice drops" minHeight={80} maxColumns={1} className={styles.feed} renderItem={(entry) => (
                     <motion.li
                         key={entry.key}
                         layout
@@ -158,12 +160,7 @@ export default function SandboxPage() {
                       <span className={styles.feedName}>{entry.name}</span>
                       <span className={styles.feedRarity}>{RARITY_LABEL[entry.rarity]}</span>
                     </motion.li>
-                ))}
-              </AnimatePresence>
-              {feed.length === 0 && (
-                  <li className={styles.feedEmpty}>Nothing opened yet — try "Open 1" above.</li>
-              )}
-            </ul>
+                )} />
           </section>
         </div>
       </div>

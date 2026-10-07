@@ -121,7 +121,7 @@ export default function BannerPage() {
 
     return (
         <div className={styles.page}>
-            <div className={styles.head}>
+            <div className={styles.head} data-page-header="true">
                 <h1 className={styles.title}>Banners</h1>
                 <p className={styles.sub}>Limited-time item pools are on the way.</p>
             </div>

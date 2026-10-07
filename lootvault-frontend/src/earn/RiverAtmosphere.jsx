@@ -1,3 +1,4 @@
+import { soundLevel } from "../audio/volume";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { useReducedMotion } from "../preferences/motion";
@@ -8,7 +9,7 @@ import intenseMusic from "../assets/audio/monarch-dutonic.mp3";
 import { pokerAtmosphere, riverMusicTier } from "./pokerAtmosphere";
 import styles from "../pages/EarnLootPage.module.css";
 
-export default function RiverAtmosphere({ round, sceneRef, revealing = false, audioAllowed = true, contained = false, motionAllowed = true }) {
+export default function RiverAtmosphere({ round, sceneRef, revealing = false, audioAllowed = true, contained = false, motionAllowed = true, showStatus = true }) {
     const reducedMotion = useReducedMotion();
     const { level, label } = pokerAtmosphere(round);
     const [peak, setPeak] = useState(level >= 2 ? level : 0);
@@ -61,7 +62,7 @@ export default function RiverAtmosphere({ round, sceneRef, revealing = false, au
             }, 40);
         };
         const sync = () => {
-            if (!enabled || !audioAllowed || isMuted()) { audio.pause(); void choirRef.current?.setLevel(0); return; }
+            if (!enabled || !audioAllowed || isMuted() || soundLevel("music") === 0) { audio.pause(); void choirRef.current?.setLevel(0); return; }
             if (intensity < 2 || musicTier === 0) { fadeOut(); return; }
             if (fading) return;
             if (musicStarted.current !== music) {
@@ -77,9 +78,9 @@ export default function RiverAtmosphere({ round, sceneRef, revealing = false, au
                 pendingSeek.current = audio.readyState < 1;
                 if (!pendingSeek.current) audio.currentTime = Number.isFinite(audio.duration) && audio.duration > 0 ? 30 % audio.duration : 30;
             }
-            audio.volume = intensity >= 4 ? .65 : intensity === 3 ? (stage === "RIVER" ? .58 : stage === "TURN" ? .52 : .44) : intensity === 2 ? .34 : .16;
+            audio.volume = (intensity >= 4 ? .65 : intensity === 3 ? (stage === "RIVER" ? .58 : stage === "TURN" ? .52 : .44) : intensity === 2 ? .34 : .16) * soundLevel("music");
             if (musicTier === 2) choirRef.current ||= createHeavenlyChoir();
-            void choirRef.current?.setLevel(musicTier === 2 ? .85 + (stage === "RIVER" || revealing ? .15 : 0) : 0).catch(() => setBlocked(true));
+            void choirRef.current?.setLevel(musicTier === 2 ? (.85 + (stage === "RIVER" || revealing ? .15 : 0)) * soundLevel("music") : 0).catch(() => setBlocked(true));
             if (audio.paused) void audio.play().then(() => setBlocked(false)).catch(() => setBlocked(true));
         };
         sync(); window.addEventListener("lootvault:sound-changed", sync);
@@ -91,9 +92,9 @@ export default function RiverAtmosphere({ round, sceneRef, revealing = false, au
     const veil = <div className={styles.extremeVeil} style={contained ? {position:"absolute",zIndex:2} : undefined} aria-hidden="true" />;
     return <><audio ref={audioRef} src={music} loop preload="none" onLoadedMetadata={() => {
         if (pendingSeek.current) { audioRef.current.currentTime = Number.isFinite(audioRef.current.duration) && audioRef.current.duration > 0 ? seekOffset.current % audioRef.current.duration : seekOffset.current; pendingSeek.current = false; }
-    }} />{active && intensity >= 3 && (contained ? veil : createPortal(veil, document.body))}{active && !contained && <div className={`${styles.atmosphere} ${intensity >= 2 ? styles.intense : ""}`}><span role="status">{intensity >= 2 && level < 2 ? "The tension stays · showdown awaits" : label}<small>{intensity >= 3 ? "EXTREME · sky ascent incoming" : intensity >= 2 ? "Intensity locked until the result" : "Hand cues, not winning odds"}</small></span><button aria-pressed={enabled} onClick={() => {
+    }} />{active && intensity >= 3 && (contained ? veil : createPortal(veil, document.body))}{active && !contained && showStatus && <div className={`${styles.atmosphere} ${intensity >= 2 ? styles.intense : ""}`}><span role="status">{intensity >= 2 && level < 2 ? "The tension stays · showdown awaits" : label}<small>{intensity >= 3 ? "EXTREME · sky ascent incoming" : intensity >= 2 ? "Intensity locked until the result" : "Hand cues, not winning odds"}</small></span><button aria-pressed={enabled} onClick={() => {
         if (blocked && enabled && musicTier > 0 && intensity >= 2 && !isMuted()) { void audioRef.current.play().then(() => setBlocked(false)).catch(() => {});
-            void choirRef.current?.setLevel(musicTier === 2 ? .85 : 0).catch(() => {}); }
+            void choirRef.current?.setLevel(musicTier === 2 ? .85 * soundLevel("music") : 0).catch(() => {}); }
         else setEnabled(value => !value);
     }}>{!enabled ? "Music off" : musicTier === 0 ? "Music armed ♫" : blocked ? "Play music" : "Music on ♫"}</button></div>}</>;
 }

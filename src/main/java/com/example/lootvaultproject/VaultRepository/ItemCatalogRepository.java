@@ -14,4 +14,6 @@ public interface ItemCatalogRepository
     List<ItemCatalog> findByIsActiveTrue();
 
     List<ItemCatalog> findByRarity(String rarity);
+    List<ItemCatalog> findByRarityAndLimitedFalse(String rarity);
+    List<ItemCatalog> findByLimitedTrueAndLimitedBannerCode(String code);
 }

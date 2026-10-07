@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { devStatus } from "../api/auth";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
+import ScreenDialog from "../components/ScreenDialog";
 import Button from "../components/Button";
 import { ApiError } from "../api/client";
 import { useAuth } from "../auth/AuthContext";
@@ -11,6 +12,7 @@ export default function LoginPage() {
     const navigate = useNavigate();
     const location = useLocation();
 
+    const [showDev, setShowDev] = useState(false);
     const [mode, setMode] = useState("login"); // "login" | "register"
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
@@ -55,7 +57,7 @@ export default function LoginPage() {
     }
 
     return (
-        <div className={styles.page}>
+        <div className={styles.page} data-game-theme="arcade">
             <section className={styles.hero} aria-label="LootVault introduction">
                 <div className={styles.eyebrow}>
 
@@ -80,12 +82,12 @@ export default function LoginPage() {
                     <span className={styles.extraordinary} />
                     <span className={styles.mystery} />
                 </div>
-                {devEnabled && <details className={styles.devEntry}><summary>Developer playground <span>∞</span></summary><p>A separate test vault with coins that never run out.</p><form onSubmit={enterDev}><label className={styles.field}>Developer phrase<input type="password" autoComplete="off" value={phrase} onChange={event => setPhrase(event.target.value)} required maxLength={256} /></label>{devError && <p className={styles.error} role="alert">{devError}</p>}<Button type="submit" disabled={submitting}>Enter test vault</Button></form></details>}
+
             </section>
 
-            <form className={styles.card} onSubmit={handleSubmit}>
+            <div className={styles.loginStack}><form className={styles.card} onSubmit={handleSubmit}>
                 {location.state?.message && <p role="status">{location.state.message}</p>}
-                <div className={styles.brandRow}>
+                <div className={styles.brandRow} data-page-header="true">
                     <h2 className={styles.title}>
                         Loot<span>Vault</span>
                     </h2>
@@ -162,6 +164,9 @@ export default function LoginPage() {
                     {submitting ? "Please wait..." : mode === "login" ? "Log in" : "Create account"}
                 </Button>
             </form>
+            {devEnabled && <button className={styles.devLink} onClick={() => setShowDev(true)}>Developer playground</button>}
+            </div>
+            {showDev && <ScreenDialog title="Developer playground" onClose={() => setShowDev(false)}><p>A separate test vault with coins that never run out.</p><form className={styles.devForm} onSubmit={enterDev}><label className={styles.field}>Developer phrase<input type="password" autoComplete="off" value={phrase} onChange={event => setPhrase(event.target.value)} required maxLength={256}/></label>{devError && <p className={styles.error} role="alert">{devError}</p>}<Button type="submit" disabled={submitting}>Enter test vault</Button></form></ScreenDialog>}
         </div>
     );
 }

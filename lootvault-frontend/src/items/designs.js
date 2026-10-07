@@ -1,5 +1,9 @@
 // Original flat silhouettes: blocky starter equipment and anime-inspired relics.
 export const WEAPON_DESIGNS = [
+  {name:"Eclipse of Tomorrow",rarity:"EXTRA_EXTRAORDINARY",type:"sword",design:"cleaver",color:"#e1fff7",effect:"eclipse"},
+  {name:"Sunbreak Oathblade",rarity:"EXTRA_EXTRAORDINARY",type:"sword",design:"flame",color:"#ffd778",effect:"sunbreak"},
+  {name:"Stormheart Katana",rarity:"EXTRA_EXTRAORDINARY",type:"sword",design:"katana",color:"#76d9ff",effect:"stormheart"},
+  {name:"Astral Bastion",rarity:"EXTRA_EXTRAORDINARY",type:"shield",design:"moon",color:"#bda1ff",effect:"astral"},
   { name: "Brickwood Sword", rarity: "COMMON", type: "sword", design: "block", color: "#c89b70" },
   { name: "Studded Saber", rarity: "COMMON", type: "sword", design: "block", color: "#aeb7c5" },
   { name: "Brickwood Shield", rarity: "COMMON", type: "shield", design: "square", color: "#c89b70" },
@@ -16,7 +20,7 @@ export const WEAPON_DESIGNS = [
   { name: "Eclipse Cleaver", rarity: "EXTRAORDINARY", type: "sword", design: "cleaver", color: "#ddc5ef" },
   { name: "Dawncrest Saber", rarity: "EXTRAORDINARY", type: "sword", design: "flame", color: "#f0d6a2" },
   { name: "Dawncrest Aegis", rarity: "EXTRAORDINARY", type: "shield", design: "sun", color: "#f0d6a2" },
-  { name: "Crimson Veil Katana", rarity: "EXTRA_EXTRAORDINARY", type: "sword", design: "katana", color: "#f16c85" },
+  { name: "Mystery Harbor", rarity: "EXTRA_EXTRAORDINARY", type: "sword", design: "katana", color: "#f16c85" },
   { name: "Voidseal Aegis", rarity: "EXTRA_EXTRAORDINARY", type: "shield", design: "moon", color: "#c4a0ef" },
 ];
 export function resolveItemDesign(name = "", type) {

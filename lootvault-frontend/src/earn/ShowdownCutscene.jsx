@@ -108,14 +108,14 @@ export default function ShowdownCutscene({ round, onDone, audioAllowed = true, p
 
     }, [onDone, blackjack, extreme, win, round.outcome, reduced, audioAllowed]);
 
-    return createPortal(<div ref={scene} tabIndex={-1} data-reduced-motion={reduced} className={`${styles.scene} ${extreme ? styles.extreme : ""} ${win ? styles.youWin : ""} ${blackjack ? styles.blackjack : ""} ${blackjack && !revealed ? styles.blackout : ""}`} role="dialog" aria-modal="true" aria-label={blackjack ? "Close blackjack winner reveal" : "Showdown winner reveal"} onKeyDown={event => {
+    return createPortal(<div className={styles.sceneShell} role="dialog" aria-modal="true" aria-label={blackjack ? "Close blackjack winner reveal" : "Showdown winner reveal"} onKeyDown={event => {
 
         if (event.key === "Escape") onDone();
 
         if (event.key === "Tab") { event.preventDefault(); (button.current || scene.current)?.focus(); }
 
     }}>
-
+        <div ref={scene} tabIndex={-1} data-reduced-motion={reduced} className={`${styles.scene} ${extreme ? styles.extreme : ""} ${win ? styles.youWin : ""} ${blackjack ? styles.blackjack : ""} ${blackjack && !revealed ? styles.blackout : ""}`}>
         {!blackjack && <>
 
             {extreme && <><div className={styles.sky} aria-hidden="true" /><svg className={styles.cracks} viewBox="0 0 1000 800" preserveAspectRatio="none" aria-hidden="true"><path d="M500 400 420 310 450 220 350 120 390 0 M500 400 650 340 690 210 820 160 900 0 M500 400 570 510 540 610 670 720 650 800 M500 400 370 470 270 430 180 570 0 620 M500 400 670 440 750 390 890 480 1000 460 M450 220 540 170 580 60 M270 430 230 300 100 240 M570 510 710 590 830 740" /></svg><div className={styles.shatter} aria-hidden="true" /></>}
@@ -144,14 +144,15 @@ export default function ShowdownCutscene({ round, onDone, audioAllowed = true, p
 
                 <p>{blackjack ? `You ${round.showdown.playerHand} · Dealer ${round.showdown.opponentHand}` : round.showdown.winningHand}</p>
 
-                <small>{practice ? "Practice preview · no coins awarded" : round.outcome === "LOSS" ? "Another hand awaits." : `${Number(round.payout).toLocaleString()} coins returned`}</small>
+                <small>{practice ? "Practice preview · no coins awarded" : round.outcome === "LOSS" ? "Another hand awaits." : `${Number(round.payout).toLocaleString()} ${round.currency==="HARD"?"gems":"coins"} returned`}</small>
 
             </div>
 
-            <button ref={button} className={styles.skip} onClick={onDone}>Continue to result ↗</button>
+
 
         </>}
 
+        </div><button ref={button} className={styles.skip} onClick={onDone}>{revealed ? "Continue to result ↗" : "Skip animation ↗"}</button>
     </div>, document.body);
 
 }

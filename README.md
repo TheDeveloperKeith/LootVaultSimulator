@@ -1,16 +1,18 @@
-LootVault
+# LootVault
 
 LootVault is a browser game about collecting gear, opening daily crates, and risking coins in short card games. The project pairs a React interface with a Spring Boot API and PostgreSQL database. Its current MVP focuses on a small set of complete, connected experiences rather than adding more modes.
 
 ## MVP scope
 
-- **Earn your loot:** play Blackjack against the dealer or The River, a Texas Hold’em game against two AI opponents.
-- **Crates and daily rewards:** claim daily coins and a limited number of daily boxes, then open earned crates to discover collectible items.
+- **Earn your loot:** stake coins or gems in Blackjack against the dealer or The River against two AI opponents.
+- **Crates and daily rewards:** claim daily coins, 5 gems, and daily crates. Exchange an unopened Mystery Crate for 10 gems.
 - **Shop and inventory:** spend coins on catalog items, equip or review owned items, and see collection progress.
 - **Quests and introduction:** complete a small set of participation quests and take a short first-login tour. The River includes a no-wager demo that previews its visual effects.
 - **Accessibility and comfort:** sound and motion controls, keyboard support for important interactions, and reduced-motion handling.
 
-Unfinished modes such as banners and crafting are outside the main navigation while the MVP is stabilized. The sandbox is a secondary practice area. See [MVP readiness](docs/mvp-readiness.md) for remaining work and the proposed playtest plan.
+Limited banners are available in the main navigation. Crafting remains outside the main flow. See [Banner and bulk openings](docs/banner-and-bulk-openings.md) for the 1% limited pool, original relic effects, and Flyway V11–V13 rollout. The sandbox is a secondary practice area. See [MVP readiness](docs/mvp-readiness.md) for remaining work and the proposed playtest plan.
+
+Luck potions cost 10/25 gems for 2.5×/5.5× featured banner odds over the next 10 rolls. Secret odds remain unchanged. See [Gems and luck](docs/gems-and-luck.md) for the economy, transaction safeguards, V14 rollout, and tests.
 
 ## How the project fits together
 
@@ -19,6 +21,8 @@ The browser loads the React app from `lootvault-frontend`. Its API modules send 
 Spring Boot handles authentication, game rules, wallet changes, crate openings, shop purchases, quests, and inventory. Controllers expose HTTP endpoints, services enforce game and transaction rules, and repositories read and write JPA entities in PostgreSQL. Flyway applies the ordered SQL migrations in `src/main/resources/db/migration`; Hibernate checks the resulting schema at startup rather than creating tables automatically.
 
 The longer guide, [Understanding LootVault](docs/understanding-lootvault.md), walks through the React-to-API request path, Spring and JPA responsibilities, Flyway, and project exercises. The [developer playground guide](docs/developer-playground.md) covers the isolated developer account.
+
+For a system-level overview, see the [LootVault System Design](docs/system-design.md), including architecture diagrams, request flow, security boundaries, persistence, and deployment shape.
 
 ## Technology
 

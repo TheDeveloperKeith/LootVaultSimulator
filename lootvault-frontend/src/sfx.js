@@ -1,3 +1,5 @@
+import notificationAudio from "./assets/audio/kenney-notification.wav";
+import { effectVolume } from "./audio/volume";
 import clickAudio from "./assets/audio/kenney-click_003.ogg";
 import winAudio from "./assets/audio/kenney-win.ogg";
 import lossAudio from "./assets/audio/kenney-loss.ogg";
@@ -38,13 +40,13 @@ export function setMuted(value) {
 
 export function playGameEffect(kind = "click", volume = .5, pitch = 1) {
   if (muted) return;
-  const clips = { win:winAudio, loss:lossAudio, click:clickAudio, confirm:confirmAudio, back:backAudio, tick:tickAudio, reward:rewardAudio };
+  const clips = { win:winAudio, loss:lossAudio, click:clickAudio, confirm:confirmAudio, back:backAudio, tick:tickAudio, reward:rewardAudio, notification:notificationAudio };
   const audio = new Audio(clips[kind] || clickAudio);
-  audio.volume = Math.max(0, Math.min(1, volume));
+  const release = effectVolume(audio, Math.max(0, Math.min(1, volume)));
   audio.preservesPitch = false;
   audio.playbackRate = Math.max(.65, Math.min(1.5, pitch));
   if (activeEffects.size >= 6) activeEffects.values().next().value?.();
-  const stop = () => { audio.pause(); clearTimeout(timer); audio.onended = null; activeEffects.delete(stop); };
+  const stop = () => { audio.pause(); release(); clearTimeout(timer); audio.onended = null; activeEffects.delete(stop); };
   const timer = setTimeout(stop, 8000);
   activeEffects.add(stop); audio.onended = stop;
   void audio.play().catch(stop);
@@ -68,11 +70,11 @@ export function playRarityFanfare(rarity) {
   const [src, offset, volume] = clips[rarity];
   const audio = new Audio(src);
   audio.currentTime = offset;
-  audio.volume = volume;
+  const release = effectVolume(audio, volume);
   const stopEffects = rarity === "EXTRA_EXTRAORDINARY" ? createMysteryRevealEffects() : undefined;
   const started = Date.now();
-  const fade = setInterval(() => { audio.volume = volume * Math.max(0, Math.min(1, (4800 - (Date.now() - started)) / 900)); }, 50);
-  const stop = () => { clearInterval(fade); clearTimeout(end); audio.pause(); stopEffects?.(); if (stopRevealAudio === stop) stopRevealAudio = undefined; };
+  const fade = setInterval(() => { effectVolume(audio, volume * Math.max(0, Math.min(1, (4800 - (Date.now() - started)) / 900))); }, 50);
+  const stop = () => { clearInterval(fade); clearTimeout(end); audio.pause(); release(); stopEffects?.(); if (stopRevealAudio === stop) stopRevealAudio = undefined; };
   const end = setTimeout(stop, 4800);
   stopRevealAudio = stop;
   audio.onended = stop;
@@ -85,8 +87,8 @@ export function playAudienceReaction(win) {
   if (muted) return;
   const audio = new Audio(win ? applauseAudio : boosAudio);
   audio.currentTime = win ? 4 : 0;
-  audio.volume = win ? .9 : .7;
-  const stop = () => { clearTimeout(end); audio.pause(); if (stopRevealAudio === stop) stopRevealAudio = undefined; };
+  const release = effectVolume(audio, win ? .9 : .7);
+  const stop = () => { clearTimeout(end); audio.pause(); release(); if (stopRevealAudio === stop) stopRevealAudio = undefined; };
   const end = setTimeout(stop, 4800);
   stopRevealAudio = stop;
   audio.onended = stop;
@@ -98,8 +100,8 @@ export function playAudienceReaction(win) {
 export function playGlassShatter() {
   if (muted) return;
   const audio = new Audio(glassShatterAudio);
-  audio.volume = 1;
-  const stop = () => { audio.pause(); clearTimeout(end); window.removeEventListener('lootvault:sound-changed', sync); audio.onended = null; };
+  const release = effectVolume(audio, 1);
+  const stop = () => { audio.pause(); release(); clearTimeout(end); window.removeEventListener('lootvault:sound-changed', sync); audio.onended = null; };
   const sync = () => { if (muted) stop(); };
   const end = setTimeout(stop, 2000);
   audio.onended = stop;
@@ -107,3 +109,5 @@ export function playGlassShatter() {
   void audio.play().catch(stop);
   return stop;
 }
+
+export const playCrateNotification = () => playGameEffect("notification", .55);

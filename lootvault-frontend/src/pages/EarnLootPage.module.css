@@ -134,11 +134,350 @@
 @keyframes actionBeacon { 0%,12%,66%,100% { box-shadow:0 0 0 transparent;filter:brightness(1); } 28%,42% { box-shadow:0 0 24px #c496ff99,0 0 48px #876bff66;filter:brightness(1.35); } }
 @media(prefers-reduced-motion:reduce) { .actionGlow > button { animation:none;box-shadow:0 0 16px #c496ff66; } }
 
-.finalChoices { position:fixed;z-index:1004;left:50%;bottom:12vh;transform:translateX(-50%);display:flex;align-items:center;gap:clamp(1.5rem,7vw,6rem);width:max-content;max-width:100vw; }
-.finalChoices button { appearance:none;border:0;border-radius:0;background:transparent;padding:.5rem;color:#e8e9f1;font:800 italic clamp(2rem,6vw,4.5rem)/1.15 var(--font-body);letter-spacing:-.04em;cursor:pointer;text-shadow:0 3px 12px #000;transition:color .2s,text-shadow .2s,transform .2s; }
-.finalChoices button:hover:not(:disabled),.finalChoices button:focus-visible { color:#fff2b5;text-shadow:0 0 14px #ffe083,0 0 36px #ffc96788;transform:translateY(-3px); }
-.finalChoices button:focus-visible { outline:none;text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:.16em; }
-.finalChoices button:last-child:hover:not(:disabled),.finalChoices button:last-child:focus-visible { color:#ffc4d3;text-shadow:0 0 14px #ff89a7,0 0 36px #ff6c9788; }
-.finalChoices button:disabled { opacity:.4;cursor:wait; }
-@media(prefers-reduced-motion:reduce) { .finalChoices button { transition:none; }.finalChoices button:hover:not(:disabled),.finalChoices button:focus-visible { transform:none; } }
-html[data-reduced-motion="true"] .finalChoices button { transition:none;transform:none; }
+/* The River occupies the full width, with decisions placed on the near edge. */
+.gamePage { max-width: 1480px; }
+.gamePage .title { font-size: clamp(1.75rem,3vw,2.5rem); }
+.gamePage .stats { padding-block: .65rem; }
+.gameLayout { grid-template-columns: minmax(0,1fr); }
+.gameTable { min-height: 650px; padding: clamp(1.25rem,3vw,2.5rem); border-radius: 36px; background: radial-gradient(ellipse at 50% 42%,rgba(61,123,126,.22),transparent 68%),linear-gradient(135deg,#14232c,#121c2a 65%,#182432); box-shadow: inset 0 0 0 10px rgba(255,255,255,.025),inset 0 0 90px #0003,0 24px 80px #0003; }
+.gameTable .opponents { justify-content: space-around; max-width: 1000px; margin: 0 auto; }
+.gameTable .community { border: 0; margin: 1.2rem auto; padding: 1.1rem; max-width: 660px; }
+.gameTable .player { margin: 1.2rem 0 .75rem; }
+.gameTable .pressure { margin-bottom: 1.25rem; }
+.boardActions { position: relative; margin: 1.5rem auto 0; padding: 1.2rem 1.5rem; max-width: 900px; border-top: 1px solid #ffffff15; display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; }
+.moveCaption { display: grid; gap: .35rem; flex-shrink: 0; }
+.moveCaption > span { font-size: .9rem; color: #edf5ff; }
+.moveCaption small { color: var(--text-dim); font-size: .7rem; }
+.boardButtons { display: flex; align-items: center; justify-content: center; gap: .75rem; flex-wrap: wrap; }
+.boardButtons > button { min-width: 110px; min-height: 48px; }
+.raiseControl { display: grid; grid-template-columns: 85px auto; gap: .3rem .5rem; align-items: center; }
+.raiseControl label { grid-column: 1/-1; color: var(--text-dim); font-size: .625rem; }
+.raiseControl input { width: 100%; min-width: 0; padding: .65rem .5rem; font-variant-numeric: tabular-nums; }
+.raiseControl button { min-height: 44px; }
+.actionGlow .raiseControl button { animation: actionBeacon 3s ease-in-out 1s infinite; }
+@media (prefers-reduced-motion: reduce) { .actionGlow .raiseControl button { animation: none; } }
+html[data-reduced-motion="true"] .actionGlow > button,html[data-reduced-motion="true"] .actionGlow .raiseControl button { animation: none; }
+.tableSetup { max-width: 680px; margin: 1.5rem auto 0; }
+.tableSetup .controls { background: #ffffff04; border-color: #ffffff10; box-shadow: none; }
+.tableSetup .controls .stake { margin: 1rem 0; }
+@media (min-width: 1100px) {
+    .gameTable { display: grid; grid-template-columns: 1fr 1.2fr 1fr; align-items: center; min-height: 660px; }
+    .gameTable .tableHeader { grid-column: 1/-1; margin-bottom: .5rem; }
+    .gameTable .opponents { grid-column: 1/-1; width: 100%; }
+    .gameTable .community { grid-column: 1/-1; margin-block: .5rem; padding-block: .5rem; }
+    .gameTable .opponents .cards > div { width: 56px; }
+    .gameTable .player { grid-column: 1; grid-row: 4; margin: .5rem 0; }
+    .gameTable .message { grid-column: 1/-1; grid-row: 5; margin: .25rem; }
+    .gameTable .pressure,.gameTable .result,.boardActions,.tableSetup,.gameTable .emptyTable { grid-column: 1/-1; width: 100%; }
+    .gameTable .boardActions { grid-column: 2/-1; grid-row: 4; width: auto; margin: 0; border: 0; flex-direction: column; align-items: flex-end; gap: .75rem; }
+    .gameTable .moveCaption { text-align: right; }
+    .gameTable .pressure { margin: .25rem auto; }
+}
+@media (max-width: 700px) {
+    .gameTable { min-height: 0; border-radius: 24px; padding: 1.25rem .75rem; }
+    .boardActions { padding: 1rem 0 .25rem; flex-direction: column; gap: .75rem; }
+    .moveCaption { text-align: center; }
+    .boardButtons { gap: .5rem; width: 100%; }
+    .boardButtons > button { flex: 1; min-width: 80px; padding-inline: .8rem; }
+    .raiseControl { grid-template-columns: 65px auto; }
+    .gameTable .community { padding-inline: 0; }
+}
+
+/* A compact game HUD and a table that uses the remaining screen height. */
+.gamePage { height: 100%; min-height: 0; padding: 0; gap: .45rem; display: flex; flex-direction: column; font-family: "Bahnschrift", "Arial Narrow", sans-serif; }
+.gamePage > :not(.layout) { flex-shrink: 0; }
+.gamePage > p.atmosphere { display: none; }
+.gamePage .header { gap: .5rem; }
+.gamePage .title { font-family: "Bahnschrift", "Arial Narrow", Impact, sans-serif; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; font-size: clamp(1rem,2vw,1.5rem); margin: 0; }
+.gamePage .header .eyebrow,.gamePage .sub,.gamePage > .loop { display: none; }
+.gamePage > .atmosphere { margin: 0; padding: .3rem .75rem; border-radius: 10px; font-size: .75rem; }
+.gamePage .atmosphere small { font-size: .6rem; margin-top: 0; }
+.gamePage .atmosphere button { padding: .25rem .5rem; font-size: .65rem; }
+.gamePage .tabs { margin: 0 auto; padding: .15rem; max-width: 500px; }
+.gamePage .tabs > button { padding: .35rem .8rem; font-size: .75rem; }
+.gamePage .tabs small,.gamePage .tabs > button > span:first-child { display: none; }
+.gamePage .layout { min-height: 0; height: auto; flex: 1; }
+.gamePage .gameTable { --game-card: clamp(34px,8dvh,64px); min-height: 0; height: 100%; padding: clamp(.6rem,1.5vw,1.25rem); display: grid; grid-template-columns: 1fr 1.4fr 1fr; grid-template-rows: auto minmax(0,1fr) minmax(0,1fr) minmax(0,1fr) auto; align-items: center; border-radius: 24px; }
+.gameTable .tableHeader { grid-column: 1/-1; grid-row: 1; margin: 0; }
+.gameTable .tableHeader h2 { font-family: inherit; font-size: clamp(.9rem,2vw,1.3rem); text-transform: uppercase; letter-spacing: .08em; font-weight: 800; }
+.gameTable .pot { padding: .3rem .6rem; }
+.gameTable .pot strong { font-size: 1rem; }
+.gameTable .opponents { grid-column: 1/-1; grid-row: 2; width: 100%; max-width: 900px; }
+.gameTable .seat { gap: .15rem; }
+.gameTable .avatar { width: 24px; height: 24px; }
+.gameTable .seat small { font-size: .6rem; }
+.gameTable .cards > div { width: var(--game-card); border-radius: 7px; }
+.gameTable .opponents .cards > div { width: calc(var(--game-card) * .72); }
+.gameTable .community { grid-column: 1/-1; grid-row: 3; padding: 0; margin: 0; justify-self: center; width: 100%; }
+.gameTable .community > span { margin-bottom: .25rem; }
+.gameTable .player { grid-column: 1; grid-row: 4; margin: 0; gap: .3rem; }
+.gameTable .seatName { font-size: .7rem; }
+.gameTable .handBadge { font-size: .6rem; padding: .15rem .35rem; }
+.gameTable .boardActions { grid-column: 2/-1; grid-row: 4; width: 100%; padding: .25rem .5rem; margin: 0; border: 0; flex-direction: column; align-items: center; gap: .25rem; }
+.gameTable .moveCaption { text-align: center; }
+.gameTable .moveCaption > span { display: none; }
+.gameTable .moveCaption small { font-size: .6rem; }
+.gameTable .boardButtons { flex-wrap: nowrap; align-items: flex-start; gap: clamp(.85rem,2.5vw,2.5rem); width: auto; }
+.gamePage .boardButtons button.wordAction { position: relative; min-width: 0; min-height: 44px; padding: .6rem .25rem; background: none; border: 0; border-radius: 0; box-shadow: none; color: #ced8d0; font: 650 clamp(1rem,2vw,1.65rem)/1.2 "Bahnschrift", "Arial Narrow", sans-serif; letter-spacing: .1em; text-transform: uppercase; text-shadow: none; transition: color .15s ease; }
+.gamePage .boardButtons button.wordAction::after { content: ""; position: absolute; left: .25rem; right: .25rem; bottom: .3rem; height: 2px; background: currentColor; opacity: .18; transform: scaleX(.3); transition: opacity .15s ease,transform .15s ease; }
+.gamePage .boardButtons button.checkAction { color: #e3e0c9; }
+.gamePage .boardButtons button.foldAction { color: #c8b5b2; }
+.gamePage .boardButtons button.wordAction:hover:not(:disabled),.gamePage .boardButtons button.wordAction:focus-visible { color: #f5f5e9; text-shadow: none; outline: none; text-decoration: none; }
+.gamePage .boardButtons button.foldAction:hover:not(:disabled),.gamePage .boardButtons button.foldAction:focus-visible { color: #e8c3bd; }
+.gamePage .boardButtons button.wordAction:hover:not(:disabled)::after,.gamePage .boardButtons button.wordAction:focus-visible::after { opacity: .8; transform: scaleX(1); }
+.gamePage .boardButtons button.wordAction:focus-visible { outline: 1px solid #dde6db88; outline-offset: 3px; }
+.gamePage .boardButtons button.wordAction:active:not(:disabled)::after { opacity: 1; }
+.gamePage .boardButtons button.wordAction:disabled { opacity: .3; cursor: not-allowed; }
+.gamePage .wordAction small { display: block; font: 500 .65rem/1.2 "Bahnschrift",sans-serif; letter-spacing: 0; }
+.gamePage .raiseControl { display: flex; flex-direction: column-reverse; gap: .2rem; }
+.gamePage .raiseControl label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+.gamePage .raiseControl input { width: 75px; padding: .1rem .25rem; background: transparent; border: 0; border-bottom: 1px solid #ffffff25; border-radius: 0; text-align: center; font-size: .7rem; }
+.gameTable .message { grid-column: 1/-1; grid-row: 5; font-size: .7rem; margin: .25rem 0 0; min-height: 0; }
+.gameTable .pressure { display: none; }
+.gameTable .result { grid-column: 2/-1; grid-row: 4; padding: .3rem; margin: 0; border: 0; background: none; gap: .15rem; }
+.gameTable .result > span,.gameTable .result a { display: none; }
+.gameTable .result > strong { font-size: 1.2rem; }
+.gameTable .tableSetup { grid-column: 1/-1; grid-row: 5; padding: 0; margin: .3rem auto 0; width: 100%; max-width: 650px; }
+.gameTable:has(.result) .tableSetup { grid-row: 6; }
+.gameTable:has(.emptyTable) .tableSetup { grid-row: 2/-1; align-self: center; }
+.gameTable .emptyTable { display: none; }
+.gameTable .tableSetup .controls { padding: .5rem; border: 0; background: none; display: grid; grid-template-columns: 1fr 1fr; gap: .35rem .75rem; }
+.gameTable .tableSetup h2 { font-size: .85rem; }
+.gameTable .tableSetup .controls > p,.gameTable .tableSetup .note,.gameTable .tableSetup .rules { display: none; }
+.gameTable .tableSetup .stake { padding: 0; border: 0; background: none; margin: 0; }
+.gameTable .tableSetup .stake strong { font-size: 1.1rem; }
+.gameTable .tableSetup .stake span { font-size: .6rem; }
+.gameTable .tableSetup .presets { margin: 0; padding: 0; }
+.gameTable .tableSetup .presets button { background: none; border: 0; }
+.gameTable .tableSetup .controls > button { font-family: inherit; text-transform: uppercase; font-weight: 800; background: none; color: #9ee9ff; border: 0; box-shadow: none; padding: .3rem; }
+.infoLink { border: 0; padding: .25rem; background: transparent; color: #a4d5f3; font: inherit; font-size: .75rem; cursor: pointer; }
+.infoLink:hover,.infoLink:focus-visible { text-decoration: underline; color: #fff0a6; }
+.infoDialog { width: min(700px,calc(100vw - 2rem)); max-height: 85dvh; overflow: auto; padding: 1.5rem; color: #e3edfa; background: #142033; border: 1px solid #ffffff25; border-radius: 20px; }
+.infoDialog::backdrop { background: #020611cc; backdrop-filter: blur(8px); }
+.infoDialog > * { margin-bottom: 1rem; }
+.infoHeading { display: flex; align-items: center; justify-content: space-between; }
+.infoDialog p { font-size: .8rem; color: var(--text-dim); }
+/* Actions stay visually steady even as the hand's atmosphere intensifies. */
+.gamePage .actionGlow button.wordAction { animation: none; filter: none; box-shadow: none; }
+@media(max-width:650px) {
+    .gamePage .gameTable { --game-card: clamp(30px,6.5dvh,48px); grid-template-columns: 1fr 1.7fr; padding: .6rem; }
+    .gameTable .boardActions,.gameTable .result { grid-column: 2; }
+    .gamePage .boardButtons { gap: .65rem; }
+    .gamePage .boardButtons button.wordAction { font-size: clamp(.85rem,3.7vw,1.15rem); }
+    .gamePage .header .infoLink { font-size: .65rem; }
+    .gameTable .opponents { justify-content: space-around; }
+    .gameTable .player .seatName { font-size: .6rem; }
+    .gameTable .handBadge { margin-left: .2rem; }
+    .gamePage .raiseControl input { width: 50px; }
+}
+@media(prefers-reduced-motion:reduce) { .gamePage .actionGlow .wordAction { animation: none; }.gamePage .boardButtons button.wordAction,.gamePage .boardButtons button.wordAction::after { transition: none; } }
+html[data-reduced-motion="true"] .gamePage .actionGlow .wordAction { animation: none; }
+
+/* Felt, a padded rail, and unframed opponent artwork on both tables. */
+.gamePage .gameTable { border: 8px solid #272529; background: radial-gradient(ellipse at 50% 45%,#235d4d99,transparent 75%),repeating-linear-gradient(25deg,#ffffff02 0px,#ffffff02 1px,transparent 1px,transparent 4px),#10382e; box-shadow: inset 0 0 0 1px #b9a47155,inset 0 0 70px #0005,0 0 0 1px #9c8a6744,0 12px 35px #0005; border-radius: 36px; }
+.gameTable .avatar { width: clamp(28px,5dvh,44px); height: clamp(28px,5dvh,44px); background: none; border: 0; border-radius: 0; }
+.gameTable .avatar svg { width: 100%; height: 100%; filter: drop-shadow(0 2px 8px #0004); }
+.gameTable .pot { background: #051d1666; border-color: #d7c19033; }
+.gameTable .seatName { color: #e7e4cd; }
+.gameTable .handBadge { background: #ffffff09; color: #e8ddae; border-color: #cab57d44; }
+.feltLabel { grid-column: 1/-1; grid-row: 3; text-align: center; color: #d8cf9d55; display: grid; gap: .35rem; pointer-events: none; }
+.feltLabel strong { font-size: clamp(1.3rem,4vw,3rem); letter-spacing: .25em; }
+.feltLabel span { font-size: .65rem; letter-spacing: .08em; text-transform: uppercase; }
+.blackjackTable .cards { flex-wrap: wrap; max-width: 100%; }
+.blackjackTable .player { grid-column: 1; width: 100%; }
+@media(max-width:650px) {
+    .gamePage .gameTable { border-width: 5px; border-radius: 26px; }
+    .blackjackTable .feltLabel { display: none; }
+    .blackjackTable .player { grid-column: 1/-1; grid-row: 3; }
+    .blackjackTable .boardActions,.blackjackTable .result { grid-column: 1/-1; grid-row: 4; }
+    .blackjackTable .boardButtons button.wordAction { font-size: clamp(1.5rem,7vw,2.5rem); }
+}
+
+html[data-reduced-motion="true"] .gamePage .boardButtons button.wordAction::after { transition: none; }
+
+/* A confident opening screen, with the wager as its visual anchor. */
+.gameTable:has(.emptyTable) .tableSetup { max-width: 760px; }
+.gameTable:has(.emptyTable) .tableSetup .controls { gap: clamp(.5rem,1.5dvh,1rem) 2rem; padding: .5rem clamp(.5rem,2vw,1.5rem); align-items: center; }
+.gameTable:has(.emptyTable) .tableSetup h2 { grid-column: 1/-1; text-align: center; font-size: clamp(1.4rem,4dvh,2.4rem); font-weight: 750; letter-spacing: .015em; text-transform: uppercase; color: #f3efda; }
+.gameTable:has(.emptyTable) .tableSetup .controls > p:first-of-type { display: block; grid-column: 1/-1; text-align: center; margin: 0 auto; max-width: 48ch; color: #c4cfc7; font-size: clamp(.75rem,1.7dvh,.95rem); line-height: 1.5; }
+.gameTable:has(.emptyTable) .tableSetup .stake { text-align: center; }
+.gameTable:has(.emptyTable) .tableSetup .stake strong { color: #f6e5b4; font-size: clamp(2.25rem,7dvh,4.25rem); font-weight: 750; line-height: 1.15; letter-spacing: -.03em; }
+.gameTable:has(.emptyTable) .tableSetup .stake span { font-size: clamp(.75rem,1.6dvh,.95rem); color: #cbd8cb; }
+.gameTable:has(.emptyTable) .tableSetup .range { font-size: .85rem; gap: .65rem; }
+.gameTable:has(.emptyTable) .tableSetup .presets { grid-column: 1/-1; background: none; gap: clamp(.5rem,2vw,1.5rem); }
+.gameTable:has(.emptyTable) .tableSetup .presets button { min-height: 44px; font-size: clamp(.9rem,2dvh,1.1rem); font-weight: 650; color: #c9d5cf; border-radius: 0; border-bottom: 2px solid transparent; }
+.gameTable:has(.emptyTable) .tableSetup .presets button[aria-pressed="true"] { color: #f0dfb6; border-bottom-color: #dfc591; }
+.gameTable:has(.emptyTable) .tableSetup .presets button:hover:not(:disabled) { color: #fff; }
+.gameTable:has(.emptyTable) .tableSetup .controls > button { grid-column: 1/-1; font-size: clamp(1rem,2.5dvh,1.4rem); letter-spacing: .07em; color: #e7ead7; min-height: 48px; }
+.gameTable:has(.emptyTable) .tableSetup .controls > button:hover:not(:disabled) { color: #fff1c4; text-decoration: underline; text-underline-offset: .3em; }
+/* Stronger physical cards: larger faces, crisp ranks, and a grounded shadow. */
+.gamePage .pokerCards { --game-card: clamp(44px,9dvh,76px); }
+.pokerCards .cards > div { border-width: 2px; box-shadow: 0 5px 0 #071e1a44,0 10px 20px #0006; }
+.pokerCards .cards > div > span:first-child { font-weight: 800; font-size: clamp(.85rem,1.8dvh,1.1rem); }
+.pokerCards .cards > div > span:first-child small { font-size: .75rem; }
+.pokerCards .cards > div > span:nth-child(2) { font-size: clamp(1.65rem,3.5dvh,2.5rem); }
+.pokerCards .cards > div > span:last-child { font-weight: 750; }
+.pokerCards .community > span { color: #e0dcc3; font-size: .7rem; font-weight: 650; letter-spacing: .07em; }
+@media(max-width:650px) {
+    .gamePage .pokerCards { --game-card: clamp(40px,14vw,58px); }
+    .gameTable:has(.emptyTable) .tableSetup .controls { column-gap: .75rem; }
+    .gameTable:has(.emptyTable) .tableSetup .range { font-size: .75rem; }
+}
+@media(max-height:650px) {
+    .gamePage .pokerCards { --game-card: clamp(34px,8dvh,50px); }
+    .gameTable:has(.emptyTable) .tableSetup .controls { gap: .25rem .75rem; }
+    .gameTable:has(.emptyTable) .tableSetup h2 { font-size: 1.25rem; }
+    .gameTable:has(.emptyTable) .tableSetup .stake strong { font-size: 2rem; }
+}
+
+/* Shared hierarchy, alignment, and readable game-state cues. */
+.gameTable .tableHeader { gap: 1rem; }
+.gameTable .tableHeader h2 { font-size: clamp(1rem,2.2vw,1.5rem); }
+.gameTable .tableHeader .eyebrow { color: #c5d4ca; font-size: .65rem; letter-spacing: .07em; }
+.gameTable .pot { min-width: 88px; color: #cfdbc9; }
+.gameTable .pot strong { color: #f4e4ba; font-size: clamp(1.1rem,2vw,1.45rem); font-weight: 700; }
+.stageTrack { list-style: none; display: flex; align-items: center; justify-content: center; gap: clamp(.6rem,1.5vw,1.3rem); margin: 0; padding: 0; }
+.stageTrack li { position: relative; color: #bdcbbf; font-size: .7rem; padding: .3rem 0; }
+.stageTrack li[aria-current="step"] { color: #f2e5bb; font-weight: 750; }
+.stageTrack li[aria-current="step"]::after { content: ""; position: absolute; height: 2px; inset: auto 0 0; background: #dac18b; }
+.stageTrack li.stageDone { color: #e0e9da; }
+.gameTable .seatName { font-size: .8rem; font-weight: 600; }
+.gameTable .seat small { color: #c2cfc4; font-size: .7rem; }
+.gameTable .handBadge { font-size: .7rem; font-weight: 600; color: #f0e6c4; }
+.gameTable .moveCaption small { color: #c9d8cf; font-size: .7rem; }
+.gameTable .message { color: #e6ebdc; font-size: .8rem; line-height: 1.4; }
+.gamePage .boardButtons button.foldAction { margin-left: clamp(.5rem,1.5vw,1.25rem); }
+.gamePage .raiseControl label { position: static; width: auto; height: auto; clip-path: none; color: #c8d7ca; font-size: .65rem; text-align: center; }
+.gamePage .raiseControl input { color: #f0e9d1; font-size: .85rem; min-height: 30px; border-bottom-color: #9baf9c; }
+.gamePage .raiseControl input:focus-visible { outline: 2px solid #dac18b; outline-offset: 2px; }
+.gamePage .tableSetup button:focus-visible,.gamePage .tableSetup input:focus-visible,.infoLink:focus-visible { outline: 2px solid #dac18b; outline-offset: 3px; }
+.gameTable .result > strong { font-size: clamp(1.35rem,2.7vw,1.9rem); }
+.gameTable .result small { color: #c9d8cf; font-size: .75rem; }
+@media(max-width:650px) {
+    .gameTable .tableHeader { flex-wrap: wrap; gap: .25rem; }
+    .gameTable .tableHeader > div { flex: 1; }
+    .stageTrack { order: 3; width: 100%; padding-top: .15rem; gap: 1rem; }
+    .stageTrack li { font-size: .65rem; padding: .2rem 0; }
+    .gameTable .pot { min-width: 72px; }
+    .gameTable .seatName,.gameTable .player .seatName { font-size: .7rem; }
+    .gameTable .moveCaption small { font-size: .65rem; }
+    .gameTable .message { font-size: .7rem; }
+    .gamePage .boardButtons { gap: .45rem; }
+    .gamePage .boardButtons button.foldAction { margin-left: .3rem; }
+}
+@media(max-height:650px){.gameTable:has(.emptyTable) .tableSetup .controls{padding:.25rem;gap:.15rem .5rem}.gameTable:has(.emptyTable) .tableSetup .controls>p{font-size:.7rem;line-height:1.3;margin:0}.gameTable:has(.emptyTable) .tableSetup .stake span{font-size:.65rem}.gameTable:has(.emptyTable) .tableSetup .range{font-size:.65rem;gap:.2rem}.gameTable:has(.emptyTable) .tableSetup .presets button{min-height:36px;font-size:.8rem;padding:.25rem}.gameTable:has(.emptyTable) .tableSetup .controls>button{min-height:36px;font-size:.85rem;padding:.25rem}.gameTable:has(.emptyTable) .tableSetup .stake strong{font-size:1.75rem}}
+@media(max-height:650px){.gameTable:has(.emptyTable) .stageTrack{display:none}}
+
+/* Rate-up inspired game accents; table geometry and atmospheric effects stay intact. */
+.gamePage {font-family:"Arial Rounded MT Bold","Trebuchet MS",Arial,sans-serif;--font-body:"Arial Rounded MT Bold","Trebuchet MS",Arial,sans-serif}
+.gamePage .header {padding:.5rem .8rem;border:2px solid transparent;border-radius:10px;background:linear-gradient(110deg,#26182d,#14252b) padding-box,linear-gradient(110deg,#f9d267,#ef73c1,#aa79f1,#69e1e7,#a4e77c) border-box;box-shadow:0 3px 0 #080b14}
+.gamePage .header h1 {font-family:inherit;font-weight:900;font-size:clamp(1.4rem,2.6vw,2rem);color:#ffd776;text-shadow:2px 2px 0 #1d1027,-1px -1px 0 #1d1027;letter-spacing:-.035em}
+.gamePage .header p {color:#e2cfeb;font-size:.7rem}
+.gamePage .eyebrow {color:#efafee;font-weight:900;letter-spacing:.06em}
+.gamePage .infoLink {border:2px solid #96dcf1;border-radius:7px;background:linear-gradient(#37c6e9,#1377af);color:white;font-family:inherit;font-weight:900;text-shadow:1px 1px #18334e;padding:.4rem .65rem;box-shadow:0 3px 0 #102d45}
+.gamePage .modeTabs button {font-family:inherit;font-weight:900;border:2px solid #777793;border-radius:8px;background:linear-gradient(#342d48,#1a202e);color:#fff;box-shadow:0 2px 0 #080914}
+.gamePage .modeTabs button[aria-pressed=true] {border-color:#daa4ec;background:linear-gradient(#863dae,#482969);color:#fff}
+.gamePage .gameTable {border:2px solid transparent;background:radial-gradient(ellipse at 8% 70%,#51254366,transparent 50%),radial-gradient(ellipse at 95% 0%,#3c596044,transparent 50%),linear-gradient(#16372f,#102a25) padding-box,linear-gradient(110deg,#f7ce72,#e778bd,#9c8aed,#6edce7,#a9da80) border-box;box-shadow:inset 0 0 0 5px #071b18,0 5px 20px #0005}
+.gamePage .tableHeader h2,.gamePage .emptyTable h3 {font-family:inherit;font-weight:900;color:white;text-shadow:2px 2px #071610}
+.gamePage .seatName,.gamePage .pot strong {font-family:inherit;font-weight:900;text-shadow:1px 2px #071610}
+.gamePage .pot strong,.gamePage .stake strong {color:#f0ca7a}
+.gamePage .handBadge {color:#f3aff0;background:#39233c;border-color:#c07bd5}
+.gamePage .controls {background:linear-gradient(120deg,#241e30ee,#142c2aee);border-color:#9475b3}
+.gamePage .presets button {font-family:inherit;font-weight:900;color:#fff;background:linear-gradient(#4b3764,#2c2441);border:2px solid #8c75ad;border-radius:6px}
+.gamePage .controls>button[data-variant] {background:linear-gradient(#edcd68,#b3852d);color:#241828;border:2px solid #ffdf91;box-shadow:0 3px 0 #624819;text-shadow:none;font-family:inherit;font-weight:900}
+.gamePage .boardButtons button.wordAction {font-family:inherit;font-weight:900;color:#eefbf8;text-shadow:2px 2px #051912}
+.gamePage .boardButtons button.wordAction:hover:not(:disabled) {color:#e8b4ff;text-shadow:0 0 12px #bd86ee99,2px 2px #051912}
+.gamePage .result>strong {font-family:inherit;color:#a4f6b1;text-shadow:1px 2px #0b2112}
+@media(max-width:650px),(max-height:650px){.gamePage .header{padding:.3rem .5rem}.gamePage .header h1{font-size:1.25rem}.gamePage .header p{font-size:.6rem}.gamePage .infoLink{font-size:.6rem;padding:.3rem}}
+
+/* Summon-menu contrast: rainbow is reserved for the table rim. */
+.gamePage {background:radial-gradient(ellipse at 50% 0,#19414d44,transparent 65%);border-radius:10px}
+.gamePage .header {border:2px solid #8490dd;background:linear-gradient(110deg,#3b3da0,#7133ad 48%,#2b8eaf);border-radius:10px 10px 4px 4px;box-shadow:inset 0 2px #ffffff30,0 3px 0 #070813}
+.gamePage .header h1 {color:#fff;text-shadow:2px 2px #090715,-1px -1px #090715}
+.gamePage .header .eyebrow {color:#d7e8ff}
+.gamePage .gameTable {border:2px solid transparent;background:repeating-linear-gradient(135deg,#080a0e 0 5px,#101217 5px 10px) padding-box,linear-gradient(110deg,#f7ce72,#e778bd,#9c8aed,#6edce7,#a9da80) border-box;box-shadow:inset 0 0 0 4px #050609,0 5px 20px #0006}
+.gamePage .tableHeader {background:linear-gradient(110deg,#132630,#12121c);border-bottom-color:#43576a}
+.gamePage .tabs button {border:2px solid #496e86;border-radius:7px;background:linear-gradient(#223641,#111a24);color:#d9eaf4;font-family:inherit;font-weight:900;box-shadow:0 3px 0 #060b10}
+.gamePage .tabs button[aria-pressed=true] {background:linear-gradient(#28bce9 0 48%,#1179b8 49%);border-color:#90e5ff;color:white;text-shadow:1px 2px #083a55}
+.gamePage .tabs button>span:first-child {background:#0e253b;border:2px solid #72d9f3;color:#8be8ff;border-radius:8px;display:grid;place-items:center;width:38px;height:38px;font-size:1.5rem;box-shadow:inset 0 0 12px #38bce633}
+.gamePage .tabs button[aria-pressed=true]>span:first-child {background:#10334e;color:#f5e0a0;border-color:#c3f1ff}
+.gamePage .controls {background:#10141ded;border:1px solid #526272}
+.gamePage .presets button {background:linear-gradient(#293f53,#182735);border-color:#6a8aa6;color:#fff}
+.gamePage .presets button[aria-pressed=true] {background:linear-gradient(#d6b846,#ac7e23);border-color:#f5df83;color:#fff;text-shadow:1px 1px #493411}
+.gamePage .controls>button[data-variant] {background:linear-gradient(#f2d33d 0 48%,#d49619 49%);border:2px solid #fff294;box-shadow:inset 0 0 0 2px #785017,0 3px 0 #523209;color:white;text-shadow:1px 2px #50390c}
+.gamePage .boardButtons button.wordAction {border:2px solid #75d9f7;border-radius:7px;background:linear-gradient(#28bde9 0 48%,#1179b8 49%);color:white;box-shadow:inset 0 0 0 2px #094666,0 3px 0 #062d44;text-shadow:1px 2px #082d45;padding:.45rem .8rem;font-size:clamp(.85rem,1.8vw,1.2rem)}
+.gamePage .boardButtons button.raiseAction {border-color:#fff18b;background:linear-gradient(#f2d33d 0 48%,#d49619 49%);box-shadow:inset 0 0 0 2px #785017,0 3px 0 #523209;text-shadow:1px 2px #50390c}
+.gamePage .boardButtons button.foldAction {border-color:#ed979c;background:linear-gradient(#af4b60,#763345);box-shadow:inset 0 0 0 2px #51202d,0 3px 0 #34131c}
+.gamePage .boardButtons button.wordAction:hover:not(:disabled) {filter:brightness(1.15);color:white;text-shadow:1px 2px #082d45;transform:translateY(-1px)}
+.gamePage .boardButtons button.wordAction:active:not(:disabled) {transform:translateY(2px)}
+.gamePage .handBadge {background:#172c3b;border-color:#6aafce;color:#a6eaff}
+.gamePage .community>span,.gamePage .seatName {color:#edf3ff}
+.gamePage .message,.gamePage .emptyTable p {color:#cad4e3}
+.gamePage .feltLabel {color:#b8c4d4}
+@media(max-width:650px){.gamePage .tabs button>span:first-child{width:28px;height:28px;font-size:1.1rem}.gamePage .boardButtons button.wordAction{padding:.3rem .5rem;font-size:.85rem}}
+
+/* Floating anime-inspired table titles; the felt and page surfaces are unchanged. */
+.gamePage .gameTable .tableHeader {background:transparent;border:0;box-shadow:none;border-radius:0}
+.gamePage .gameTable .tableHeader h2 {
+ font-family:Georgia,"Times New Roman",serif;font-weight:900;
+ font-size:clamp(1.25rem,2.7vw,2rem);text-transform:none;letter-spacing:-.035em;
+ color:#ede9ff;background:linear-gradient(180deg,#fff9e9 8%,#d6ccdf 42%,#a080dc 64%,#e0f7ff 95%);
+ background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+ -webkit-text-stroke:.6px #201528;
+ filter:drop-shadow(2px 2px 0 #050409) drop-shadow(0 0 4px #63daf399);
+ text-shadow:none;margin:.15rem 0;line-height:1.15;
+}
+.gamePage .gameTable .tableHeader .eyebrow {color:#cad8ee;font-size:.6rem;letter-spacing:.08em;text-shadow:1px 1px #06090e}
+@media(max-width:650px){.gamePage .gameTable .tableHeader h2{font-size:1.15rem;-webkit-text-stroke:.4px #201528}}
+
+/* Main title banner matches the lobby header. */
+.gamePage .header {
+ background:linear-gradient(110deg,#393e9e 0%,#7733a7 40%,#2a7897 76%,#485db1 100%);
+ border:2px solid #818ed5;border-radius:12px 12px 5px 5px;
+ padding:.65rem 1rem;min-height:78px;
+ box-shadow:inset 0 2px 0 #ffffff35,0 3px 0 #090b1d;
+}
+.gamePage .header h1 {
+ font-family:"Arial Rounded MT Bold","Trebuchet MS",Arial,sans-serif;
+ font-size:clamp(1.35rem,2.5vw,2rem);font-weight:900;letter-spacing:-.035em;
+ text-transform:none;color:#fff;text-shadow:2px 2px 0 #211b45;margin:.15rem 0;
+}
+.gamePage .header .eyebrow {color:#ece7ff;font-size:.6rem;font-weight:800;letter-spacing:.1em}
+.gamePage .header p {color:#ece7ff;font-size:.65rem;line-height:1.35;margin:.2rem 0}
+.gamePage .header .infoLink {
+ background:linear-gradient(#32c9ed,#0b90c5);border:2px solid #8ee6fa;border-radius:7px;
+ color:#fff;box-shadow:0 3px 0 #064963;font-weight:900;
+ text-shadow:1px 1px #123f59;min-height:36px;padding:.4rem .65rem;
+}
+@media(max-width:650px),(max-height:650px){
+ .gamePage .header{padding:.4rem .6rem;min-height:60px}
+ .gamePage .header h1{font-size:1.25rem}
+ .gamePage .header p{font-size:.6rem}
+ .gamePage .header .infoLink{font-size:.6rem;padding:.3rem .45rem}
+}
+
+.gamePage .settingsDock {display:flex;justify-content:flex-end;flex-shrink:0;padding:.15rem .2rem}
+.gamePage .tableSettings {display:inline-flex;align-items:center;gap:.4rem;min-height:36px;padding:.35rem .8rem;border:2px solid #8ee6fa;border-radius:7px;background:linear-gradient(#28bde9 0 48%,#1179b8 49%);color:white;font-family:inherit;font-size:.75rem;font-weight:900;text-shadow:1px 2px #082d45;box-shadow:inset 0 0 0 2px #094666,0 3px 0 #062d44;cursor:pointer}
+.gamePage .tableSettings:hover {filter:brightness(1.15)}
+.gamePage .tableSettings:active {transform:translateY(2px)}
+.gamePage .tableSettings:focus-visible {outline:3px solid white;outline-offset:3px}
+.gamePage .tableSettings>span {font-size:1rem}
+@media(max-height:650px){.gamePage .tableSettings{min-height:30px;font-size:.65rem;padding:.2rem .6rem}.gamePage .settingsDock{padding:0}}
+
+.currencyChoice{display:flex;justify-content:center;gap:.5rem;margin:.45rem 0}.currencyChoice button{display:flex;align-items:center;justify-content:center;gap:.35rem;min-height:40px;min-width:100px;border:2px solid #776998;border-radius:7px;background:linear-gradient(#34294a,#1b1526);color:#fff;font-family:"Arial Rounded MT Bold","Trebuchet MS",sans-serif;font-weight:900;cursor:pointer;box-shadow:0 3px 0 #0a0711}.currencyChoice button[aria-pressed="true"]{background:linear-gradient(#40c7ef,#197cba);border-color:#91e8ff}.currencyChoice button:hover:not(:disabled){filter:brightness(1.16)}.currencyChoice button:focus-visible{outline:3px solid white;outline-offset:3px}.currencyChoice button:disabled{opacity:.5;cursor:default}
+
+.gamePage .tableSetup .stakeHeading{grid-column:1/-1;display:flex;align-items:center;justify-content:center;gap:1.2rem}.gamePage .stakeHeading h2{margin:0}.gamePage .stakeHeading .currencyChoice{margin:0}.gamePage .tableSetup .controls{row-gap:clamp(.25rem,.9dvh,.6rem)}
+@media(max-width:650px){.gamePage .tableSetup .stakeHeading{flex-wrap:wrap;gap:.25rem}.gamePage .stakeHeading h2{font-size:1.1rem}.gamePage .currencyChoice button{min-height:36px;min-width:80px}}
+@media(max-height:650px){.gamePage .tableSetup .stakeHeading{gap:.4rem}.gamePage .stakeHeading h2{font-size:1rem}.gamePage .currencyChoice button{min-height:32px;min-width:75px;font-size:.75rem}}
+
+@media(max-width:650px) and (max-height:650px){
+ .gamePage .gameTable:has(.emptyTable) .tableSetup .stakeHeading{flex-wrap:nowrap;gap:.3rem}
+ .gamePage .gameTable:has(.emptyTable) .tableSetup .stakeHeading h2{font-size:.85rem;letter-spacing:0}
+ .gamePage .gameTable:has(.emptyTable) .tableSetup .currencyChoice{gap:.2rem}
+ .gamePage .gameTable:has(.emptyTable) .tableSetup .currencyChoice button{min-width:52px;min-height:32px;padding:.2rem;font-size:.65rem}
+ .gamePage .gameTable:has(.emptyTable) .tableSetup .currencyChoice svg{width:18px;height:18px}
+ .gamePage .gameTable:has(.emptyTable) .tableSetup .controls>p:first-of-type{display:none}
+ .gamePage .gameTable:has(.emptyTable) .tableSetup .controls{gap:.15rem .5rem}
+}
+
+@media(max-width:650px) and (max-height:650px){.gamePage .gameTable:has(.emptyTable) .tableSetup .presets button,.gamePage .gameTable:has(.emptyTable) .tableSetup .controls>button{min-height:32px}.gamePage .gameTable:has(.emptyTable) .tableSetup .stake strong{font-size:1.5rem}}

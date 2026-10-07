@@ -25,5 +25,6 @@ public class WalletResponse {
     public UUID getPlayerId() { return playerId; }
     public Long getSoftBalance() { return softBalance; }
     public Long getHardBalance() { return hardBalance; }
+    public Long getGemBalance() { return hardBalance; }
     public boolean isUnlimited() { return unlimited; }
 }

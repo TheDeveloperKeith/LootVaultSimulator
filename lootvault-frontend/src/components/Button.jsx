@@ -14,6 +14,7 @@ export default function Button({
                                }) {
     return (
         <button
+            data-variant={variant}
             type="button"
             className={`${styles.btn} ${styles[variant]} ${styles[size]} ${className}`}
             onClick={(e) => {

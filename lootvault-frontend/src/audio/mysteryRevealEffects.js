@@ -1,3 +1,4 @@
+import { soundLevel } from "./volume";
 // Original procedural reveal cues: charging air, a blade sweep, impact, and echoes.
 // No sampled anime audio is used. The caller owns muting and disposal.
 export function createMysteryRevealEffects() {
@@ -6,7 +7,8 @@ export function createMysteryRevealEffects() {
     const context = new AudioContext();
     const master = context.createGain();
     const limiter = context.createDynamicsCompressor();
-    master.gain.value = .28;
+    const sync = () => { master.gain.value = .28 * soundLevel(); };
+    sync(); window.addEventListener("lootvault:sound-changed", sync);
     limiter.threshold.value = -12;
     limiter.ratio.value = 8;
     master.connect(limiter);
@@ -71,6 +73,7 @@ export function createMysteryRevealEffects() {
     function stop() {
         if (stopped) return;
         stopped = true;
+        window.removeEventListener("lootvault:sound-changed", sync);
         sources.forEach(source => { try { source.stop(); } catch { /* Already ended. */ } });
         void context.close().catch(() => {});
     }
