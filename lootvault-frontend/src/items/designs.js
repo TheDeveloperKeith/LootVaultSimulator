@@ -24,7 +24,8 @@ export const WEAPON_DESIGNS = [
   { name: "Voidseal Aegis", rarity: "EXTRA_EXTRAORDINARY", type: "shield", design: "moon", color: "#c4a0ef" },
 ];
 export function resolveItemDesign(name = "", type) {
-  const exact = WEAPON_DESIGNS.find(item => item.name === name);
+  const canonicalName = name === "Crimson Veil Katana" ? "Mystery Harbor" : name;
+  const exact = WEAPON_DESIGNS.find(item => item.name === canonicalName);
   if (exact) return exact;
   const kind = type || (/shield|guard|aegis|buckler|bulwark/i.test(name) ? "shield" : /ring/i.test(name) ? "ring" : /cloak|armor|breastplate|robe/i.test(name) ? "armor" : "sword");
   const hash = [...name].reduce((sum, char) => sum + char.charCodeAt(0), 0);

@@ -5,7 +5,7 @@ import { useLocation } from "react-router-dom";
 import { api } from "../api/client";
 import { getTodayGrant, openLootBox } from "../api/game";
 import { getEarnState, claimDailyCoins } from "../api/earn";
-import { useWallet } from "../wallet/WalletContext";
+import { useWallet } from "../wallet/useWallet";
 import ScreenDialog from "./ScreenDialog";
 import CrateIcon from "./CrateIcon";
 import { RARITY_LABEL } from "../rarities";

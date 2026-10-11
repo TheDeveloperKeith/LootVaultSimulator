@@ -32,7 +32,14 @@ export default function RarityBurst({ rarity, itemName, itemType }) {
     useRevealSounds(CRIMSON_CUES,itemName === "Mystery Harbor" && rarity === "EXTRA_EXTRAORDINARY" && !skipped && !reduced);
     const mystery = rarity === "EXTRA_EXTRAORDINARY";
     useEffect(() => { if (!limited && !voidseal) stopAudio.current = playRarityFanfare(rarity); return () => stopAudio.current?.(); }, [rarity,limited,voidseal]);
-    useEffect(() => { const timer = setTimeout(() => setSkipped(true), reduced ? 2000 : limited ? 30000 : voidseal ? 7800 : 4800); const skip = () => { stopAudio.current?.(); setSkipped(true); }; window.addEventListener("lootvault:skip-reveal", skip); return () => { clearTimeout(timer); window.removeEventListener("lootvault:skip-reveal", skip); }; }, [reduced,limited,voidseal]);
+    useEffect(() => {
+        // LimitedReveal completes from its media clock. A second wall-clock
+        // timeout here would cut off the soundtrack after a buffering pause.
+        const timer = limited ? null : setTimeout(() => setSkipped(true), reduced ? 2000 : voidseal ? 7800 : 4800);
+        const skip = () => { stopAudio.current?.(); setSkipped(true); };
+        window.addEventListener("lootvault:skip-reveal", skip);
+        return () => { clearTimeout(timer); window.removeEventListener("lootvault:skip-reveal", skip); };
+    }, [reduced, limited, voidseal]);
     useEffect(() => { if (skipped) return; const previous = document.activeElement; skipButton.current?.focus({preventScroll:true}); return () => { if (previous?.isConnected) previous.focus({preventScroll:true}); }; }, [skipped]);
     if (!scene || skipped) return null;
     if(voidseal) return <VoidsealReveal reduced={reduced} onDone={() => setSkipped(true)}/>;

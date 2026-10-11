@@ -14,6 +14,7 @@ const CrateModePage = lazy(() => import("./pages/CrateModePage"));
 const SandboxPage = lazy(() => import("./pages/SandboxPage"));
 const LoginPage = lazy(() => import("./pages/LoginPage"));
 const ProgressionPage = lazy(() => import("./pages/ProgressionPage"));
+const EarnChooserPage = lazy(() => import("./pages/EarnChooserPage"));
 const EarnLootPage = lazy(() => import("./pages/EarnLootPage"));
 
 export default function App() {
@@ -37,7 +38,9 @@ export default function App() {
                                 <Route path="sandbox" element={<SandboxPage />} />
                                 <Route path="inventory" element={<InventoryPage />} />
                                 <Route path="progression" element={<ProgressionPage />} />
-                                <Route path="earn" element={<EarnLootPage />} />
+                                <Route path="earn" element={<EarnChooserPage />} />
+                                <Route path="earn/blackjack" element={<EarnLootPage />} />
+                                <Route path="earn/river" element={<EarnLootPage />} />
                                 <Route path="settings" element={<SettingsPage />} />
                                 <Route path="shop" element={<Navigate to="/menu" replace />} />
                             </Route>

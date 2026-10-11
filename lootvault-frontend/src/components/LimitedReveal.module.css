@@ -28,27 +28,13 @@
 @media(prefers-reduced-motion:reduce){.relic,.arrival{animation:none}.summonAura{display:none}}
 [data-reduced-motion="true"] .relic,[data-reduced-motion="true"] .arrival{animation:none}
 
-.scene.intro{background:#000!important}.prophecy{text-align:center;padding:2rem;max-width:90vw}.prophecy small{color:var(--color);letter-spacing:.15em;font-size:.7rem}.prophecy h2{font-family:Georgia,serif;font-size:clamp(1.8rem,5vw,4rem);color:var(--color);text-shadow:0 0 15px var(--color),0 0 45px color-mix(in srgb,var(--color) 40%,transparent);animation:prophecyGlow 3s ease-in-out infinite}.relic{animation:heroEntrance 1.4s cubic-bezier(.15,.8,.25,1) both,rewardFade 1s ease-out var(--hold) forwards}.arrival{animation:none}.summonAura{animation:none}.summonRing{animation:ringArrival 5s ease-out both}.mist{animation:revealMist 7s ease-out both}@keyframes prophecyGlow{50%{opacity:.7;filter:brightness(1.2)}}@keyframes heroEntrance{from{opacity:0;transform:scale(2.4) rotate(-12deg);filter:blur(15px)}to{opacity:1;transform:none;filter:none}}@keyframes rewardFade{to{opacity:0}}@media(prefers-reduced-motion:reduce){.prophecy h2,.relic{animation:none}}
 
-.prophecy .phrase{animation:phraseChange 1.9s ease-in-out both}.growingShake{animation:secretPressure 7s linear both}.secretRise{position:absolute;inset:0;overflow:hidden;pointer-events:none}.secretRise span{position:absolute;left:calc(8% + var(--i)*11%);bottom:-15%;color:var(--color);font-weight:900;font-size:clamp(1.2rem,3vw,2rem);text-shadow:0 0 15px var(--color);opacity:0;animation:questionRise 3s linear infinite;animation-delay:calc(var(--i)*.3s)}@keyframes phraseChange{0%,100%{opacity:0;filter:blur(4px)}15%,85%{opacity:1;filter:blur(0)}}@keyframes questionRise{10%{opacity:.4}90%{opacity:0}to{transform:translateY(-100vh)}}@keyframes secretPressure{0%,20%{transform:none}40%{transform:translate(1px,-1px)}55%{transform:translate(-2px,2px)}70%{transform:translate(3px,-2px)}80%{transform:translate(-4px,3px)}90%{transform:translate(5px,-4px)}94%{transform:translate(-6px,4px)}97%{transform:translate(7px,-5px)}100%{transform:translate(-8px,6px)}}@media(prefers-reduced-motion:reduce){.prophecy .phrase,.growingShake{animation:none}.secretRise{display:none}}
+/* Reward enters at the original music cue; the illustrated scene continues underneath. */
+.relic{opacity:var(--reward-opacity,1);animation:heroEntrance 1.4s cubic-bezier(.15,.8,.25,1) backwards}
+.arrival,.summonAura{animation:none}
+.summonRing{animation:ringArrival 5s ease-out both}
+.mist{animation:revealMist 7s ease-out both}
+@keyframes heroEntrance{from{opacity:0;transform:scale(2.4) rotate(-12deg);filter:blur(15px)}to{opacity:1;transform:none;filter:none}}
 
-/* Ambient questions remain behind the foreground phrases. */
-.prophecy{position:relative;isolation:isolate}
-.prophecy>small,.prophecy>.phrase{position:relative;z-index:1}
-.secretRise{z-index:-1}
-.growingShake{--shake:1px;animation:secretForce 7s linear forwards,secretTremor .1s steps(2,end) infinite}
-@keyframes secretForce{0%{--shake:1px}25%{--shake:3px}45%{--shake:6px}65%{--shake:10px}80%{--shake:15px}92%,100%{--shake:20px}}
-@keyframes secretTremor{0%{transform:translate(calc(var(--shake)*-1),calc(var(--shake)*.6)) rotate(-.4deg)}50%{transform:translate(var(--shake),calc(var(--shake)*-.8)) rotate(.4deg)}100%{transform:translate(calc(var(--shake)*-.7),var(--shake)) rotate(-.2deg)}}
-@media(prefers-reduced-motion:reduce){.growingShake{animation:none}}
-[data-reduced-motion="true"] .growingShake{animation:none}
-
-/* Eclipse fills the viewport while its phrases stay in the foreground. */
-.eclipse.intro .prophecy{position:static;isolation:auto}
-.eclipse.intro .prophecy>small,.eclipse.intro .prophecy>.phrase{z-index:2}
-.eclipse.intro .secretRise{position:absolute;inset:0;z-index:1}
-.eclipse.intro .secretRise span{left:var(--x);bottom:-20%;font-size:var(--size);animation:questionStorm var(--duration) linear infinite;animation-delay:var(--delay)}
-.eclipseShake{--shake:5px;animation:eclipseForce 7s linear forwards,secretTremor .08s steps(2,end) infinite;transform-origin:center}
-@keyframes eclipseForce{0%{--shake:5px}20%{--shake:9px}40%{--shake:15px}60%{--shake:22px}80%{--shake:30px}92%,100%{--shake:38px}}
-@keyframes questionStorm{0%{opacity:0;transform:translateY(0) rotate(-8deg)}15%,65%{opacity:.65}90%{opacity:.3}100%{opacity:0;transform:translateY(-145vh) rotate(8deg)}}
-@media(prefers-reduced-motion:reduce){.eclipseShake{animation:none}.eclipse.intro .secretRise{display:none}}
-[data-reduced-motion="true"] .eclipseShake{animation:none}
+.reduced .relic,.reduced .arrival{animation:none}
+@media(prefers-reduced-motion:reduce){.relic,.arrival{animation:none}}

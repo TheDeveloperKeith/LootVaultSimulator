@@ -481,3 +481,67 @@ html[data-reduced-motion="true"] .gamePage .boardButtons button.wordAction::afte
 }
 
 @media(max-width:650px) and (max-height:650px){.gamePage .gameTable:has(.emptyTable) .tableSetup .presets button,.gamePage .gameTable:has(.emptyTable) .tableSetup .controls>button{min-height:32px}.gamePage .gameTable:has(.emptyTable) .tableSetup .stake strong{font-size:1.5rem}}
+
+/* Fit cards to table height and each hand's available width. */
+.gamePage .gameLayout { overflow: auto; }
+.gamePage .gameTable {
+    container-type: size;
+    --game-card: clamp(28px, min(9vw, 7dvh, 9cqh), 76px);
+    grid-template-columns: minmax(0,1fr) minmax(0,1.4fr) minmax(0,1fr);
+    grid-template-rows: auto minmax(min-content,1fr) minmax(min-content,1fr) minmax(min-content,1fr) auto;
+    row-gap: .5rem;
+    overflow: auto;
+}
+.gameTable .seat,.gameTable .player { min-width: 0; max-width: 100%; }
+.gameTable .cards {
+    --card-gap: clamp(3px,.6vw,8px);
+    gap: var(--card-gap);
+    width: 100%;
+    min-width: 0;
+}
+.gameTable .cards > div {
+    width: min(var(--game-card), calc((100% - (var(--card-count) - 1) * var(--card-gap)) / var(--card-count)));
+}
+.gameTable .opponents .cards > div {
+    width: min(calc(var(--game-card) * .72), calc((100% - (var(--card-count) - 1) * var(--card-gap)) / var(--card-count)));
+}
+.blackjackTable .cards { flex-wrap: wrap; }
+.blackjackTable .cards > div { min-width: min(28px,100%); }
+@media(max-width:650px) {
+    .gamePage .gameTable { grid-template-columns: minmax(0,1fr) minmax(0,1.7fr); }
+    .gameTable .opponents { gap: .5rem; }
+    .gameTable .boardActions { min-width: 0; }
+    .gameTable .boardButtons { flex-wrap: wrap; }
+}
+
+.gameTable .cards > div { container-type: inline-size; }
+.gameTable .cards > div > span:first-child:not(:only-child) {
+    left: 10cqw; top: 6cqw; font-size: clamp(8px,24cqw,16px);
+}
+.gameTable .cards > div > span:first-child small { font-size: clamp(7px,18cqw,11px); }
+.gameTable .cards > div > span:nth-child(2) { font-size: clamp(12px,40cqw,30px); }
+.gameTable .cards > div > span:last-child:not(:only-child) {
+    right: 10cqw; bottom: 6cqw; font-size: clamp(8px,20cqw,12px);
+}
+.gameTable .cards > div > span:only-child { font-size: clamp(6px,22cqw,12px); }
+/* Give dealer hands a real row width before calculating per-card space. */
+.gameTable .opponents .seat { flex: 0 1 42%; }
+.blackjackTable .opponents .seat { flex-basis: 100%; width: 100%; }
+
+/* Dedicated tables use the full viewport rather than the main-menu frame. */
+.tableTopbar { display:flex; align-items:center; justify-content:space-between; gap:.75rem; padding:.15rem .35rem; color:#dce8f5; }
+.tableTopbar > span { font-size:.8rem; font-weight:750; }
+.tableTopbar > small { color:#bbc9da; font-size:.75rem; }
+.exitTable { display:inline-flex; align-items:center; min-height:44px; padding:.5rem .8rem; border:1px solid #7a98b555; border-radius:10px; background:#152637; color:#f1e2bc; text-decoration:none; font-size:.85rem; font-weight:700; }
+.exitTable:hover { border-color:#eed89e; }
+.exitTable:focus-visible { outline:3px solid #8ee6fa; outline-offset:3px; }
+.gamePage .gameTable { --game-card:clamp(32px,min(13vw,14cqh),116px); }
+@media(max-width:650px) { .tableTopbar > span { display:none; } .tableTopbar > small { font-size:.65rem; } }
+.gamePage { max-width:none; width:100%; }
+
+/* Keep target geometry available while the opening deck deals into each seat. */
+.gameTable[data-dealing="true"] [data-playing-card], .gameTable[data-dealing="true"] [data-deal-seat] > small, .gameTable[data-dealing="true"] [data-deal-seat] .handBadge { visibility:hidden; }
+
+.gameTable[data-dealing="true"] .boardActions { visibility:hidden; }
+
+.gameTable[data-dealing="true"] .result, .gameTable[data-dealing="true"] .sparkles { visibility:hidden; }

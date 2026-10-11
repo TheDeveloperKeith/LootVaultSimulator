@@ -246,3 +246,11 @@
 .page{background:radial-gradient(ellipse at 100% 0,#315b4322,transparent 65%)}
 
 .card{background:linear-gradient(150deg,#203c33,#18232c);border-color:#7ca68f44}
+
+/* Shared light-canvas page foundation, matching the login screen. */
+.page.page.page.page { font-family:Satoshi,sans-serif; color:#101114; background:transparent; border-color:#d9dce2; box-shadow:none; }
+.page.page.page.page :is(h1,h2,h3) { font-family:Switzer,sans-serif; font-weight:500; color:#101114; text-shadow:none; -webkit-text-fill-color:currentColor; }
+
+
+.page.page.page.page .card {background:#fff;border-color:#d9dce2;border-radius:24px;box-shadow:none}
+.page.page.page.page .itemName {color:#101114}

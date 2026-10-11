@@ -35,3 +35,6 @@ Result jingles: Kenney Music Jingles, CC0/public domain. kenney-win.ogg = jingle
 # Original mystery reveal effects
 
 The charge, blade sweep, sub-bass impact, and harmonic echoes in `src/audio/mysteryRevealEffects.js` are original procedural Web Audio sounds, layered over the credited mystery music. They stop when the reveal closes or the site is muted. They contain no anime samples.
+
+## River opening deal — user-supplied recording
+`playing-cards-kevinhilt.wav` comes from the supplied `196541__kevinhilt__playing_cards.aiff` (kevinhilt). Converted to mono 16-bit PCM WAV; excerpt from seconds 2–8 with volume normalization. Used during the visible shuffle and deal, honoring effect volume and mute; stops after the deal or on leaving the table. The attachment did not include license metadata.

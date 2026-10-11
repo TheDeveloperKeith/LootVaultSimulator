@@ -1,16 +1,20 @@
+import "@fontsource/roboto/latin-400.css";
+import "@fontsource/roboto/latin-500.css";
+import "@fontsource/roboto/latin-700.css";
+import coolStyles from "./CoolLoot.module.css";
 import {exchangeCrateForGems} from "../api/gems";
 import GemIcon from "../components/GemIcon";
 import { Link, useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import OpeningResults from "../components/OpeningResults";
-import Button from "../components/Button";
+import Button from "../components/TableButton";
 import CrateOpenOverlay from "../components/CrateOpenOverlay";
 import RarityBurst from "../components/RarityBurst";
 import { ApiError } from "../api/client";
 import { getCrateTypes, getMyCrates, buyCrate, openCrate, openCrates, sellCrate } from "../api/crates";
 import { fireConfetti } from "../sandbox/effects";
 import { RARITY_LABEL, RARITY_ORDER, BURST_RARITIES } from "../rarities";
-import { useWallet } from "../wallet/WalletContext";
+import { useWallet } from "../wallet/useWallet";
 import styles from "./CrateModePage.module.css";
 import PagedGrid from "../components/PagedGrid";
 import ScreenDialog from "../components/ScreenDialog";
@@ -180,7 +184,7 @@ export default function CrateModePage() {
   if (crateTypes === null && !error) return <p>Loading crates...</p>;
 
   return (
-      <div className={styles.page}>
+      <div className={`${styles.page} ${coolStyles.page}`}>
         {bulkResults && <OpeningResults items={bulkResults} onClose={()=>setBulkResults(null)}/>}{lastBurst && <RarityBurst key={lastBurst.key} rarity={lastBurst.rarity} itemName={lastBurst.itemName} itemType={lastBurst.itemType} />}
 
         {openingId && (
@@ -195,7 +199,7 @@ export default function CrateModePage() {
             />
         )}
 
-        <div className={styles.head} data-page-header="true">
+        <div className={styles.head} data-cool-page-header="true">
           <div>
             <h1 className={styles.title}>Crate exchange</h1>
             <p className={styles.sub}>
@@ -305,7 +309,8 @@ export default function CrateModePage() {
 
                     <Button
                         size="sm"
-                        variant="secondary"
+                        variant="primary"
+                        pending={buyingCode === crate.code}
                         disabled={!affordable || buyingCode === crate.code || bulkBusy}
                         onClick={() => handleBuy(crate.code)}
                     >
@@ -331,6 +336,7 @@ export default function CrateModePage() {
                         <Button
                             size="sm"
                             variant="danger"
+                            pending={sellingId === crate.id}
                             disabled={exchangeBusy || sellingId === crate.id || openingId !== null || bulkBusy || Boolean(pendingBulk)}
                             onClick={() => handleSell(crate.id)}
                         >

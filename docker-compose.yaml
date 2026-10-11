@@ -3,6 +3,10 @@ services:
     image: postgres:16
     container_name: lootvault-postgres
     restart: unless-stopped
+
+    ports:
+      - "5433:5432"
+
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
@@ -13,10 +17,13 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+
     volumes:
       - lootvault-pgdata:/var/lib/postgresql/data
+
     security_opt:
       - no-new-privileges:true
+
     deploy:
       resources:
         limits:
@@ -25,6 +32,5 @@ services:
 
 volumes:
   lootvault-pgdata:
-
 
   

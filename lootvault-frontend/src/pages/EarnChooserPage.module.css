@@ -1,0 +1,35 @@
+.page { width:100%; max-width:1000px; margin:auto; padding:clamp(1rem,3vw,2.5rem); color:#edf3ff; }
+.page h1 { margin:.5rem 0; font-size:clamp(1.8rem,4vw,3rem); letter-spacing:-.035em; }
+.page header p,.note { color:#afbdce; line-height:1.6; }
+.eyebrow { color:#a3e4da; text-transform:uppercase; font-size:.75rem; letter-spacing:.14em; }
+.games { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:1.25rem; margin:2rem 0; }
+.game { display:flex; flex-direction:column; align-items:flex-start; gap:.7rem; padding:clamp(1.25rem,3vw,2rem); border:1px solid #6e849d66; border-radius:24px; background:radial-gradient(ellipse at top right,#465bd055,transparent 65%),#302e4b; color:inherit; text-decoration:none; transition:border-color .2s,transform .2s; }
+.game h2,.game p { margin:0; }
+.game h2 { font-size:1.6rem; }
+.game p { color:#bdcadb; line-height:1.6; flex:1; }
+.game small { color:#a6bdd3; }
+.game strong { color:#a3e4da; margin-top:1rem; }
+.symbol { color:#a3e4da; font-size:3.5rem; line-height:1; }
+.game:hover:not([aria-disabled]) { border-color:#a3e4da; transform:translateY(-3px); }
+.game:focus-visible { outline:3px solid #8ee6fa; outline-offset:4px; }
+.game[aria-disabled] { opacity:.55; }
+.saved { padding:.8rem 1rem; border:1px solid #a3e4da55; border-radius:12px; background:#a3e4da0b; color:#dce6f7; }
+.note { font-size:.8rem; }
+@media(max-width:650px) { .games { grid-template-columns:1fr; margin:1.25rem 0; } .game { gap:.4rem; } .symbol { font-size:2.3rem; } }
+@media(prefers-reduced-motion:reduce) { .game { transition:none; } .game:hover:not([aria-disabled]) { transform:none; } }
+
+.page { font-family:Roboto,sans-serif; }
+.game h2 { font-weight:500; line-height:1.33; }
+
+/* Shared light-canvas page foundation, matching the login screen. */
+.page.page.page.page { font-family:Satoshi,sans-serif; color:#101114; background:transparent; border-color:#d9dce2; box-shadow:none; }
+.page.page.page.page :is(h1,h2,h3) { font-family:Switzer,sans-serif; font-weight:500; color:#101114; text-shadow:none; -webkit-text-fill-color:currentColor; }
+
+
+.page.page.page.page .game {background:#0c0d10;color:#fff;border:1px solid #17191c;border-radius:30px;box-shadow:0 8px 24px #10111408}
+.page.page.page.page .game h2 {color:#fff}
+.page.page.page.page .game :is(p,small) {color:#b7bdc7}
+.page.page.page.page .game strong {background:#fff;color:#101114;border:1px solid #fff;border-radius:999px;box-shadow:none}
+.page.page.page.page header p,.page.page.page.page .note {color:#626976}
+/* Retain the original suit artwork color on the new dark feature panels. */
+.page.page.page.page.page .symbol {color:#a3e4da}

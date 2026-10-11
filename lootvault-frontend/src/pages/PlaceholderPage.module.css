@@ -3,3 +3,7 @@
 .title { composes: title from "../styles/Glass.module.css"; }
 .sub { composes: sub from "../styles/Glass.module.css"; margin-bottom: 2rem; }
 .badge { display: inline-block; margin-bottom: 1.5rem; padding: .4rem .85rem; border: var(--border); border-radius: 999px; color: var(--text-dim); font-size: .75rem; }
+
+/* Shared light-canvas page foundation, matching the login screen. */
+.page.page.page.page { font-family:Satoshi,sans-serif; color:#101114; background:transparent; border-color:#d9dce2; box-shadow:none; }
+.page.page.page.page :is(h1,h2,h3) { font-family:Switzer,sans-serif; font-weight:500; color:#101114; text-shadow:none; -webkit-text-fill-color:currentColor; }

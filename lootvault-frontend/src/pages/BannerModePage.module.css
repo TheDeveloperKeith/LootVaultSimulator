@@ -175,3 +175,15 @@
 @media(min-width:651px) {.rewardBoxes {flex:0 1 auto; width:100%; max-width:390px; aspect-ratio:3 / 2; align-self:center; margin:auto 0; min-height:0}}
 
 .headerActions{display:flex;gap:.4rem;align-items:center}.headerActions button{display:flex;align-items:center;gap:.3rem}@media(max-width:550px){.headerActions{flex-wrap:wrap}.headerActions button{font-size:.65rem}}
+
+/* Square icon viewports preserve the full forged silhouettes in small tiles. */
+.itemArt svg { aspect-ratio:1; object-fit:contain; flex-shrink:0; overflow:visible; }
+
+/* Shared light-canvas page foundation, matching the login screen. */
+.page.page.page.page { font-family:Satoshi,sans-serif; color:#101114; background:transparent; border-color:#d9dce2; box-shadow:none; }
+.page.page.page.page :is(h1,h2,h3) { font-family:Switzer,sans-serif; font-weight:500; color:#101114; text-shadow:none; -webkit-text-fill-color:currentColor; }
+.page.page.page.page.page .secretInner {background:radial-gradient(ellipse at center,#353558,#141c32 75%);color:#fff}
+.page.page.page.page.page .secretCaption h2 {color:#fff}
+.page.page.page.page.page .secretCaption p {color:#bccbe3}
+.page.page.page.page.page .itemDetails strong {color:#101114;text-shadow:none}
+.page.page.page.page.page .featuredHeading span {color:#626976}

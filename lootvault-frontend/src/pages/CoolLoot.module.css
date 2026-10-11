@@ -1,0 +1,53 @@
+/* Shared soothing-cool surfaces; item artwork keeps its elemental/rarity palette. */
+.shell,.page { --loot-night:#141c32; --loot-felt:#293f66; --loot-rail:#302e4b; --loot-mint:#a3e4da; --loot-text:#dce6f7; --loot-muted:#bccbe3; font-family:Roboto,sans-serif; color:var(--loot-text); }
+.shell.shell { background:var(--loot-night); --font-body:Roboto,sans-serif; --glass:var(--loot-rail); --text-dim:var(--loot-muted); --white:var(--loot-text); }
+.shell.shell [class*="_top_"],.shell.shell [class*="_tabs_"],.shell.shell [class*="_bottom_"] { background:var(--loot-night); border-color:#8ea9ce30; }
+.shell.shell [class*="_content_"] { background:var(--loot-night); }
+.shell.shell [class*="_tab_"] { background:var(--loot-rail); color:var(--loot-muted); border-color:#77759860; box-shadow:none; text-shadow:none; }
+.shell.shell [class*="_tab_"][aria-current=page] { background:var(--loot-felt); color:var(--loot-mint); border-color:var(--loot-mint); box-shadow:inset 0 -2px 0 var(--loot-mint); }
+.shell.shell [class*="_chip_"] { background:var(--loot-rail); color:var(--loot-text); border-color:#77759860; }
+.page.page.page { background:none; color:var(--loot-text); font-family:Roboto,sans-serif; }
+.page.page.page :is(h1,h2,h3) { font-family:Roboto,sans-serif; text-shadow:none; background:none; -webkit-text-fill-color:currentColor; letter-spacing:0; color:var(--loot-text); }
+.page.page.page h1 { font-size:clamp(1.5rem,3vw,2.125rem); font-weight:500; line-height:1.24; }
+.page.page.page h2 { font-weight:500; line-height:1.33; }
+.page.page.page h3 { font-weight:500; line-height:1.4; }
+.page.page.page :is([class*="_sub_"],[class*="_floor_"],[class*="_poolNote_"],[class*="_note_"]) { color:var(--loot-muted); line-height:1.5; }
+.page.page.page :is([class*="_heading_"],[class*="_head_"]) { background:none; border:0; box-shadow:none; }
+.page.page.page :is([class*="_buyCard_"],[class*="_ownedCard_"],[class*="_rewardBox_"],[class*="_game_"]) { background:var(--loot-felt); border:1px solid #8ea9ce65; border-radius:16px; box-shadow:inset 0 1px 0 #ffffff10,0 4px 0 var(--loot-rail); color:var(--loot-text); }
+.page.page.page :is([class*="_crateName_"],[class*="_ownedName_"],[class*="_itemDetails_"] h3) { color:var(--loot-text); font-weight:500; }
+.page.page.page :is([class*="_price_"],[class*="_symbol_"],[class*="_eyebrow_"],[class*="_heading_"] small) { color:var(--loot-mint); }
+.page.page.page [class*="_bannerStage_"] { background:var(--loot-rail); border:1px solid #77759860; border-radius:20px; box-shadow:none; }
+.page.page.page [class*="_secret_"] { background:linear-gradient(135deg,#9582cf,#465bd0,#4bacc9,var(--loot-mint)); box-shadow:none; }
+.page.page.page [class*="_secretInner_"] { background:radial-gradient(ellipse at center,#353558,var(--loot-night) 75%); }
+.page.page.page :is([class*="_pullBar_"],[class*="_bulkControl_"],[class*="_saved_"]) { background:var(--loot-rail); color:var(--loot-text); border:1px solid #77759860; border-radius:12px; box-shadow:none; }
+.page.page.page :is([class*="_pullBar_"] p,[class*="_pullBar_"] small,[class*="_pullBar_"] span,[class*="_bulkControl_"] small,[class*="_game_"] p,[class*="_game_"] small) { color:var(--loot-muted); }
+.page.page.page :is(input,select) { background:var(--loot-night); color:var(--loot-text); border:1px solid #8ea9ce; border-radius:8px; min-height:40px; accent-color:var(--loot-mint); }
+/* The same layered texture-button treatment used at the poker table. */
+.page.page.page button,.shell.shell [class*="_actions_"] button { position:relative; min-height:44px; padding:.6rem .85rem; border:1px solid #777598; border-radius:12px; background:linear-gradient(180deg,#484765,var(--loot-rail)); color:var(--loot-text); font:700 .875rem/1.5 Roboto,sans-serif; text-shadow:none; letter-spacing:.025em; box-shadow:inset 0 1px 0 #ffffff20,0 3px 0 var(--loot-night); cursor:pointer; user-select:none; -webkit-touch-callout:none; transition:border-color .16s,box-shadow .16s; }
+.page.page.page button:hover:not(:disabled) { background:linear-gradient(180deg,#484765,var(--loot-rail)); color:var(--loot-text); border-color:var(--loot-mint); filter:none; text-shadow:none; }
+.page.page.page button[data-variant=primary],.page.page.page button[data-variant=primary]:hover:not(:disabled) { background:linear-gradient(180deg,#b8eee6,#78cfc5); color:var(--loot-night); border-color:#b8eee6; box-shadow:inset 0 1px 0 #ffffff80,inset 0 -2px 0 #397b8560,0 3px 0 #1c6574; }
+.page.page.page button[data-variant=danger] { background:transparent; color:var(--loot-muted); border-color:transparent; box-shadow:none; text-decoration:underline; text-underline-offset:4px; }
+.page.page.page button[data-pressed] { box-shadow:inset 0 2px 4px #0006; }
+.page.page.page button:disabled { opacity:.45; cursor:not-allowed; }
+.page.page.page button[data-pending] { opacity:1; cursor:progress; }
+.page.page.page :is(button,a):focus-visible,.page.page.page button[data-focus-visible],.shell.shell a:focus-visible { outline:3px solid var(--loot-mint); outline-offset:4px; }
+.page.page.page [data-texture-surface] { position:absolute; inset:2px; border-radius:9px; pointer-events:none; box-shadow:inset 0 0 0 1px #ffffff12; background:linear-gradient(180deg,#ffffff0a,transparent); }
+.page.page.page button[data-variant=danger] [data-texture-surface] { display:none; }
+.page.page.page [class*="_catalogTabs_"] button[aria-pressed=true] { background:var(--loot-felt); color:var(--loot-mint); border-color:var(--loot-mint); box-shadow:inset 0 -2px 0 var(--loot-mint); }
+.page.page.page [class*="_oddsLink_"] { background:none; border:0; color:var(--loot-mint); box-shadow:none; font-weight:500; }
+.page.page.page [class*="_crateOpenIcon_"] { background:transparent; border:0; box-shadow:none; color:var(--loot-mint); }
+.page.page.page [class*="_crateOpenIcon_"] span { color:var(--loot-mint); }
+.page.page.page [class*="_stackCount_"] { background:var(--loot-mint); color:var(--loot-night); border-color:var(--loot-night); }
+.page.page.page [class*="_game_"] strong { display:inline-block; background:linear-gradient(#b8eee6,#78cfc5); color:var(--loot-night); border:1px solid #b8eee6; padding:.6rem .85rem; border-radius:12px; font-size:.875rem; box-shadow:0 3px 0 #1c6574; }
+.page.page.page [class*="_game_"]:hover:not([aria-disabled]) { border-color:var(--loot-mint); }
+.page.page.page [class*="_pullButtons_"] button > span:last-child { flex-direction:column; }
+.page.page.page [class*="_pullButtons_"] button span span { color:inherit; font-size:.75rem; font-weight:400; }
+@media(max-width:650px) { .page.page.page [class*="_heading_"] { flex-wrap:wrap; } .page.page.page [class*="_headerActions_"] { flex-wrap:wrap; } .page.page.page [class*="_pullButtons_"] { flex-wrap:wrap; } .page.page.page [class*="_pullButtons_"] button { flex:1; min-width:120px; } }
+@media(prefers-reduced-motion:reduce) { .page.page.page button { transition:none; } }
+html[data-reduced-motion=true] .page.page.page [class*="_game_"] { transition:none; transform:none; }
+.page.page.page [class*="_crateArt_"] { flex:0 0 auto; height:72px; min-height:72px; max-height:72px; display:grid; place-items:center; }
+.page.page.page [class*="_crateArt_"] svg { display:block; height:72px; max-height:72px; }
+.page.page.page [class*="_pullButtons_"] button > span { color:inherit; }
+@media(max-height:650px) { .page.page.page [class*="_crateArt_"] { height:48px; min-height:48px; max-height:48px; } .page.page.page [class*="_crateArt_"] svg { height:48px; max-height:48px; } }
+
+.shell.shell.shell.shell.shell,.page.page.page.page.page {--loot-night:#f5f6f8;--loot-felt:#fff;--loot-rail:#eceef2;--loot-mint:#101114;--loot-text:#101114;--loot-muted:#626976;font-family:Satoshi,sans-serif}

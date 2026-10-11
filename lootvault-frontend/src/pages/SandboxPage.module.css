@@ -335,3 +335,11 @@
 .layout{align-items:stretch}.feed{display:grid;gap:.75rem;padding:0}.feedPanel{flex:1}.stats{position:static}
 
 @media(max-height:650px){.controls button{flex:1 1 auto;font-size:.65rem;min-height:36px;padding:.4rem}.sub{font-size:.7rem}.head{text-align:left}.feedItem{padding:.4rem}.feedName{font-size:.75rem}.feedRarity{font-size:.6rem}.feedIcon{width:26px;height:26px}.feedTitle{font-size:.9rem}}
+
+/* Shared light-canvas page foundation, matching the login screen. */
+.page.page.page.page { font-family:Satoshi,sans-serif; color:#101114; background:transparent; border-color:#d9dce2; box-shadow:none; }
+.page.page.page.page :is(h1,h2,h3) { font-family:Switzer,sans-serif; font-weight:500; color:#101114; text-shadow:none; -webkit-text-fill-color:currentColor; }
+
+
+.page.page.page.page .feed {background:#fff;color:#101114;border-color:#d9dce2;border-radius:24px}
+.page.page.page.page .feedEmpty,.page.page.page.page .statLabel {color:#626976}

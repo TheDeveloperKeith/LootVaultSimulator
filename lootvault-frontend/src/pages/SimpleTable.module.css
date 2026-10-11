@@ -1,0 +1,160 @@
+/* Cool blue, violet, cyan and teal families; cards retain their own artwork. */
+.screen,.page { --table-page:#141c32; --table-surface:#293f66; --table-rail:#302e4b; --table-action:#a3e4da; }
+.screen.screen { background:var(--table-page); }
+.page.page.page { background:var(--table-page); font-family:Roboto, sans-serif; color:var(--table-action); border-radius:0; }
+.page.page.page [class*="_tableTopbar_"] { background:none; border:0; border-image:none; padding:.25rem .35rem; }
+.page.page.page [class*="_gameTable_"] { background:var(--table-surface); border:clamp(8px,1.4vw,18px) solid var(--table-rail); outline:1px solid var(--table-action); outline-offset:-2px; box-shadow:inset 0 0 0 1px var(--table-action),0 8px 0 var(--table-rail); border-radius:clamp(32px,8vw,110px); animation:none; }
+.page.page.page [class*="_tableHeader_"] { background:none; box-shadow:none; }
+.page.page.page [class*="_tableHeader_"] h2 { font:750 clamp(1rem,2vw,1.5rem)/1.2 Roboto, sans-serif; color:var(--table-action); text-shadow:none; letter-spacing:-.02em; -webkit-text-stroke:0; filter:none; }
+.page.page.page :is([class*="_pot_"],[class*="_handBadge_"],[class*="_controls_"],[class*="_stake_"],[class*="_presets_"],[class*="_result_"]) { background:none; border-color:var(--table-action); box-shadow:none; }
+.page.page.page :is(h2,h3,strong,small,p,label,[class*="_seatName_"],[class*="_community_"]>span,[class*="_feltLabel_"],[class*="_eyebrow_"],[class*="_handBadge_"],[class*="_pot_"]) { color:var(--table-action); text-shadow:none; }
+.page.page.page :is([class*="_seatName_"],[class*="_handBadge_"]) { font-weight:600; }
+.page.page.page :is([class*="_stageTrack_"] li,[class*="_stageTrack_"] li[aria-current]) { color:var(--table-action); }
+.page.page.page [class*="_stageTrack_"] li[aria-current]::after { background:var(--table-action); }
+.page.page.page :is(button,[class*="_exitTable_"]) { background:var(--table-action); color:var(--table-page); border:1px solid var(--table-action); border-radius:10px; box-shadow:none; text-shadow:none; font:700 .85rem/1.25 Roboto, sans-serif; letter-spacing:0; min-height:44px; padding:.65rem 1rem; cursor:pointer; filter:none; transition:none; transform:none; animation:none; }
+.page.page.page :is(button,[class*="_exitTable_"]):hover:not(:disabled),.page.page.page :is(button,[class*="_exitTable_"]):active:not(:disabled) { background:var(--table-action); color:var(--table-page); filter:none; text-shadow:none; box-shadow:none; transform:none; }
+.page.page.page :is(button,[class*="_exitTable_"]):focus-visible { outline:2px solid var(--table-action); outline-offset:4px; }
+.page.page.page button:disabled { opacity:.45; cursor:not-allowed; }
+.page.page.page [class*="_boardButtons_"] { gap:clamp(.5rem,1.5vw,1.25rem); }
+.page.page.page [class*="_wordAction_"]::after { display:none; }
+.page.page.page :is(button small,button strong) { color:var(--table-page); }
+.page.page.page [class*="_presets_"] button[aria-pressed=true],.page.page.page [class*="_currencyChoice_"] button[aria-pressed=true] { background:var(--table-action); border-color:var(--table-action); color:var(--table-page); outline:2px solid var(--table-action); outline-offset:3px; text-decoration:underline; text-underline-offset:3px; }
+.page.page.page :is(input,select) { color:var(--table-action); background:var(--table-page); border:1px solid var(--table-action); border-radius:7px; accent-color:var(--table-action); }
+.page.page.page [class*="_cards_"] > [data-playing-card] { border:0; box-shadow:none; border-radius:8px; }
+.page.page.page [class*="_cards_"] [data-card-rank] { font-weight:800; }
+.page.page.page [class*="_error_"] { background:var(--table-surface); border-color:var(--table-action); color:var(--table-action); }
+@media(max-width:650px) { .page.page.page [class*="_boardButtons_"] button { padding:.55rem .7rem; font-size:.8rem; } }
+.page.page.page [data-playing-card] small { color:inherit; }
+.page.page.page [class*="_sparkles_"] { display:none; }
+.page.page.page [class*="_tableHeader_"] h2 { background:none; -webkit-text-fill-color:var(--table-action); }
+.page.page.page [class*="_infoDialog_"] { background:var(--table-surface); color:var(--table-action); border-color:var(--table-action); }
+.page.page.page [class*="_infoDialog_"]::backdrop { background:var(--table-page); }
+.page.page.page [class*="_foldAction_"] { margin-left:0; }
+.page.page.page [class*="_avatar_"] { border:1px solid var(--table-action); border-radius:50%; font:600 .85rem/1 Roboto, sans-serif; color:var(--table-action); filter:none; }
+.page.page.page [class*="_tableTopbar_"] { color:var(--table-action); }
+
+/* A padded tournament rail, subtle felt weave and an inset betting line. */
+.page.page.page [class*="_gameTable_"] { background:repeating-linear-gradient(25deg,transparent 0 3px,var(--table-rail) 3px 3.2px),var(--table-surface); padding:clamp(.85rem,2vw,1.7rem); }
+.page.page.page [class*="_community_"] { border:1px solid var(--table-action); border-radius:18px; padding:.65rem clamp(.3rem,1vw,.8rem); max-width:660px; }
+.page.page.page [class*="_pot_"] { background:var(--table-rail); border-radius:14px; padding:.45rem .75rem; }
+.page.page.page [class*="_avatar_"] { background:var(--table-rail); border:2px solid var(--table-action); }
+.page.page.page [class*="_tableHeader_"] h2 { letter-spacing:.025em; font-weight:650; }
+.page.page.page [class*="_feltLabel_"] { opacity:.5; }
+.page.page.page :is(button,[class*="_exitTable_"]) { border-radius:999px; box-shadow:0 3px 0 var(--table-page); user-select:none; -webkit-user-select:none; -webkit-touch-callout:none; }
+.page.page.page button[data-variant=secondary],.page.page.page button[data-variant=danger],.page.page.page :is([class*="_exitTable_"],[class*="_tableSettings_"]) { background:var(--table-rail); color:var(--table-action); }
+.page.page.page button[data-hovered] { outline:1px solid var(--table-action); outline-offset:3px; }
+.page.page.page button[data-pressed] { box-shadow:none; }
+.page.page.page button[data-focus-visible] { outline:3px solid var(--table-action); outline-offset:4px; }
+.page.page.page [class*="_boardActions_"] { background:var(--table-rail); border:1px solid var(--table-action); border-radius:18px; max-width:640px; padding:.65rem .9rem; justify-self:center; }
+.page.page.page [class*="_boardButtons_"] button { min-width:90px; }
+@media(max-width:650px) { .page.page.page [class*="_gameTable_"] { border-width:8px; border-radius:36px; padding:.75rem; } .page.page.page [class*="_boardActions_"] { padding:.55rem .4rem; } .page.page.page [class*="_boardButtons_"] { gap:.5rem; } .page.page.page [class*="_boardButtons_"] button { min-width:0; padding:.55rem .65rem; } }
+.page.page.page [class*="_gameTable_"] { background:var(--table-surface); --game-card:clamp(32px,min(13vw,13cqh),116px); row-gap:.35rem; }
+.page.page.page button[data-variant=secondary]:hover:not(:disabled),.page.page.page button[data-variant=danger]:hover:not(:disabled),.page.page.page button[data-variant=secondary]:active:not(:disabled),.page.page.page button[data-variant=danger]:active:not(:disabled) { background:var(--table-rail); color:var(--table-action); }
+
+/* Cool mint action hierarchy: sculpted primary controls, quiet secondary controls. */
+.page.page.page :is(button,[class*="_exitTable_"]) { border-radius:12px; }
+.page.page.page button[data-variant=primary] { border-bottom:4px solid var(--table-page); box-shadow:inset 0 1px 0 var(--table-action),0 4px 0 var(--table-page),0 7px 0 var(--table-rail); font-weight:800; }
+.page.page.page button[data-variant=primary][data-hovered] { box-shadow:inset 0 1px 0 var(--table-action),0 5px 0 var(--table-page),0 8px 0 var(--table-rail); }
+.page.page.page button[data-pressed] { border-bottom-width:1px; box-shadow:inset 0 2px 0 var(--table-page); }
+.page.page.page button[data-variant=secondary] { border-bottom:3px solid var(--table-page); box-shadow:0 3px 0 var(--table-page); }
+.page.page.page button[data-variant=danger] { background:none; border-color:transparent; box-shadow:none; font-weight:600; text-decoration:underline; text-underline-offset:5px; }
+.page.page.page button[data-variant=danger][data-hovered] { border-color:var(--table-action); }
+.page.page.page button[data-pending] { opacity:1; cursor:progress; }
+.page.page.page [class*="_boardActions_"] { border-color:transparent; box-shadow:0 4px 0 var(--table-page); padding:.85rem 1rem; }
+.page.page.page [class*="_boardButtons_"] { align-items:center; }
+.page.page.page [class*="_moveCaption_"] { opacity:.8; }
+.page.page.page button[data-variant=primary]:hover:not(:disabled) { box-shadow:inset 0 1px 0 var(--table-action),0 5px 0 var(--table-page),0 8px 0 var(--table-rail); }
+.page.page.page button[data-variant=secondary]:hover:not(:disabled) { box-shadow:0 3px 0 var(--table-page); }
+.page.page.page button[data-variant][data-pressed] { border-bottom-width:1px; box-shadow:inset 0 2px 0 var(--table-page); }
+.page.page.page [class*="_boardButtons_"] { align-items:flex-start; }
+.page.page.page button[data-variant][data-pressed]:hover:not(:disabled) { border-bottom-width:1px; box-shadow:inset 0 2px 0 var(--table-page); }
+
+/* Cult UI Texture Button: nested gradient border and inset surface, ported to
+   CSS modules with React Aria press semantics. https://www.cult-ui.com/docs/components/texture-button */
+.page.page.page :is(button,[class*="_exitTable_"]) {
+    font-family:Roboto,sans-serif; font-weight:700; font-size:.875rem; line-height:1.5;
+    letter-spacing:.025em; border:1px solid color-mix(in srgb,var(--table-action) 30%,var(--table-rail));
+    box-shadow:inset 0 1px 0 #ffffff24,0 3px 0 var(--table-page),0 5px 12px #00000020;
+    transition:box-shadow .16s ease,border-color .16s ease;
+}
+.page.page.page button[data-variant=primary],
+.page.page.page button[data-variant=primary]:hover:not(:disabled) {
+    background:linear-gradient(180deg,#b8eee6,#78cfc5); color:var(--table-page);
+    border-color:#b8eee6; border-bottom-width:1px;
+    box-shadow:inset 0 1px 0 #ffffff80,inset 0 -2px 0 #397b8560,0 3px 0 #1c6574,0 6px 12px #00000030;
+}
+.page.page.page button[data-variant=secondary],
+.page.page.page button[data-variant=secondary]:hover:not(:disabled),
+.page.page.page [class*="_exitTable_"] {
+    background:linear-gradient(180deg,#484765,var(--table-rail)); color:#e0e8fa;
+    border-color:#777598; border-bottom-width:1px;
+    box-shadow:inset 0 1px 0 #ffffff20,inset 0 -1px 0 var(--table-page),0 3px 0 var(--table-page);
+}
+.page.page.page button[data-variant=danger],
+.page.page.page button[data-variant=danger]:hover:not(:disabled) {
+    color:#ced7ed; background:transparent; border-color:transparent; box-shadow:none;
+}
+.page.page.page button[data-variant][data-pressed],
+.page.page.page button[data-variant][data-pressed]:hover:not(:disabled) {
+    box-shadow:inset 0 2px 4px #00000040; border-bottom-width:1px;
+}
+.page.page.page button[data-hovered] { outline:0; border-color:var(--table-action); }
+.page.page.page button[data-focus-visible] { outline:3px solid var(--table-action); outline-offset:4px; }
+.page.page.page [data-texture-surface] { position:absolute; inset:2px; border-radius:9px; pointer-events:none; box-shadow:inset 0 0 0 1px #ffffff12; background:linear-gradient(180deg,#ffffff0a,transparent); }
+.page.page.page button { position:relative; }
+.page.page.page :is(h2,h3,strong,small,p,label,[class*="_seatName_"],[class*="_community_"]>span,[class*="_eyebrow_"]) { color:#dce6f7; }
+.page.page.page [class*="_tableHeader_"] h2 { font:500 clamp(1.25rem,2vw,1.5rem)/1.33 Roboto,sans-serif; letter-spacing:0; -webkit-text-fill-color:#e7efff; }
+.page.page.page :is([class*="_eyebrow_"],[class*="_feltLabel_"]) { font-size:.75rem; line-height:1.66; letter-spacing:.08em; color:var(--table-action); }
+.page.page.page [class*="_moveCaption_"] { font-size:.875rem; line-height:1.43; opacity:1; color:#c4d2e9; }
+.page.page.page [class*="_pot_"] { color:var(--table-action); font-variant-numeric:tabular-nums; }
+.page.page.page :is(button small,button strong) { color:inherit; }
+.page.page.page [data-playing-card] small { color:inherit; }
+.page.page.page [class*="_community_"] { border-color:#8ea9ce65; }
+@media(prefers-reduced-motion:reduce) { .page.page.page button { transition:none; } }
+
+.page.page.page button[data-variant=primary] { background-color:#78cfc5; }
+.page.page.page button[data-variant=secondary] { background-color:var(--table-rail); }
+.page.page.page button[data-variant=danger] [data-texture-surface] { display:none; }
+/* Preserve complete labels when a narrow action dock wraps. */
+.page.page.page [class*="_boardButtons_"] { flex-wrap:wrap; }
+.page.page.page [class*="_boardButtons_"] > button { flex:0 0 auto; white-space:nowrap; }
+
+/* Ant Design gradient bet controls: black labels on a light cool gradient. */
+.page.page.page.page button[data-bet-button][data-variant],.page.page.page.page button[data-bet-button][data-variant]:hover:not(:disabled) {
+    position:relative; isolation:isolate; color:#000; background:#a3e4da; border:1px solid #c4f4ed;
+    box-shadow:inset 0 1px 0 #ffffff90,0 4px 0 #286c7a,0 7px 12px #0003;
+    min-height:44px; height:auto; font-weight:700; text-decoration:none;
+}
+.page.page.page.page button[data-bet-button][data-variant]::before {
+    content:""; position:absolute; inset:0; z-index:-1; border-radius:inherit; opacity:1;
+    background:linear-gradient(135deg,#c9ddff,#a3e4da); transition:opacity .18s;
+}
+.page.page.page.page button[data-bet-button][data-variant] > span { position:relative; color:#000; }
+.page.page.page.page button[data-bet-button][data-variant]:hover:not(:disabled)::before { opacity:.65; }
+.page.page.page.page button[data-bet-button][data-variant]:active:not(:disabled) { box-shadow:inset 0 2px 4px #0003,0 1px 0 #286c7a; }
+.page.page.page.page button[data-bet-button][data-variant][aria-pressed=true] { outline:2px solid #a3e4da; outline-offset:3px; text-decoration:underline; text-underline-offset:4px; }
+.page.page.page.page button[data-bet-button][data-variant]:disabled { color:#000; opacity:.55; }
+.page.page.page.page button[data-bet-button][data-variant][aria-busy=true] { opacity:1; cursor:progress; }
+@media(prefers-reduced-motion:reduce) { .page.page.page.page button[data-bet-button][data-variant]::before { transition:none; } }
+html[data-reduced-motion=true] .page.page.page.page button[data-bet-button][data-variant]::before { transition:none; }
+
+.page.page.page.page button[data-bet-button][data-variant] span { color:#000; }
+
+.page.page.page.page button[data-bet-button][data-variant] { border-radius:12px; }
+
+
+/* Black feature room and muted blue felt retain all card artwork and motion. */
+.screen.screen.screen {background:#f5f6f8}
+.page.page.page.page.page {--table-page:#0c0d10;--table-surface:#1d3050;--table-rail:#111827;--table-action:#fff;background:#0c0d10;color:#fff;border-radius:28px}
+.page.page.page.page.page [class*="_tableTopbar_"] {color:#fff}
+.page.page.page.page.page :is(h2,h3,strong,small,p,label,[class*="_seatName_"],[class*="_moveCaption_"]) {color:#e1e8f5}
+.page.page.page.page.page [class*="_tableHeader_"] h2 {color:#fff;-webkit-text-fill-color:#fff}
+.page.page.page.page.page button[data-variant=primary],.page.page.page.page.page button[data-bet-button][data-variant] {background:#fff!important;color:#101114!important;border-color:#fff!important;box-shadow:0 2px 3px #0003!important;border-radius:999px}
+.page.page.page.page.page button[data-bet-button][data-variant]::before {background:linear-gradient(135deg,#fff,#e8ecf2)}
+.page.page.page.page.page button[data-bet-button][data-variant] span {color:#101114}
+.page.page.page.page.page button[data-variant=secondary],.page.page.page.page.page [class*="_exitTable_"] {background:#242a35!important;color:#fff!important;border-color:#5d6573!important;border-radius:999px}
+.page.page.page.page.page button[data-variant=danger] {background:transparent!important;color:#e1e8f5!important;border-color:#5d6573!important}
+.page.page.page.page.page [class*="_tableSetup_"] {color:#fff}
+.page.page.page.page.page :is(input,select) {color:#fff!important;background:#171d28!important;border-color:#73829b!important}
+.page.page.page.page.page [class*="_boardActions_"] {background:#0c0d10;border-radius:24px}
+.page.page.page.page.page [class*="_error_"] {background:#39202b;color:#ffe6ed}
