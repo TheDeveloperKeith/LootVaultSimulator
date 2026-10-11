@@ -1,0 +1,98 @@
+/* Shared login-inspired surfaces. Artwork, rarity colors, and motion are owned by
+   their original components; this layer styles only navigation and page chrome. */
+@font-face {font-family:Switzer;src:url('../assets/fonts/Switzer-Medium.woff2') format('woff2');font-weight:500;font-display:swap}
+@font-face {font-family:Satoshi;src:url('../assets/fonts/Satoshi-Variable.woff2') format('woff2');font-weight:300 900;font-display:swap}
+html {background:#f5f6f8}
+[data-ui="vault"][data-ui][data-ui][data-ui][data-ui][data-ui] {
+ color-scheme:light; background:#f5f6f8; color:#101114;
+ --font-body:Satoshi,sans-serif; --font-display:Switzer,sans-serif;
+ --white:#101114; --text-dim:#626976; --glass:#fff; --glass-strong:#fff;
+ --line:#d9dce2; --border:1px solid #d9dce2; --outline:#d9dce2;
+ --shadow:0 8px 24px #10111408;
+ --loot-night:#f5f6f8; --loot-felt:#fff; --loot-rail:#eceef2;
+ --loot-text:#101114; --loot-muted:#626976; --loot-mint:#101114;
+ font-family:Satoshi,sans-serif;
+}
+[data-ui="vault"] [data-game-theme="arcade"] {--font-body:Satoshi,sans-serif;--font-display:Switzer,sans-serif;--glass:#fff;--glass-strong:#fff;--text-dim:#626976;--line:#d9dce2}
+[data-ui="vault"][data-ui][data-ui][data-ui][data-ui][data-ui] :is([class*="_top_"],[class*="_bottom_"],[class*="_content_"]) {background:#f5f6f8;color:#626976;border-color:#e1e4e9}
+[data-ui="vault"][data-ui][data-ui][data-ui][data-ui][data-ui] [class*="_top_"] {background:#fff}
+[data-ui="vault"][data-ui][data-ui][data-ui][data-ui][data-ui] [class*="_tabs_"] {background:#eceef2;border-color:#d9dce2;border-radius:999px;box-shadow:none}
+[data-ui="vault"][data-ui][data-ui][data-ui][data-ui][data-ui] [class*="_tab_"] {background:transparent;color:#545c69;border:1px solid transparent;border-radius:999px;box-shadow:none;text-shadow:none;font-family:Satoshi,sans-serif}
+[data-ui="vault"][data-ui][data-ui][data-ui][data-ui][data-ui] [class*="_tab_"][aria-current="page"] {background:#101114;color:#fff;border-color:#101114}
+[data-ui="vault"][data-ui][data-ui][data-ui][data-ui][data-ui] [class*="_chip_"] {background:#f1f3f5;color:#101114;border-color:#d9dce2}
+[data-ui="vault"][data-ui][data-ui][data-ui][data-ui][data-ui] [class*="_identity_"] strong {color:#101114}
+[data-ui="vault"][data-ui][data-ui][data-ui][data-ui][data-ui] :is([class*="_page_"],[class*="_lobby_"]) {color:#101114;font-family:Satoshi,sans-serif;background:transparent;border-color:#d9dce2;box-shadow:none}
+[data-ui="vault"][data-ui][data-ui][data-ui][data-ui][data-ui] [data-page-header="true"] {background:transparent!important;color:#101114!important;border:0!important;border-image:none!important;box-shadow:none!important;border-radius:0!important;font-family:Satoshi,sans-serif;padding:.65rem 0!important}
+[data-ui="vault"][data-ui][data-ui][data-ui][data-ui][data-ui] :is(h1,h2,h3,[class*="_title_"]) {font-family:Switzer,sans-serif!important;font-weight:500!important;letter-spacing:-.035em;text-shadow:none!important;-webkit-text-stroke:0;background:none;-webkit-text-fill-color:currentColor;color:#101114}
+[data-ui="vault"][data-ui][data-ui][data-ui][data-ui][data-ui] [data-page-header="true"] :is(h1,h2) {color:#101114!important;font-size:clamp(1.7rem,3vw,2.75rem)!important}
+[data-ui="vault"][data-ui][data-ui][data-ui][data-ui][data-ui] [data-page-header="true"] :is(p,small,[class*="eyebrow"]) {color:#626976!important;font-size:.8125rem;font-weight:500}
+[data-ui="vault"][data-ui][data-ui][data-ui][data-ui][data-ui] :is([class*="_sub_"],[class*="_note_"],[class*="_dim_"],[class*="_empty_"],[class*="_eyebrow_"],[class*="_floor_"],[class*="_poolNote_"],[class*="_cardBlurb_"]) {color:#626976}
+[data-ui="vault"][data-ui][data-ui][data-ui][data-ui][data-ui] :is([class*="_panel_"],[class*="_buyCard_"],[class*="_ownedCard_"],[class*="_rewardBox_"],[class*="_workbench_"],[class*="_bulkControl_"],[class*="_saved_"],[class*="_pullBar_"],[class*="_stats_"],[class*="_feedPanel_"],[class*="_controls_"],[class*="_questBoard_"],[class*="_recordBoard_"],[class*="_mission_"],[class*="_quest_"]) {background:#fff;border:1px solid #d9dce2;border-radius:24px;box-shadow:0 8px 24px #10111405;color:#101114}
+[data-ui="vault"][data-ui][data-ui][data-ui][data-ui][data-ui] :is([class*="_crateName_"],[class*="_ownedName_"],[class*="_count_"],[class*="_total_"],[class*="_statNums_"],[class*="_statLabel_"],[class*="_price_"]) {color:#101114;text-shadow:none}
+[data-ui="vault"][data-ui][data-ui][data-ui][data-ui][data-ui] :is([class*="_pullBar_"],[class*="_bulkControl_"],[class*="_panel_"]) :is(p,label,small) {color:#626976}
+[data-ui="vault"][data-ui][data-ui][data-ui][data-ui][data-ui] :is(input:not([type="range"]):not([type="checkbox"]),select) {background:#fff;color:#101114;border:1px solid #b7bdc7;border-radius:12px;font-family:Satoshi,sans-serif}
+[data-ui="vault"][data-ui][data-ui][data-ui][data-ui][data-ui] input::placeholder {color:#626976}
+[data-ui="vault"][data-ui][data-ui][data-ui][data-ui][data-ui] input:focus-visible {outline-color:#345de3}
+[data-ui="vault"][data-ui][data-ui][data-ui][data-ui][data-ui] a:not([class*="_tab_"]):not([class*="_game_"]):not([class*="_logoPlate_"]) {color:#242a35}
+/* Native and React Aria controls share hierarchy, retaining their press motion. */
+[data-ui="vault"][data-ui][data-ui][data-ui][data-ui][data-ui] button:where(:not([class*="_inspect_"]):not([class*="_crateOpenIcon_"]):not([class*="_crateInbox_"])) {
+ background:#eceef2!important;color:#101114!important;border:1px solid #d9dce2!important;
+ border-radius:999px!important;box-shadow:0 2px 3px #00000010!important;text-shadow:none!important;
+ font-family:Satoshi,sans-serif!important;font-weight:600!important;letter-spacing:0;min-height:44px;
+}
+[data-ui="vault"][data-ui][data-ui][data-ui][data-ui][data-ui] button[data-variant="primary"],
+[data-ui="vault"][data-ui][data-ui][data-ui][data-ui][data-ui] button[aria-pressed="true"],
+[data-ui="vault"][data-ui][data-ui][data-ui][data-ui][data-ui] button[class*="Active"] {background:#101114!important;color:#fff!important;border-color:#101114!important}
+[data-ui="vault"][data-ui][data-ui][data-ui][data-ui][data-ui] button[data-variant="danger"] {background:#fff!important;color:#8f1731!important;border-color:#e4a7b4!important}
+[data-ui="vault"][data-ui][data-ui][data-ui][data-ui][data-ui] button:not([class*="_inspect_"]):hover:not(:disabled) {filter:brightness(.94)}
+[data-ui="vault"][data-ui][data-ui][data-ui][data-ui][data-ui] :is(button,a):focus-visible {outline:3px solid #345de3;outline-offset:4px}
+[data-ui="vault"][data-ui][data-ui][data-ui][data-ui][data-ui] :is([class*="_error_"],[class*="_errorText_"]) {background:#fff0f2;color:#8f1731;border-color:#e4a7b4}
+[data-ui="vault"][data-ui][data-ui][data-ui][data-ui][data-ui] [class*="_notification_"] {background:#fff;color:#101114;border-color:#d9dce2}
+[data-ui="vault"][data-ui][data-ui][data-ui][data-ui][data-ui] [class*="_notification_"] :is(strong,p) {color:#101114}
+@media(max-width:650px) { [data-ui="vault"][data-ui][data-ui][data-ui][data-ui][data-ui] [class*="_tabs_"] {border-radius:22px} }
+
+[data-ui="vault"] [data-page-header="true"] a {color:#242a35!important}
+[data-ui="vault"] [class*="_pagination_"] span {color:#626976}
+[data-ui="vault"] dialog:not([class*="reveal"]) {background:#fff;color:#101114;border:1px solid #d9dce2;border-radius:28px}
+[data-ui="vault"] dialog:not([class*="reveal"]) p {color:#626976}
+[data-ui="vault"] [class*="_volumeControl_"] {color:#101114}
+[data-ui="vault"] [class*="_grid_"]>li:not([data-inventory-item]):not([class*="_card_"]):not([class*="_feedItem_"]):not([class*="_quest_"]) {color:#101114}
+/* Dark gameplay rooms invert the same neutral action hierarchy. */
+[data-ui="vault"][data-ui][data-ui][data-ui][data-ui][data-ui][data-game-theme="table"] [class*="_page_"] {background:#0c0d10;color:#fff;border-radius:28px}
+[data-ui="vault"][data-ui][data-ui][data-ui][data-ui][data-ui][data-game-theme="table"] :is(h1,h2,h3,strong,small,p,label) {color:#e1e8f5;-webkit-text-fill-color:currentColor}
+[data-ui="vault"][data-ui][data-ui][data-ui][data-ui][data-ui][data-game-theme="table"] [class*="_controls_"] {background:#171d28;color:#fff;border-color:#4c5a71}
+[data-ui="vault"][data-ui][data-ui][data-ui][data-ui][data-ui][data-game-theme="table"] button[data-variant="primary"] {background:#fff!important;color:#101114!important;border-color:#fff!important}
+[data-ui="vault"][data-ui][data-ui][data-ui][data-ui][data-ui][data-game-theme="table"] :is(button[data-variant="secondary"],[class*="_exitTable_"]) {background:#242a35!important;color:#fff!important;border-color:#5d6573!important}
+[data-ui="vault"][data-ui][data-ui][data-ui][data-ui][data-ui][data-game-theme="table"] :is(input,select) {background:#171d28;color:#fff;border-color:#73829b}
+[data-ui="vault"][data-ui][data-ui][data-ui][data-ui][data-ui][data-game-theme="table"] [data-playing-card] small {color:inherit}
+[data-ui="vault"][data-ui][data-ui][data-ui][data-ui][data-ui] [class*="_game_"] h2 {color:#fff}
+[data-ui="vault"][data-ui][data-ui][data-ui][data-ui][data-ui] [class*="_card_"] [class*="_cardTitle_"] {color:#fff}
+[data-ui="vault"][data-ui][data-ui][data-ui][data-ui][data-ui] input:is([type="range"],[type="checkbox"]) {accent-color:#101114}
+[data-ui="vault"][data-ui][data-ui][data-ui][data-ui][data-ui][data-game-theme="table"] [class*="_eyebrow_"] {color:#b7bdc7}
+[data-ui="vault"][data-ui][data-ui][data-ui][data-ui][data-ui] [class*="_card_"] [class*="_cardBlurb_"] {color:#b7bdc7}
+[data-ui="vault"][data-ui][data-ui][data-ui][data-ui][data-ui] [class*="_workbench_"] small {color:#626976}
+
+/* Refined table rooms: light page chrome and an auth-style stake panel. */
+[data-ui="vault"][data-ui][data-ui][data-ui][data-ui][data-ui][data-ui][data-game-theme="table"] [class*="_page_"] {background:#f5f6f8;color:#101114;border-radius:0}
+[data-ui="vault"][data-ui][data-ui][data-ui][data-ui][data-ui][data-ui][data-game-theme="table"] [class*="_tableTopbar_"] {color:#101114;padding:.35rem .5rem .6rem}
+[data-ui="vault"][data-ui][data-ui][data-ui][data-ui][data-ui][data-ui][data-game-theme="table"] [class*="_tableTopbar_"] > span {font:500 clamp(1rem,2vw,1.35rem)/1.3 Switzer,sans-serif;letter-spacing:-.025em}
+[data-ui="vault"][data-ui][data-ui][data-ui][data-ui][data-ui][data-ui][data-game-theme="table"] [class*="_tableTopbar_"] small {color:#626976}
+[data-ui="vault"][data-ui][data-ui][data-ui][data-ui][data-ui][data-ui][data-game-theme="table"] [class*="_exitTable_"] {background:#fff!important;color:#101114!important;border-color:#d9dce2!important;box-shadow:0 2px 3px #00000010!important}
+[data-ui="vault"][data-ui][data-ui][data-ui][data-ui][data-ui][data-ui][data-game-theme="table"] [class*="_gameTable_"] {border-color:#0c0d10;outline-color:#4c5a71;box-shadow:0 8px 24px #10111410,inset 0 0 0 1px #4c5a71}
+[data-ui="vault"][data-ui][data-ui][data-ui][data-ui][data-ui][data-ui][data-game-theme="table"] [class*="_tableSetup_"] [class*="_controls_"] {background:#fff;color:#101114;border:1px solid #d9dce2;border-radius:28px;box-shadow:0 8px 24px #10111412}
+[data-ui="vault"][data-ui][data-ui][data-ui][data-ui][data-ui][data-ui][data-game-theme="table"] [class*="_tableSetup_"] :is(h2,strong,label,p,small) {color:#101114;-webkit-text-fill-color:currentColor}
+[data-ui="vault"][data-ui][data-ui][data-ui][data-ui][data-ui][data-ui][data-game-theme="table"] [class*="_tableSetup_"] :is(p,small) {color:#626976}
+[data-ui="vault"][data-ui][data-ui][data-ui][data-ui][data-ui][data-ui][data-game-theme="table"] [class*="_tableSetup_"] h2 {text-transform:none;font-family:Switzer,sans-serif!important;letter-spacing:-.035em}
+[data-ui="vault"][data-ui][data-ui][data-ui][data-ui][data-ui][data-ui][data-game-theme="table"] [class*="_tableSetup_"] button[data-variant="primary"] {background:#101114!important;color:#fff!important;border-color:#101114!important}
+[data-ui="vault"][data-ui][data-ui][data-ui][data-ui][data-ui][data-ui][data-game-theme="table"] [class*="_tableSetup_"] button[data-bet-button]::before {background:linear-gradient(135deg,#101114,#30343b)}
+[data-ui="vault"][data-ui][data-ui][data-ui][data-ui][data-ui][data-ui][data-game-theme="table"] [class*="_tableSetup_"] button[data-bet-button] span {color:inherit}
+[data-ui="vault"][data-ui][data-ui][data-ui][data-ui][data-ui][data-ui][data-game-theme="table"] [class*="_tableSetup_"] button[aria-pressed="true"] {outline:2px solid #101114;outline-offset:3px}
+[data-ui="vault"][data-ui][data-ui][data-ui][data-ui][data-ui][data-ui][data-game-theme="table"] [class*="_tableSetup_"] input[type="range"] {accent-color:#101114;background:transparent;border:0}
+[data-ui="vault"][data-ui][data-ui][data-ui][data-ui][data-ui][data-ui][data-game-theme="table"] [class*="_boardActions_"] {background:#0c0d10;border:1px solid #4c5a71;border-radius:24px;box-shadow:0 4px 12px #0002}
+[data-ui="vault"][data-ui][data-ui][data-ui][data-ui][data-ui][data-ui][data-game-theme="table"] button[data-variant="primary"] [data-texture-surface] {border-radius:999px}
+[data-ui="vault"][data-ui][data-ui][data-ui][data-ui][data-ui][data-ui][data-game-theme="table"] [class*="_settingsDock_"] button {background:#fff!important;color:#101114!important;border-color:#d9dce2!important}
+
+[data-ui="vault"][data-ui][data-ui][data-ui][data-ui][data-ui][data-ui][data-game-theme="table"] [class*="_tableSetup_"] [class*="_stake_"] span {color:#626976}
+[data-ui="vault"][data-ui][data-ui][data-ui][data-ui][data-ui][data-ui][data-game-theme="table"] [class*="_tableSetup_"] button[data-variant="secondary"] {background:#eceef2!important;color:#101114!important;border-color:#d9dce2!important}
+[data-ui="vault"][data-ui][data-ui][data-ui][data-ui][data-ui][data-ui][data-game-theme="table"] [class*="_tableSetup_"] button[data-variant="secondary"]::before {background:linear-gradient(135deg,#fff,#eceef2)}
+[data-ui="vault"][data-ui][data-ui][data-ui][data-ui][data-ui][data-ui][data-game-theme="table"] [class*="_tableSetup_"] button[data-variant="secondary"] span {color:#101114}

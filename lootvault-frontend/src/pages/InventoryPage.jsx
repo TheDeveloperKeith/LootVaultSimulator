@@ -7,7 +7,7 @@ import Button from "../components/Button";
 import { ApiError } from "../api/client";
 import { getInventory, sellItem } from "../api/game";
 import { RARITY_LABEL, RARITY_CLASS, RARITY_ORDER } from "../rarities";
-import { useWallet } from "../wallet/WalletContext";
+import { useWallet } from "../wallet/useWallet";
 import styles from "./InventoryPage.module.css";
 import ItemIcon from "../components/ItemIcon";
 
@@ -76,7 +76,7 @@ export default function InventoryPage() {
         {error && <p className={styles.errorText}>{error}</p>}
 
         <div className={styles.workbench}><label>Filter name<input value={search} onChange={event=>setSearch(event.target.value)} placeholder="Find an item…"/></label><label><input type="checkbox" checked={loadout.enabled} onChange={event=>updateLoadout({...loadout,enabled:event.target.checked})}/> Mythic action effects</label><small>???? only · cosmetic slash and guard effects · reduced motion respected</small></div>
-        {selected && <ScreenDialog title={selected.itemName} onClose={()=>setSelected(null)}><ItemIcon name={selected.itemName} size={120}/><p>{RARITY_LABEL[selected.rarity]} · {SOURCE_LABEL[selected.acquiredVia] || selected.acquiredVia}</p>{eligibleRelic(selected) && ["sword","shield"].includes(resolveItemDesign(selected.itemName).type) && <Button onClick={()=>{const type=resolveItemDesign(selected.itemName).type;updateLoadout({...loadout,[type]:loadout[type]===selected.id?null:selected.id});}}>{loadout[resolveItemDesign(selected.itemName).type]===selected.id ? "Unequip effect" : "Equip action effect"}</Button>}<p>Effects change basic actions at both card tables. They do not change results or payouts.</p><Button variant="danger" disabled={sellingId!==null} onClick={()=>handleSell(selected.id)}>Sell item</Button></ScreenDialog>}
+        {selected && <ScreenDialog title={selected.itemName} onClose={()=>setSelected(null)}><ItemIcon name={selected.itemName} rarity={selected.rarity} size={120}/><p>{RARITY_LABEL[selected.rarity]} · {SOURCE_LABEL[selected.acquiredVia] || selected.acquiredVia}</p>{eligibleRelic(selected) && ["sword","shield"].includes(resolveItemDesign(selected.itemName).type) && <Button onClick={()=>{const type=resolveItemDesign(selected.itemName).type;updateLoadout({...loadout,[type]:loadout[type]===selected.id?null:selected.id});}}>{loadout[resolveItemDesign(selected.itemName).type]===selected.id ? "Unequip effect" : "Equip action effect"}</Button>}<p>Effects change basic actions at both card tables. They do not change results or payouts.</p><Button variant="danger" disabled={sellingId!==null} onClick={()=>handleSell(selected.id)}>Sell item</Button></ScreenDialog>}
         <div className={styles.filters}>
           <button
               aria-pressed={rarityFilter === "ALL"}
@@ -104,8 +104,8 @@ export default function InventoryPage() {
         ) : (
             <ul className={styles.grid}>
               {filtered.map((item) => (
-                  <li key={item.id} className={`${styles.card} ${styles[RARITY_CLASS[item.rarity]] ?? ""}`}>
-                    <button className={styles.inspect} onClick={()=>setSelected(item)} aria-label={`Inspect ${item.itemName}`}><span className={styles.art}><ItemIcon name={item.itemName} size={90}/></span><span className={styles.nameplate}><strong>{item.itemName}</strong><small>{RARITY_LABEL[item.rarity]}{loadout.sword===item.id || loadout.shield===item.id ? " · EQUIPPED" : ""}</small></span></button>
+                  <li key={item.id} data-inventory-item data-rarity={item.rarity} className={`${styles.card} ${styles[RARITY_CLASS[item.rarity]] ?? ""}`}>
+                    <button className={styles.inspect} onClick={()=>setSelected(item)} aria-label={`Inspect ${item.itemName}`}><span className={styles.art}><ItemIcon name={item.itemName} rarity={item.rarity} size={90}/></span><span className={styles.nameplate}><strong>{item.itemName}</strong><small>{RARITY_LABEL[item.rarity]}{loadout.sword===item.id || loadout.shield===item.id ? " · EQUIPPED" : ""}</small></span></button>
                   </li>
               ))}
             </ul>

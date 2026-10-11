@@ -1,0 +1,30 @@
+@font-face {
+    font-family:"Switzer";
+    src:url("../assets/fonts/Switzer-Medium.woff2") format("woff2");
+    font-weight:500;
+    font-style:normal;
+    font-display:swap;
+}
+/* Use the genuine Medium glyphs for digits even within mixed body/button text. */
+@font-face {
+    font-family:"Earn Numerals";
+    src:url("../assets/fonts/Switzer-Medium.woff2") format("woff2");
+    font-weight:100 900;
+    font-style:normal;
+    font-display:swap;
+    unicode-range:U+0030-0039;
+}
+/* Free sans-serif alternative approved in place of Santrio. */
+@font-face {
+    font-family:"Satoshi";
+    src:url("../assets/fonts/Satoshi-Variable.woff2") format("woff2");
+    font-weight:300 900;
+    font-style:normal;
+    font-display:swap;
+}
+.page.page.page.page.page,.shell.shell.shell { --font-body:"Earn Numerals","Satoshi",Roboto,sans-serif; font-family:var(--font-body); font-synthesis:none; }
+.page.page.page.page.page :is(button,input,select,[class*="_exitTable_"],[class*="_avatar_"],[class*="_seatName_"],[class*="_eyebrow_"]) { font-family:var(--font-body); font-synthesis:none; }
+.page.page.page.page.page :is(h1,h2,h3,h4,h5,h6,[class*="_tableTopbar_"]>span,[class*="_stake_"]>strong,[class*="_pot_"]>strong,[class*="_stats_"] strong) { font-family:"Switzer",sans-serif; font-weight:500; font-synthesis:none; }
+.page.page.page.page.page :is(input[type=number],[data-card-rank]) { font-family:"Switzer",sans-serif; font-weight:500; font-variant-numeric:tabular-nums; }
+.page.page.page.page.page [class*="_pot_"]>strong small { font-family:var(--font-body); font-weight:400; }
+.shell.shell.shell :is(button,[class*="_tab_"],[class*="_chip_"],[class*="_identity_"]) { font-family:var(--font-body); font-synthesis:none; }

@@ -1,7 +1,9 @@
 import RelicIcon from "./RelicIcon";
 import { resolveItemDesign } from "../items/designs";
-export default function ItemIcon({ name = "", type, size = 40 }) {
-    const item = resolveItemDesign(name, type);
+export default function ItemIcon({ name = "", type, rarity, size = 40 }) {
+    const design = resolveItemDesign(name, type?.toLowerCase());
+    const tier = rarity || design.rarity;
+    const item = { ...design, rarity: tier, color: tier === "COMMON" ? "#9ca3ad" : tier === "BASIC" ? "#91aaa6" : design.color };
     if (["EXCELLENT","EXOTIC","EXTRAORDINARY","EXTRA_EXTRAORDINARY"].includes(item.rarity)) return <RelicIcon item={item} size={size} />;
     return <svg width={size} height={size} viewBox="0 0 64 64" fill="none" stroke={item.color} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
         {item.type === "sword" ? <g transform="rotate(35 32 32)">

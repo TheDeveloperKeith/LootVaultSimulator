@@ -1,1 +1,8 @@
 .page{display:flex;flex-direction:column;flex:1;min-height:0;gap:.6rem;color:#d8e1ed}.page>a{color:#ebd59e;font-size:.8rem}.page header{display:flex;align-items:center;gap:1.3rem;padding:.6rem 1rem;background:linear-gradient(120deg,#2c3742,#17202c);border:1px solid #64718144}.page h1{margin:.25rem 0;font-family:Georgia,serif}.page p{font-size:.8rem;color:#b6c2d1}.page small{letter-spacing:.15em;color:#d5bc85}.grid li{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.5rem;background:linear-gradient(#39424c,#222b35);border-bottom:4px solid #af89d1;padding:.6rem;text-align:center}.grid strong{font-size:.8rem}.grid span{font-size:.65rem;color:#d5c2ed}@media(max-width:550px){.page header{gap:.5rem}.page header svg{width:60px}.page h1{font-size:1.3rem}}
+
+/* Shared light-canvas page foundation, matching the login screen. */
+.page.page.page.page { font-family:Satoshi,sans-serif; color:#101114; background:transparent; border-color:#d9dce2; box-shadow:none; }
+.page.page.page.page :is(h1,h2,h3) { font-family:Switzer,sans-serif; font-weight:500; color:#101114; text-shadow:none; -webkit-text-fill-color:currentColor; }
+
+.page.page.page.page .grid li {background:#fff;border:1px solid #d9dce2;border-radius:24px;color:#101114}
+.page.page.page.page .grid span,.page.page.page.page p {color:#626976}

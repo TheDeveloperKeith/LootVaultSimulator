@@ -3,7 +3,7 @@ import { getEarnState } from "../api/earn";
 import Button from "../components/Button";
 import { ApiError } from "../api/client";
 import { getShopOffers, buyShopOffer } from "../api/shop";
-import { useWallet } from "../wallet/WalletContext";
+import { useWallet } from "../wallet/useWallet";
 import styles from "./ShopPage.module.css";
 import PagedGrid from "../components/PagedGrid";
 import ScreenDialog from "../components/ScreenDialog";

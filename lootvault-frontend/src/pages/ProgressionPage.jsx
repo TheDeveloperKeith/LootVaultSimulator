@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { claimQuest, getCollection, getQuests } from "../api/progression";
 import { RARITY_LABEL, RARITY_ORDER } from "../rarities";
-import { useWallet } from "../wallet/WalletContext";
+import { useWallet } from "../wallet/useWallet";
 import PagedGrid from "../components/PagedGrid";
 import Button from "../components/Button";
 import { getEarnState } from "../api/earn";

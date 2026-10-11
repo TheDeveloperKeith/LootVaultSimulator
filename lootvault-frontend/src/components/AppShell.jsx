@@ -1,3 +1,6 @@
+import earnTypography from "../pages/EarnTypography.module.css";
+import coolStyles from "../pages/CoolLoot.module.css";
+import simpleStyles from "../pages/SimpleTable.module.css";
 import GemIcon from "./GemIcon";
 import { getTodayGrant } from "../api/game";
 import VaultLogo from "./VaultLogo";
@@ -14,7 +17,7 @@ import Button from "./Button";
 import { blip } from "../sfx";
 import { useAuth } from "../auth/AuthContext";
 import styles from "./AppShell.module.css";
-import { useWallet } from "../wallet/WalletContext";
+import { useWallet } from "../wallet/useWallet";
 
 const TABS = [
     {to:"/menu", label:"Lobby", icon:"crates"},
@@ -45,8 +48,13 @@ export default function AppShell() {
         catch { setSessionError("Could not log out. Check your connection and try again."); }
     }
 
+    if (["/earn/blackjack", "/earn/river"].includes(location.pathname)) {
+        return <div className={`${styles.tableScreen} ${simpleStyles.screen}`} data-ui="vault" data-game-theme="table"><Outlet /></div>;
+    }
+
+    const coolPage = ["/earn", "/crates", "/banners"].includes(location.pathname);
     return (
-        <div className={`${styles.shell} ${location.pathname !== "/inventory" ? styles.screenShell : ""}`}>
+        <div className={`${location.pathname === "/earn" ? earnTypography.shell : ""} ${coolPage ? coolStyles.shell : ""} ${styles.shell} ${!["/inventory", "/earn"].includes(location.pathname) ? styles.screenShell : ""}`} data-ui="vault">
             <header className={styles.top}>
                 <NavLink to="/menu" className={styles.logoPlate} aria-label="LootVault lobby"><VaultLogo/></NavLink>
                 <div className={styles.currencies} aria-label="Wallet" aria-live="polite" aria-atomic="true">
@@ -70,7 +78,7 @@ export default function AppShell() {
                 ))}
             </nav>
 
-            <div className={styles.content} data-game-theme={!["/inventory", "/banners"].includes(location.pathname) ? "arcade" : undefined} key={location.pathname}>
+            <div className={styles.content} data-game-theme={!coolPage && location.pathname !== "/inventory" ? "arcade" : undefined} key={location.pathname}>
                 <Outlet />
             </div>
 

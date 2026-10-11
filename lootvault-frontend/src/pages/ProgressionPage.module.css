@@ -102,3 +102,17 @@
 .page .panel{gap:.35rem}.page .panel>.dim{margin:.2rem 0}.page .panel>.row{margin:0}.page .panel>.meter{flex-shrink:0}.page .panel .tile{padding:.4rem .65rem;gap:.15rem;justify-content:center}.page .panel .tile small{font-size:.6rem}.page .panel .tile .meter{flex-shrink:0}.page .panel>h2{margin:.1rem 0}
 
 .page .panel .tile strong{line-height:1.1;font-size:.85rem}.page .panel .tile>span{font-size:.65rem;line-height:1.1}.page .panel .tile small{font-size:.55rem;line-height:1.1}.page .recordBoard .tile strong{font-size:1.05rem}
+
+/* Shared light-canvas page foundation, matching the login screen. */
+.page.page.page.page { font-family:Satoshi,sans-serif; color:#101114; background:transparent; border-color:#d9dce2; box-shadow:none; }
+.page.page.page.page :is(h1,h2,h3) { font-family:Switzer,sans-serif; font-weight:500; color:#101114; text-shadow:none; -webkit-text-fill-color:currentColor; }
+.page.page.page.page .panel,.page.page.page.page .questBoard {background:#fff!important;border:1px solid #d9dce2!important;border-radius:24px!important;box-shadow:none}
+.page.page.page.page .questBoard .quest {background:#f5f6f8;border:1px solid #d9dce2;border-radius:18px;box-shadow:none}
+.page.page.page.page .mission {background:transparent;border:0;box-shadow:none;color:#101114}
+.page.page.page.page .mission :is(strong,small,span) {color:#545c69}
+.page.page.page.page .prize {background:#eceef2;color:#101114}
+.page.page.page.page .prize :is(strong,small) {color:#101114}
+.page.page.page.page .questCategories p {color:#626976}
+.page.page.page.page .questCategories button small {color:inherit}
+.page.page.page.page .tile {background:#f5f6f8;border-color:#d9dce2;color:#101114}
+.page.page.page.page .tile :is(strong,small) {color:#545c69}

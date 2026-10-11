@@ -5,7 +5,7 @@ import ScreenDialog from "./ScreenDialog";
 import ItemIcon from "./ItemIcon";
 import { getShopOffers,buyShopOffer } from "../api/shop";
 import { resolveItemDesign } from "../items/designs";
-import { useWallet } from "../wallet/WalletContext";
+import { useWallet } from "../wallet/useWallet";
 import styles from "./ExclusiveShop.module.css";
 function LuckIcon({ultra}){return <svg viewBox="0 0 70 85" width="65" height="78" aria-hidden="true"><path d="M27 8h16v9H27z" fill={ultra?"#ffd778":"#a3f4d0"} stroke="#fff" strokeWidth="2"/><path d="M29 17v18L14 59q-7 18 21 19 28-1 21-19L41 35V17z" fill={ultra?"#b18835":"#258168"} stroke={ultra?"#ffe8a6":"#baffeb"} strokeWidth="3"/><path d="M22 53h26l5 12q0 8-18 8t-18-8z" fill={ultra?"#fff1a6":"#89ffe5"}/><path d="m35 40 3 7 8 1-6 5 2 8-7-4-7 4 2-8-6-5 8-1z" fill="white"/></svg>}
 export default function ExclusiveShop({onClose}){

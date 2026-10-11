@@ -3,3 +3,7 @@
 @media(max-height:650px){.page{padding:.4rem .8rem}.sign{padding:.2rem .7rem}.sign h1{font-size:1.2rem}.sign small,.sign span{display:none}.dialogue{padding:.6rem}.dialogue h2{font-size:1rem}.dialogue>small{font-size:.45rem}.choices{gap:.3rem;margin-top:.3rem}.choices button{min-height:45px;padding:.3rem}.choices button>span:not(.coin){font-size:.65rem}.choices small{font-size:.5rem}.choices svg,.coin{width:30px;height:30px}.claim svg{width:50px;height:50px}.dialogue>section svg{width:45px;height:45px}.dialogue>section{max-height:160px}.dialogue p{font-size:.65rem}.lantern{font-size:.6rem;padding:.2rem}.back{min-height:25px}.counter{border-top-width:5px}}
 
 .dialogue h2:focus{outline:none}.dialogue button{transition:background .16s ease,transform .16s ease}.dialogue button:active{transform:translateY(1px)}@media(prefers-reduced-motion:reduce){.choices button:hover,.claim:hover,.dialogue button:active{transform:none}}:global(html[data-reduced-motion="true"]) .dialogue button{transform:none}
+
+/* Shared light-canvas page foundation, matching the login screen. */
+.page.page.page.page { font-family:Satoshi,sans-serif; color:#101114; background:transparent; border-color:#d9dce2; box-shadow:none; }
+.page.page.page.page :is(h1,h2,h3) { font-family:Switzer,sans-serif; font-weight:500; color:#101114; text-shadow:none; -webkit-text-fill-color:currentColor; }

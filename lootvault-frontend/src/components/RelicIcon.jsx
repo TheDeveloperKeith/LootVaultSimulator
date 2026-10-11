@@ -1,5 +1,8 @@
+import MythicArmoryIcon from "./MythicArmoryIcon";
+
 // Each named relic has its own silhouette, guard, crest and material details.
 export default function RelicIcon({ item, size }) {
+    if (item.rarity === "EXTRA_EXTRAORDINARY") return <MythicArmoryIcon item={item} size={size} />;
     const name=item.name;
     const sword=item.type==='sword';
     const blade={

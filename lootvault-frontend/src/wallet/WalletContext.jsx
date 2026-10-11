@@ -1,9 +1,9 @@
-import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { getGems } from "../api/gems";
 import { getMyWallet } from "../api/wallet";
 import { useAuth } from "../auth/AuthContext";
 
-const WalletContext = createContext(null);
+import { WalletContext } from "./walletContextStore";
 
 // Central place for "how much currency does the player have right now."
 // Any page that spends currency (shop, unlimited boxes) calls refresh()
@@ -46,12 +46,4 @@ export function WalletProvider({ children }) {
       {children}
     </WalletContext.Provider>
   );
-}
-
-// This context intentionally exports its provider and consumer hook together.
-// eslint-disable-next-line react-refresh/only-export-components
-export function useWallet() {
-  const ctx = useContext(WalletContext);
-  if (!ctx) throw new Error("useWallet must be used inside a WalletProvider");
-  return ctx;
 }

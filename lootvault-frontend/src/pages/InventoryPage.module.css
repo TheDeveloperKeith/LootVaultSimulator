@@ -16,7 +16,7 @@
 .filterActive {background:linear-gradient(#9447d2,#6731a5);border-color:#ce9bff;color:white;box-shadow:0 2px 0 #140b22}
 .grid {list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:.65rem}
 .card {--r-edge:#b9b3bd;position:relative;min-width:0;aspect-ratio:1;border:2px solid var(--r-edge);border-radius:12px;padding:2px;background:#08080d;box-shadow:0 2px 0 #000,0 0 9px color-mix(in srgb,var(--r-edge) 18%,transparent);transition:transform .15s ease,box-shadow .15s ease}
-.common {--r-edge:#c79862}.basic {--r-edge:#6cde9c}.excellent {--r-edge:#e547f2}.exotic {--r-edge:#41d5f4}.extraordinary {--r-edge:#f5d35d}.mystery {--r-edge:#b198ff;background:linear-gradient(135deg,#ffbe49,#7bec93,#3cd9ed,#9e66f8,#f078c9,#ffbe49)}
+.common {--r-edge:#858c96}.basic {--r-edge:#809e98}.excellent {--r-edge:#e547f2}.exotic {--r-edge:#41d5f4}.extraordinary {--r-edge:#f5d35d}.mystery {--r-edge:#b198ff;background:linear-gradient(135deg,#ffbe49,#7bec93,#3cd9ed,#9e66f8,#f078c9,#ffbe49)}
 .card>.inspect {position:relative;display:flex;flex-direction:column;width:100%;height:100%;padding:0;overflow:hidden;border:0;border-radius:8px;cursor:pointer;color:#fff;background:radial-gradient(ellipse at 50% 25%,color-mix(in srgb,var(--r-edge) 30%,#23142c),#101016 85%);font-family:inherit}
 .card:hover {transform:translateY(-2px);box-shadow:0 3px 0 #000,0 0 15px color-mix(in srgb,var(--r-edge) 38%,transparent)}
 .inspect:active {filter:brightness(1.2)}
@@ -31,3 +31,25 @@
 .workbench input:focus-visible,.filter:focus-visible,.filterActive:focus-visible {outline:2px solid #dbb3ff;outline-offset:3px}
 @media(max-width:550px) {.page{padding:.65rem}.head{margin:-.65rem -.65rem .65rem;padding:.6rem;gap:.5rem}.sub{font-size:.6rem}.count{font-size:.75rem;padding:.4rem}.grid{grid-template-columns:repeat(auto-fill,minmax(85px,1fr));gap:.45rem}.workbench{gap:.5rem}.workbench label:first-child{min-width:100%}.workbench small{font-size:.55rem}.filters{flex-wrap:nowrap;overflow-x:auto;padding:.2rem 0 .4rem}.filter,.filterActive{flex-shrink:0}.nameplate strong{font-size:.55rem}.art svg{max-height:70px}}
 @media(prefers-reduced-motion:reduce) {.card{transition:none}.card:hover{transform:none}}
+
+/* Starter gear stays legible; saturation and light signal higher rarity. */
+.common,.basic { border-width: 1px; padding: 3px; box-shadow: 0 2px 3px #0004; }
+.common > .inspect { background: linear-gradient(145deg,#25282e,#17191e); }
+.basic > .inspect { background: linear-gradient(145deg,#26312f,#191f20); }
+.common .art,.basic .art { background: none; }
+.common .art svg,.basic .art svg { width: 60%; filter: none; }
+.common .nameplate strong,.basic .nameplate strong { color: #c5cbd2; font-weight: 650; text-shadow: none; }
+.common .nameplate small,.basic .nameplate small { color: #a4aeb8; text-shadow: none; }
+.common:hover,.basic:hover { box-shadow: 0 3px 6px #0005; }
+.exotic .art svg { filter: drop-shadow(0 0 5px #41d5f44d); }
+.extraordinary .art svg { filter: drop-shadow(0 0 7px #f5d35d66); }
+.mystery .art svg { filter: drop-shadow(0 0 9px #b198ff88); }
+
+/* Shared light-canvas page foundation, matching the login screen. */
+.page.page.page.page { font-family:Satoshi,sans-serif; color:#101114; background:transparent; border-color:#d9dce2; box-shadow:none; }
+.page.page.page.page :is(h1,h2,h3) { font-family:Switzer,sans-serif; font-weight:500; color:#101114; text-shadow:none; -webkit-text-fill-color:currentColor; }
+
+
+.page.page.page.page .workbench {background:#fff;color:#101114;border-color:#d9dce2;border-radius:20px}
+.page.page.page.page .count {background:#eceef2;color:#101114;border-color:#d9dce2;border-radius:999px;text-shadow:none}
+.page.page.page.page .empty,.page.page.page.page .sub {color:#626976}

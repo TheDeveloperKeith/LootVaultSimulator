@@ -209,3 +209,7 @@
 .block { box-shadow: none; }
 .rarity { font-weight: 600; }
 .actionBtn, .ghostBtn { min-height: 44px; font-weight: 600; }
+
+/* Shared light-canvas page foundation, matching the login screen. */
+.page.page.page.page { font-family:Satoshi,sans-serif; color:#101114; background:transparent; border-color:#d9dce2; box-shadow:none; }
+.page.page.page.page :is(h1,h2,h3) { font-family:Switzer,sans-serif; font-weight:500; color:#101114; text-shadow:none; -webkit-text-fill-color:currentColor; }

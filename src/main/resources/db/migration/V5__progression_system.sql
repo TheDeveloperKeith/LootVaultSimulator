@@ -104,6 +104,11 @@ CREATE INDEX idx_player_quests_active
 -- One counter per player + banner/crate pool.
 -- ============================================================
 
+-- V1 used banner UUIDs and rare/epic counters. Keep those records for
+-- reference: the current pool codes and Extraordinary tier have different
+-- meanings, so silently converting the old progress would be incorrect.
+ALTER TABLE pity_counters RENAME TO legacy_banner_pity_counters;
+
 CREATE TABLE pity_counters (
     player_id UUID NOT NULL,
 
@@ -129,4 +134,3 @@ CREATE TABLE pity_counters (
     CONSTRAINT chk_total_pulls_nonnegative
         CHECK (total_pulls >= 0)
 );
-
